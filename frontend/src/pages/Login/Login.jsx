@@ -4,7 +4,7 @@ import BgLogin from '../../assets/images/BgLogin.jpg';
 function LoginPage() {
     return (
         <section
-            className="bg-gray-50 dark:bg-gray-900"
+            className="bg-gray-50"
             style={{
                 backgroundImage: `url(${BgLogin})`,
                 backgroundSize: 'cover',
@@ -13,14 +13,14 @@ function LoginPage() {
             }}
         >
             <div className="mx-auto flex flex-col items-center justify-center bg-gray-700 bg-opacity-70 px-6 py-8 md:h-screen lg:py-0">
-                <div className="w-full rounded-lg bg-white shadow sm:max-w-md md:mt-0 xl:p-0 dark:border dark:border-gray-700 dark:bg-gray-800">
+                <div className="w-full rounded-lg bg-white shadow sm:max-w-md md:mt-0 xl:p-0">
                     <div className="space-y-4 p-6 sm:p-8 md:space-y-6">
-                        <h1 className="mb-12 text-center text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+                        <h1 className="mb-12 text-center text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl">
                             Sign in to your account
                         </h1>
                         <form className="space-y-4 md:space-y-6" action="#">
                             <div>
-                                <label htmlFor="email" className="mb-2 block font-medium text-gray-900 dark:text-white">
+                                <label htmlFor="email" className="mb-2 block font-medium text-gray-900">
                                     Your email
                                 </label>
                                 <input
@@ -33,10 +33,7 @@ function LoginPage() {
                                 />
                             </div>
                             <div>
-                                <label
-                                    htmlFor="password"
-                                    className="mb-2 block font-medium text-gray-900 dark:text-white"
-                                >
+                                <label htmlFor="password" className="mb-2 block font-medium text-gray-900">
                                     Password
                                 </label>
                                 <input
@@ -44,7 +41,7 @@ function LoginPage() {
                                     name="password"
                                     id="password"
                                     placeholder="••••••••"
-                                    className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+                                    className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 outline-none"
                                     required=""
                                 />
                             </div>
@@ -60,14 +57,12 @@ function LoginPage() {
                                         />
                                     </div>
                                     <div className="ml-3">
-                                        <label htmlFor="remember" className="text-gray-500 dark:text-gray-300">
+                                        <label htmlFor="remember" className="text-gray-500">
                                             Remember me
                                         </label>
                                     </div>
                                 </div>
-                                <Link className="text-primary-600 dark:text-primary-500 font-medium hover:underline">
-                                    Forgot password?
-                                </Link>
+                                <Link className="text-primary-600 font-medium hover:underline">Forgot password?</Link>
                             </div>
                             <button
                                 type="submit"
@@ -75,7 +70,7 @@ function LoginPage() {
                             >
                                 Sign in
                             </button>
-                            <p className="text-gray-500 dark:text-gray-400">
+                            <p className="text-gray-500">
                                 Don’t have an account yet ?{' '}
                                 <Link to={'/register'} className="ml-1 font-medium hover:underline">
                                     Sign up

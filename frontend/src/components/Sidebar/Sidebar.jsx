@@ -15,7 +15,7 @@ function Sidebar() {
     return (
         <div className="font h-dvh bg-primary py-6 text-white">
             <header className="mt-4 text-center text-5xl">Zagan</header>
-            <ul className="mt-14 space-y-2 px-4">
+            <ul className="mt-14 space-y-3 px-4">
                 <Link to={'/dashboard'} className={getLinkClass('/dashboard')}>
                     <GoHome className="text-3xl font-bold" />
                     <span className="text-lg">Bảng điều khiển</span>

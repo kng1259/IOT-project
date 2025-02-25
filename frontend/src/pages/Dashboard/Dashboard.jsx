@@ -111,7 +111,7 @@ function Dashboard() {
             </div>
 
             {/* graph */}
-            <div className="mb-12 mt-8 flex justify-between">
+            <div className="my-8 flex justify-between">
                 <h2 className="text-2xl font-semibold">Biểu đồ</h2>
                 <div className="flex gap-4">
                     <IoFilter className="text-3xl" />
