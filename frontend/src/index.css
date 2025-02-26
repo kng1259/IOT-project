@@ -11,3 +11,9 @@
 .btn-primary {
     @apply cursor-pointer rounded-full bg-primary px-4 py-2 font-medium text-white hover:shadow-inner hover:shadow-slate-100;
 }
+
+/* Đổi màu tab đang active */
+
+.ant-tabs-ink-bar {
+    @apply bg-primary !important;
+}

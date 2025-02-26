@@ -1,7 +1,7 @@
-import { IoFilter } from 'react-icons/io5';
 import { GoDotFill } from 'react-icons/go';
 
 import ModalCreateProfile from './ModalCreateProfile';
+import Header from '../../components/Header/Header';
 
 function ConfigPage() {
     const toggleModal = () => {
@@ -11,16 +11,8 @@ function ConfigPage() {
     };
 
     return (
-        <div className="min-h-dvh w-full px-12 py-8">
-            <div className="flex gap-4">
-                <IoFilter className="text-3xl" />
-                <select className="cursor-pointer rounded-lg px-4 py-1 shadow outline-none">
-                    <option value="volvo">Khu bí ngô</option>
-                    <option value="saab">Khu thanh long</option>
-                    <option value="opel">Khu khoai lang</option>
-                    <option value="audi">Khu sà lách</option>
-                </select>
-            </div>
+        <div className="">
+            <Header />
 
             <button className="btn-primary ml-12 mt-8 shadow" onClick={toggleModal}>
                 {' '}
@@ -28,7 +20,7 @@ function ConfigPage() {
             </button>
 
             <div className="mt-8 flex w-fit gap-4 text-center">
-                <p className="flex items-center gap-2 text-xl font-semibold">
+                <p className="flex items-center gap-2 text-lg font-semibold">
                     {' '}
                     <GoDotFill /> Tần suất thu thập dữ liệu:{' '}
                 </p>
@@ -42,7 +34,7 @@ function ConfigPage() {
             </div>
 
             <div className="g mt-8 w-fit">
-                <p className="flex items-center gap-2 text-xl font-semibold">
+                <p className="flex items-center gap-2 text-lg font-semibold">
                     {' '}
                     <GoDotFill /> Điều chỉnh bóng đèn:{' '}
                 </p>
@@ -64,7 +56,7 @@ function ConfigPage() {
             </div>
 
             <div className="g mt-8 w-fit">
-                <p className="flex items-center gap-2 text-xl font-semibold">
+                <p className="flex items-center gap-2 text-lg font-semibold">
                     {' '}
                     <GoDotFill /> Điều chỉnh máy bơm:{' '}
                 </p>

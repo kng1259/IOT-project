@@ -1,13 +1,12 @@
-import { IoFilter } from 'react-icons/io5';
-import { IoNotificationsOutline } from 'react-icons/io5';
 import { CiTempHigh } from 'react-icons/ci';
 import { LuSun } from 'react-icons/lu';
 import { BsMoisture } from 'react-icons/bs';
 import { WiHumidity } from 'react-icons/wi';
+import { IoFilter } from 'react-icons/io5';
 
-import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip } from 'recharts';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
-import bg from '../../assets/images/bgFarm.png';
+import Header from '../../components/Header/Header';
 
 function Dashboard() {
     const data = [
@@ -48,32 +47,8 @@ function Dashboard() {
     ];
 
     return (
-        <div className="min-h-dvh w-full px-12 py-8">
-            <header className="flex items-center justify-between">
-                <div className="flex gap-4">
-                    <IoFilter className="text-3xl" />
-                    <select className="cursor-pointer rounded-lg px-4 py-1 shadow outline-none">
-                        <option value="volvo">Khu bí ngô</option>
-                        <option value="saab">Khu thanh long</option>
-                        <option value="opel">Khu khoai lang</option>
-                        <option value="audi">Khu sà lách</option>
-                    </select>
-                </div>
-
-                {/* avatar */}
-                <div className="flex items-center gap-6">
-                    <IoNotificationsOutline className="rounded-full p-2 text-[40px] hover:cursor-pointer hover:shadow-inner hover:shadow-black" />
-                    <div
-                        className="size-11 rounded-full border shadow-sm shadow-slate-500"
-                        style={{
-                            backgroundImage: `url(${bg})`,
-                            backgroundSize: 'cover',
-                            backgroundPosition: 'center',
-                            backgroundRepeat: 'no-repeat',
-                        }}
-                    ></div>
-                </div>
-            </header>
+        <div className="">
+            <Header />
 
             {/* show parameters of each farm */}
             <div className="mt-8 flex justify-between">
@@ -112,7 +87,7 @@ function Dashboard() {
 
             {/* graph */}
             <div className="my-8 flex justify-between">
-                <h2 className="text-2xl font-semibold">Biểu đồ</h2>
+                <h2 className="border-l-4 border-primary pb-1 pl-3 text-2xl font-semibold">Biểu đồ</h2>
                 <div className="flex gap-4">
                     <IoFilter className="text-3xl" />
                     <select className="h-fit cursor-pointer rounded-lg px-4 py-1 shadow outline-none">
@@ -123,19 +98,25 @@ function Dashboard() {
                     </select>
                 </div>
             </div>
-            <LineChart
-                className="ml-28"
-                width={900}
-                height={300}
-                data={data}
-                margin={{ top: 5, right: 20, bottom: 5, left: 0 }}
-            >
-                <Line type="monotone" dataKey="uv" stroke="#8884d8" />
-                <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip />
-            </LineChart>
+            <div className="ml-16 w-4/5">
+                <ResponsiveContainer>
+                    <AreaChart
+                        data={data}
+                        margin={{
+                            top: 10,
+                            right: 30,
+                            left: 0,
+                            bottom: 0,
+                        }}
+                    >
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="name" />
+                        <YAxis />
+                        <Tooltip />
+                        <Area type="monotone" dataKey="uv" stroke="#8884d8" fill="#8884d8" />
+                    </AreaChart>
+                </ResponsiveContainer>
+            </div>
         </div>
     );
 }
