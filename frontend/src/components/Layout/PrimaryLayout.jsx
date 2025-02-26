@@ -5,7 +5,7 @@ function PrimaryLayout({ children }) {
     return (
         <div className="flex">
             <Sidebar className="" />
-            <div className="bg-background flex-1">{children}</div>
+            <div className="min-h-dvh w-full flex-1 bg-background px-12 py-8">{children}</div>
         </div>
     );
 }
