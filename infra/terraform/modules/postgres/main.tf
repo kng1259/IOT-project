@@ -27,7 +27,7 @@ resource "azurerm_private_dns_zone_virtual_network_link" "main" {
 resource "azurerm_postgresql_flexible_server" "main" {
   name                = "psql-server-${var.random_suffix}"
   resource_group_name = var.resource_group_name
-  location            = var.resource_group_location
+  location            = var.location
 
   sku_name = "B_Standard_B1ms"
 
@@ -61,7 +61,7 @@ resource "azurerm_key_vault_secret" "postgres_connection_string" {
 resource "azurerm_storage_account" "iot_to_db_func" {
   name                     = "iot-to-db-${var.random_suffix}"
   resource_group_name      = var.resource_group_name
-  location                 = var.resource_group_location
+  location                 = var.location
   account_tier             = "Standard"
   account_replication_type = "LRS"
   access_tier              = "Hot"
@@ -70,7 +70,7 @@ resource "azurerm_storage_account" "iot_to_db_func" {
 resource "azurerm_linux_function_app" "iot_to_db" {
   name                = "iot-to-db-${var.random_suffix}"
   resource_group_name = var.resource_group_name
-  location            = var.resource_group_location
+  location            = var.location
 
   service_plan_id = ""
   storage_account {
