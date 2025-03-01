@@ -42,19 +42,20 @@ resource "azurerm_container_app" "backend" {
     max_replicas = 2
     min_replicas = 1
     container {
-      name   = var.container_app_name
-      cpu    = 0.25
-      memory = 0.5
-      image  = var.image_url
+      name   = "quickstart"
+      cpu    = 0.5
+      memory = "1Gi"
+      image  = "mcr.microsoft.com/k8se/quickstart:latest"
       env {
         name        = "DATABASE_URL"
-        secret_name = "DATABASE_URL"
+        secret_name = "database-url"
       }
     }
   }
 
+
   ingress {
-    external_enabled           = false
+    external_enabled           = true
     allow_insecure_connections = var.app_allow_http
     target_port                = 8080
     traffic_weight {
@@ -64,9 +65,9 @@ resource "azurerm_container_app" "backend" {
   }
 
   secret {
-    name                = "DATABASE_URL"
+    name                = "database-url"
     identity            = "System"
-    key_vault_secret_id = var.key_vault_secret_id
+    key_vault_secret_id = var.db_url_secret_id
   }
 }
 
@@ -77,7 +78,7 @@ locals {
 
 resource "azurerm_static_web_app" "frontend" {
   name                = var.static_web_app_name
-  location            = var.location
+  location            = var.frontend_location
   resource_group_name = var.resource_group_name
 
   sku_size = "Standard"

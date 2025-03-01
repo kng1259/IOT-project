@@ -35,13 +35,20 @@ variable "app_allow_http" {
   default     = false
 }
 
-variable "key_vault_secret_id" {
-  description = "The ID of the Key Vault secret."
-  type        = string
-}
-
 variable "static_web_app_name" {
   description = "The name of the static web app."
   type        = string
   default     = "frontend"
+}
+
+variable "frontend_location" {
+  description = "The location of the frontend."
+  type        = string
+  default     = "East Asia"
+}
+
+variable "db_url_secret_id" {
+  description = "The ID of the database URL secret."
+  type        = string
+
 }
