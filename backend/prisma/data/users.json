@@ -1,0 +1,10 @@
+[
+    {
+        "username": "demo",
+        "email": "c@hcmut.edu.vn",
+        "password_hashed": "WoCvTiAVHGnjQFzOTmKGt6F1uMVPPRGfelt4LmdKYvQ=",
+        "salt": "NvxPruJLPCaLrKPJ+QC2k8o9YViq23RII9UhBeJX43leeLofjK6Z7kxfuoArlutAiEoiwZqoXT4r5r0+Fr+J5g==",
+        "role": "customer",
+        "phone_number": "0123456789"
+    }
+]
