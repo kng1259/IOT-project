@@ -1,0 +1,15 @@
+//// ------------------------------------------------------
+//// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+//// ------------------------------------------------------
+
+Table user {
+  user_id String [pk]
+  username String [not null]
+  password_hashed String [not null]
+  email String [unique, not null]
+  phone_number String
+  salt String [not null, default: '']
+  role String [not null, default: 'user']
+  created_at DateTime [default: `now()`, not null]
+  updated_at DateTime [not null]
+}

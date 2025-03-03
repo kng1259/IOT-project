@@ -1,0 +1,17 @@
+node_modules
+.git
+.gitignore
+*.md
+*.log
+.env
+.env.example
+eslint.config.js
+prettier.config.js
+Dockerfile
+npm-debug.log
+
+prisma/data/**
+prisma/migrations/**
+prisma/dbml/**
+prisma/docs/**
+prisma/seed.js
