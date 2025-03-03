@@ -53,4 +53,5 @@ module "webapp" {
   app_allow_http           = var.app_allow_http
   db_url_secret_id         = module.postgres.postgres_url_secret_id
   backend_address_prefixes = var.backend_address_prefixes
+  key_vault_id             = module.key_vault.key_vault_id
 }

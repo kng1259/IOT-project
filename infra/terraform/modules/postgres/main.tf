@@ -64,6 +64,13 @@ resource "azurerm_subnet" "iot_to_db" {
   virtual_network_name            = var.virtual_network_name
   address_prefixes                = var.iot_to_db_subnet_address_prefix
   default_outbound_access_enabled = true
+
+  delegation {
+    name = "IotToDbDelegation"
+    service_delegation {
+      name = "Microsoft.App/environments"
+    }
+  }
 }
 
 resource "azurerm_role_assignment" "subnet_contributor" {

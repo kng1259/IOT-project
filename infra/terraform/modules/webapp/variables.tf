@@ -50,5 +50,9 @@ variable "frontend_location" {
 variable "db_url_secret_id" {
   description = "The ID of the database URL secret."
   type        = string
+}
 
+variable "key_vault_id" {
+  description = "The ID of the key vault."
+  type        = string
 }

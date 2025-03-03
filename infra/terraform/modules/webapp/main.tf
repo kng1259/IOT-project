@@ -12,7 +12,21 @@ resource "azurerm_network_security_group" "backend" {
   resource_group_name = var.resource_group_name
 }
 
-resource "azurerm_network_security_rule" "backend" {
+resource "azurerm_network_security_rule" "backend_https" {
+  name                        = "https-inbound"
+  priority                    = 110
+  direction                   = "Inbound"
+  access                      = "Allow"
+  protocol                    = "Tcp"
+  source_port_range           = "*"
+  destination_port_range      = "443"
+  source_address_prefix       = "*"
+  destination_address_prefix  = "*"
+  resource_group_name         = var.resource_group_name
+  network_security_group_name = azurerm_network_security_group.backend.name
+}
+
+resource "azurerm_network_security_rule" "backend_ssh" {
   name                        = "ssh-inbound"
   priority                    = 120
   direction                   = "Inbound"
@@ -25,6 +39,7 @@ resource "azurerm_network_security_rule" "backend" {
   resource_group_name         = var.resource_group_name
   network_security_group_name = azurerm_network_security_group.backend.name
 }
+
 
 resource "azurerm_container_app_environment" "backend" {
   name                     = var.container_app_name
@@ -45,14 +60,13 @@ resource "azurerm_container_app" "backend" {
       name   = "quickstart"
       cpu    = 0.5
       memory = "1Gi"
-      image  = "mcr.microsoft.com/k8se/quickstart:latest"
+      image  = var.image_url
       env {
         name        = "DATABASE_URL"
         secret_name = "database-url"
       }
     }
   }
-
 
   ingress {
     external_enabled           = true
@@ -69,6 +83,16 @@ resource "azurerm_container_app" "backend" {
     identity            = "System"
     key_vault_secret_id = var.db_url_secret_id
   }
+
+  identity {
+    type = "SystemAssigned"
+  }
+}
+
+resource "azurerm_role_assignment" "container_app" {
+  scope                = var.key_vault_id
+  role_definition_name = "Key Vault Secrets User"
+  principal_id         = azurerm_container_app.backend.identity[0].principal_id
 }
 
 locals {
@@ -89,10 +113,10 @@ resource "azapi_resource" "linked_backend" {
   type      = "Microsoft.Web/staticSites/linkedBackends@2024-04-01"
   name      = "linkedBackend"
   parent_id = azurerm_static_web_app.frontend.id
-  body = jsonencode({
+  body = {
     properties = {
       backendResourceId = azurerm_container_app.backend.id
       region            = var.location
     }
-  })
+  }
 }

@@ -30,6 +30,7 @@ variable "backend_address_prefixes" {
 
 variable "image_url" {
   description = "The URL for the container image."
+  default     = "mcr.microsoft.com/k8se/quickstart:latest"
 }
 
 variable "app_allow_http" {
