@@ -1,0 +1,23 @@
+# Stage 1: Generate prisma client and install deps
+FROM node:22-alpine AS prisma
+WORKDIR /build
+COPY prisma/schema.prisma .
+COPY package.json package-lock.json ./
+RUN npm ci --omit=dev
+RUN npx prisma generate --generator client
+
+# Stage 2: Run the app
+FROM gcr.io/distroless/nodejs22-debian12
+WORKDIR /app
+
+COPY . .
+COPY --from=prisma /build/node_modules ./node_modules
+
+ENV NODE_ENV=production
+ENV PORT=8080
+# env for testing purpose
+ENV DATABASE_URL=postgresql://iotdev:123456@host.docker.internal:5432/iotdevdb?schema=public
+
+EXPOSE 8080
+
+CMD ["server.js"]
