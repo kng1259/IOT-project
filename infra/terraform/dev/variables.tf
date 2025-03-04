@@ -15,17 +15,17 @@ variable "vnet_address_space" {
 
 variable "postgres_subnet_address_prefix" {
   description = "The address prefix for the PostgreSQL subnet."
-  default     = ["10.0.1.0/24"]
+  default     = ["10.0.0.0/24"]
 }
 
 variable "iot_to_db_subnet_address_prefix" {
   description = "The address prefix for the IoT to DB subnet."
-  default     = ["10.0.3.0/24"]
+  default     = ["10.0.1.0/24"]
 }
 
 variable "backend_address_prefixes" {
   description = "The address prefixes for the backend subnet."
-  default     = ["10.0.4.0/23"]
+  default     = ["10.0.2.0/23"]
 }
 
 variable "image_url" {

@@ -57,7 +57,7 @@ resource "azurerm_container_app" "backend" {
     max_replicas = 2
     min_replicas = 1
     container {
-      name   = "quickstart"
+      name   = "backend"
       cpu    = 0.5
       memory = "1Gi"
       image  = var.image_url
