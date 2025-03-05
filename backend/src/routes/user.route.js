@@ -1,7 +1,7 @@
 import express from 'express'
 import asyncHandler from '../helpers/asyncHandler.js'
-import { userValidation } from '../validations/userValidation.js'
-import { userController } from '../controllers/userController.js'
+import { userValidation } from '../validations/user.validation.js'
+import { userController } from '../controllers/user.controller.js'
 
 const router = express.Router()
 
@@ -14,4 +14,4 @@ router.route('/register')
 router.route('/refresh-token')
   .get(asyncHandler(userController.refreshToken))
 
-export default router
+export const userRoute = router

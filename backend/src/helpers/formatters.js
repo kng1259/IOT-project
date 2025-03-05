@@ -1,7 +1,12 @@
-import pkg from 'lodash'
-const pick = pkg
-
 export const filterFieldsUser = (user) => {
   if (!user) return {}
-  return pick(user, ['user_id', 'email', 'username', 'phone_number', 'role', 'created_at', 'updated_at'])
+  return {
+    user_id: user.user_id,
+    email: user.email,
+    username: user.username,
+    phone_number: user.phone_number,
+    role: user.role,
+    created_at: user.created_at,
+    updated_at: user.updated_at
+  }
 }

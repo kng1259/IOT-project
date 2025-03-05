@@ -5,14 +5,31 @@ import ApiError from './helpers/ApiError.js'
 import helmet from 'helmet'
 import morgan from 'morgan'
 import compression from 'compression'
-import errorHandler from './middlewares/errorHandler.js'
+import { errorHandlingMiddleware } from './middlewares/errorHandler.js'
 import swagger from './swagger.js'
 import 'dotenv/config'
 import cookieParser from 'cookie-parser'
+import { WHITELIST_DOMAINS } from './helpers/constants.js'
+import { StatusCodes } from 'http-status-codes'
 
 const app = express()
+
+app.use((req, res, next) => {
+  res.set('Cache-Control', 'no-store')
+  next()
+})
+
 const corsOptions = {
-  origin: process.env.NODE_ENV !== 'production' ? '*' : process.env.FRONTEND_URL,
+  origin: function (origin, callback) {
+    if (process.env.NODE_ENV === 'development') {
+      return callback(null, true)
+    }
+
+    if (WHITELIST_DOMAINS.includes(origin)) {
+      return callback(null, true)
+    }
+    return callback(new ApiError(StatusCodes.FORBIDDEN, `${origin} not allowed by our CORS Policy.`))
+  },
   optionsSuccessStatus: 200,
   credentials: true
 }
@@ -41,6 +58,6 @@ app.all('*', (req, res, next) => {
   const err = new ApiError(404, 'Not Found', true, '')
   next(err)
 })
-app.use(errorHandler)
+app.use(errorHandlingMiddleware)
 
 export default app

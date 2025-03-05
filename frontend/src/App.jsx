@@ -9,7 +9,7 @@ import ReportPage from './pages/ReportPage/ReportPage'
 import { useSelector } from 'react-redux'
 import { selectCurrentUser } from './redux/user/userSlice'
 
-const PrivateRoute = (user) => {
+const PrivateRoute = ({ user }) => {
   if (!user) return <Navigate to={'/login'} replace={true} />
   return <Outlet />
 }

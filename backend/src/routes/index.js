@@ -1,6 +1,6 @@
 import express from 'express'
 import helloworld from './helloworld.route.js'
-import user from './user.route.js'
+import { userRoute } from './user.route.js'
 
 const router = express.Router()
 
@@ -30,8 +30,7 @@ const router = express.Router()
  *                   example: Hello World
  */
 router.use('/', helloworld)
-
-router.use('/user', user)
+router.use('/user', userRoute)
 
 
 export default router

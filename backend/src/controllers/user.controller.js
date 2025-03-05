@@ -1,7 +1,7 @@
 import { StatusCodes } from 'http-status-codes'
 
 import ms from 'ms'
-import { userService } from '../services/userService.js'
+import { userService } from '../services/user.service.js'
 
 const login = async (req, res) => {
   const result = await userService.login(req.body)
@@ -41,7 +41,6 @@ const refreshToken = async (req, res) => {
 
   res.status(StatusCodes.OK).json()
 }
-
 
 export const userController = {
   login,

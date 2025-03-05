@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import BgLogin from '../../assets/images/BgLogin.jpg'
 import { useForm } from 'react-hook-form'
 import { joiResolver } from '@hookform/resolvers/joi'
@@ -11,8 +11,11 @@ import {
   PASSWORD_RULE_MESSAGE
 } from '~/utils/validators'
 import FieldErrorAlert from '~/components/Form/FieldErrorAlert'
+import { toast } from 'react-toastify'
+import { registerUserAPI } from '~/apis'
 
 function RegisterPage() {
+  const navigate = useNavigate()
   const formSchema = Joi.object({
     email: Joi.string().required().pattern(EMAIL_RULE).messages({
       'string.empty': FIELD_REQUIRED_MESSAGE,
@@ -43,7 +46,13 @@ function RegisterPage() {
   })
 
   const handleSignup = (data) => {
-    console.log(data)
+    const { email, password } = data
+    toast.promise(
+      registerUserAPI({ email, password }),
+      { pending: 'Đang tạo tài khoản...' }
+    ).then(res => {
+      if (!res.error) navigate('/login')
+    })
   }
 
   return (
@@ -99,7 +108,7 @@ function RegisterPage() {
                   Xác nhận Mật khẩu
                 </label>
                 <input
-                  type="confirm-password"
+                  type="password"
                   id="confirmPassword"
                   placeholder="••••••••"
                   className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 outline-none"
