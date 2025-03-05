@@ -6,7 +6,7 @@ import { API_ROOT } from '~/utils/constants'
 export const loginUserAPI = createAsyncThunk(
   'user/loginUserAPI',
   async (data) => {
-    const response = await axiosInstance.post(`${API_ROOT}/v1/users/login`, data)
+    const response = await axiosInstance.post(`${API_ROOT}/api/v1/user/login`, data)
     return response.data
   }
 )
@@ -14,9 +14,9 @@ export const loginUserAPI = createAsyncThunk(
 export const logoutUserAPI = createAsyncThunk(
   'user/logoutUserAPI',
   async (showSuccessMessage = true) => {
-    const response = await axiosInstance.delete(`${API_ROOT}/v1/users/logout`)
+    const response = await axiosInstance.delete(`${API_ROOT}/api/v1/user/logout`)
     if (showSuccessMessage) {
-      toast.success('Logged out successfully!')
+      toast.success('Đăng xuất thành công!')
     }
     return response.data
   }

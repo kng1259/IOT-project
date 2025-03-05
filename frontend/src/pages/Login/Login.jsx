@@ -37,7 +37,7 @@ function LoginPage() {
       dispatch(loginUserAPI(data)),
       { pending: 'Đang đăng nhập...' }
     ).then(res => {
-      if (!res.errors) navigate('/dashboard')
+      if (!res.error) navigate('/dashboard')
     })
   }
   return (

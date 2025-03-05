@@ -1,7 +1,8 @@
-import express from 'express';
-import helloworld from './helloworld.route.js';
+import express from 'express'
+import helloworld from './helloworld.route.js'
+import user from './user.route.js'
 
-const router = express.Router();
+const router = express.Router()
 
 /**
  * @swagger
@@ -28,6 +29,9 @@ const router = express.Router();
  *                   type: string
  *                   example: Hello World
  */
-router.use('/', helloworld);
+router.use('/', helloworld)
 
-export default router;
+router.use('/user', user)
+
+
+export default router

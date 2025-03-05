@@ -1,12 +1,13 @@
-import app from './src/app.js';
+/* eslint-disable no-console */
+import app from './src/app.js'
 
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 8080
 
 const server = app.listen(PORT, () => {
-    console.log(`Listening on port ${PORT}`);
-    console.log(`Document available at:`, `http://localhost:${PORT}/api-docs`);
-});
+  console.log(`Listening on port ${PORT}`)
+  console.log('Document available at:', `http://localhost:${PORT}/api-docs`)
+})
 
 process.on('SIGINT', () => {
-    server.close(() => console.log('Exit server'));
-});
+  server.close(() => console.log('Exit server'))
+})

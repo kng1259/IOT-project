@@ -1,9 +1,9 @@
-import * as helloworldCtrl from '../controllers/helloworld.ctrl.js';
-import express from 'express';
-import asyncHandler from '../helpers/asyncHandler.js';
+import * as helloworldCtrl from '../controllers/helloworld.ctrl.js'
+import express from 'express'
+import asyncHandler from '../helpers/asyncHandler.js'
 
-const router = express.Router();
+const router = express.Router()
 
-router.get('/', asyncHandler(helloworldCtrl.helloworld));
+router.get('/', asyncHandler(helloworldCtrl.helloworld))
 
-export default router;
+export default router
