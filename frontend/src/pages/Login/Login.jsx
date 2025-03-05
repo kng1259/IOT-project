@@ -1,12 +1,18 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import BgLogin from '../../assets/images/BgLogin.jpg'
 import { useForm } from 'react-hook-form'
 import { joiResolver } from '@hookform/resolvers/joi'
 import Joi from 'joi'
 import { EMAIL_RULE, EMAIL_RULE_MESSAGE, FIELD_REQUIRED_MESSAGE, PASSWORD_RULE, PASSWORD_RULE_MESSAGE } from '~/utils/validators'
 import FieldErrorAlert from '~/components/Form/FieldErrorAlert'
+import { toast } from 'react-toastify'
+import { useDispatch } from 'react-redux'
+import { loginUserAPI } from '~/redux/user/userSlice'
 
 function LoginPage() {
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+
   const formSchema = Joi.object({
     email: Joi.string().required().pattern(EMAIL_RULE).messages({
       'string.empty': FIELD_REQUIRED_MESSAGE,
@@ -27,7 +33,12 @@ function LoginPage() {
   })
 
   const handleLogin = (data) => {
-    console.log(data);
+    toast.promise(
+      dispatch(loginUserAPI(data)),
+      { pending: 'Đang đăng nhập...' }
+    ).then(res => {
+      if (!res.errors) navigate('/dashboard')
+    })
   }
   return (
     <section
@@ -36,7 +47,7 @@ function LoginPage() {
         backgroundImage: `url(${BgLogin})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
+        backgroundRepeat: 'no-repeat'
       }}
     >
       <div className="mx-auto flex flex-col items-center justify-center bg-gray-700 bg-opacity-70 px-6 py-8 md:h-screen lg:py-0">
@@ -45,7 +56,7 @@ function LoginPage() {
             <h1 className="mb-12 text-center text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl">
               Đăng nhập
             </h1>
-            <form 
+            <form
               className="space-y-4 md:space-y-6"
               action="#"
               onSubmit={handleSubmit(handleLogin)}
@@ -60,7 +71,7 @@ function LoginPage() {
                   className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 outline-none"
                   placeholder="name@company.com"
                   {...register('email', {
-                    value: 'email',
+                    value: 'email'
                   })}
                 />
                 <FieldErrorAlert errors={errors} fieldName={'email'} />
@@ -76,7 +87,7 @@ function LoginPage() {
                   placeholder="••••••••"
                   className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 outline-none"
                   {...register('password', {
-                    value: 'password',
+                    value: 'password'
                   })}
                 />
                 <FieldErrorAlert errors={errors} fieldName={'password'} />
@@ -116,7 +127,7 @@ function LoginPage() {
         </div>
       </div>
     </section>
-  );
+  )
 }
 
-export default LoginPage;
+export default LoginPage
