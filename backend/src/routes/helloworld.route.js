@@ -1,9 +1,35 @@
-import * as helloworldCtrl from '../controllers/helloworld.ctrl.js';
-import express from 'express';
-import asyncHandler from '../helpers/asyncHandler.js';
+import * as helloworldCtrl from '../controllers/helloworld.ctrl.js'
+import express from 'express'
+import asyncHandler from '../helpers/asyncHandler.js'
+import { authMiddleware } from '../middlewares/authMiddleware.js'
 
-const router = express.Router();
+const router = express.Router()
 
-router.get('/', asyncHandler(helloworldCtrl.helloworld));
+/**
+ * @swagger
+ * tags:
+ *   name: HelloWorld
+ *   description: Sample endpoint for reference
+ */
 
-export default router;
+/**
+ * @swagger
+ * /api/v1:
+ *   get:
+ *     summary: Returns a hello world message
+ *     tags: [HelloWorld]
+ *     responses:
+ *       200:
+ *         description: Hello world message
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Hello World
+ */
+router.get('/', authMiddleware.isAuthorized, asyncHandler(helloworldCtrl.helloworld))
+
+export default router

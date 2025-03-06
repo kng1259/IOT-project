@@ -1,5 +1,5 @@
-import * as helloworldRepo from '../repositories/helloworld.repo.js';
+import * as helloworldRepo from '../repositories/helloworld.repo.js'
 
 export const helloworld = async () => {
-    return helloworldRepo.helloworld();
-};
+  return helloworldRepo.helloworld()
+}

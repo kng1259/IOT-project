@@ -1,32 +1,31 @@
-import { StrictMode, Fragment } from 'react';
-import { createRoot } from 'react-dom/client';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { createRoot } from 'react-dom/client'
+import App from './App.jsx'
+import './index.css'
 
-import './index.css';
-import routes from './routes';
-import PrimaryLayout from './components/Layout/PrimaryLayout';
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+
+
+import { Provider } from 'react-redux'
+import { store } from './redux/store.js'
+
+import { BrowserRouter } from 'react-router-dom'
+
+import { PersistGate } from 'redux-persist/integration/react'
+import { persistStore } from 'redux-persist'
+const persistor = persistStore(store)
+
+import { injectStore } from './utils/axiosConfig.js'
+injectStore(store)
 
 createRoot(document.getElementById('root')).render(
-    <StrictMode>
-        <BrowserRouter>
-            <Routes>
-                {routes.map((route, index) => {
-                    const Page = route.component;
-                    const Layout = route.layout === 'primary' ? PrimaryLayout : Fragment;
+  <Provider store={store}>
+    <PersistGate persistor={persistor}>
+      <BrowserRouter basename='/'>
+        <App />
+        <ToastContainer position='bottom-left' theme='colored' />
+      </BrowserRouter>
+    </PersistGate>
+  </Provider>
 
-                    return (
-                        <Route
-                            key={index}
-                            path={route.path}
-                            element={
-                                <Layout>
-                                    <Page />
-                                </Layout>
-                            }
-                        />
-                    );
-                })}
-            </Routes>
-        </BrowserRouter>
-    </StrictMode>,
-);
+)
