@@ -1,11 +1,9 @@
 variable "postgres_subnet_address_prefix" {
   description = "The address prefix for the PostgreSQL Server subnet."
-  default     = ["10.0.1.0/24"]
 }
 
 variable "iot_to_db_subnet_address_prefix" {
   description = "The address prefix for the PostgreSQL Server subnet."
-  default     = ["10.0.3.0/24"]
 }
 
 variable "pg_admin_login" {

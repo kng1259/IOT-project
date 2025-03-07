@@ -56,6 +56,16 @@ resource "azurerm_container_app" "backend" {
   template {
     max_replicas = 2
     min_replicas = 1
+    # init_container {
+    #   name   = "backend-init"
+    #   cpu    = 0.25
+    #   memory = "0.5Gi"
+    #   image  = var.init_image_url
+    #   env {
+    #     name        = "DATABASE_URL"
+    #     secret_name = "database-url"
+    #   }
+    # }
     container {
       name   = "backend"
       cpu    = 0.5

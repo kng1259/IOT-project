@@ -55,12 +55,12 @@ resource "azurerm_iothub_dps_certificate" "main" {
   certificate_content = filebase64("keys/cert.crt")
 }
 
-resource "null_resource" "create_enrollment_group" {
+resource "null_resource" "create_new_enrollment_group" {
   provisioner "local-exec" {
     command = <<EOT
       az iot dps enrollment-group create \
-        --dps-name "dps-apparent-doberman"\
-        --resource-group "iot-proj-iot-only-rg"\
+        --dps-name ${azurerm_iothub_dps.main.name}\
+        --resource-group ${var.resource_group_name}\
         --enrollment-id "main_eg" \
         --provisioning-status "enabled" \
         | jq -r '.attestation.symmetricKey.primaryKey' > keys/enrollment_group_sym.key

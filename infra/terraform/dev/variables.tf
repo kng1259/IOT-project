@@ -33,6 +33,11 @@ variable "image_url" {
   default     = "mcr.microsoft.com/k8se/quickstart:latest"
 }
 
+variable "init_image_url" {
+  description = "The URL for the init container image."
+  default     = "mcr.microsoft.com/k8se/quickstart:latest"
+}
+
 variable "app_allow_http" {
   description = "Allow HTTP traffic to the app."
   default     = false

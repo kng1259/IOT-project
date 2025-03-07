@@ -84,6 +84,7 @@ resource "azurerm_storage_account" "iot_to_db_func" {
   name                          = "iottodb${var.random_suffix}"
   resource_group_name           = var.resource_group_name
   location                      = var.location
+  account_kind                  = "StorageV2"
   account_tier                  = "Standard"
   account_replication_type      = "LRS"
   access_tier                   = "Hot"
@@ -96,6 +97,18 @@ resource "azurerm_storage_container" "iot_to_db_func" {
   name                  = "iot-to-db"
   storage_account_id    = azurerm_storage_account.iot_to_db_func.id
   container_access_type = "private"
+}
+
+resource "azurerm_role_assignment" "storage_account_contributor" {
+  scope                = azurerm_storage_account.iot_to_db_func.id
+  role_definition_name = "Contributor"
+  principal_id         = data.azurerm_client_config.current.object_id
+}
+
+resource "azurerm_role_assignment" "storage_container_contributor" {
+  scope                = azurerm_storage_container.iot_to_db_func.id
+  role_definition_name = "Contributor"
+  principal_id         = data.azurerm_client_config.current.object_id
 }
 
 resource "azurerm_service_plan" "iot_to_db" {

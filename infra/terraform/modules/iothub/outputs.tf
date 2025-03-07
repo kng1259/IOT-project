@@ -19,3 +19,8 @@ output "dps_id_scope" {
 output "group_sym_key" {
   value = local.group_sym_key
 }
+
+output "iothub_eventhub_connection_string" {
+  value     = "Endpoint=${azurerm_iothub.main.event_hub_events_endpoint};SharedAccessKeyName=iothubowner;SharedAccessKey=${azurerm_iothub.main.shared_access_policy[0].primary_key}"
+  sensitive = true
+}

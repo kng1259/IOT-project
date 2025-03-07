@@ -44,7 +44,7 @@ module "postgres" {
   resource_group_name             = azurerm_resource_group.main.name
   location                        = azurerm_resource_group.main.location
   function_location               = azurerm_resource_group.main.location
-  iot_hub_connection_string       = module.iothub.service_primary_connection_string
+  iot_hub_connection_string       = module.iothub.iothub_eventhub_connection_string
   virtual_network_name            = azurerm_virtual_network.main.name
   virtual_network_id              = azurerm_virtual_network.main.id
   postgres_subnet_address_prefix  = var.postgres_subnet_address_prefix

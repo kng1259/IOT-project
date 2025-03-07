@@ -29,6 +29,11 @@ variable "image_url" {
   type        = string
 }
 
+variable "init_image_url" {
+  description = "The URL of the init container image."
+  type        = string
+}
+
 variable "app_allow_http" {
   description = "Whether HTTP traffic is allowed."
   type        = bool
@@ -44,7 +49,7 @@ variable "static_web_app_name" {
 variable "frontend_location" {
   description = "The location of the frontend."
   type        = string
-  default     = "East Asia"
+  default     = "South East Asia"
 }
 
 variable "db_url_secret_id" {
