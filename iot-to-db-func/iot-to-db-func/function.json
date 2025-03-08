@@ -5,7 +5,7 @@
       "type": "eventHubTrigger",
       "name": "event",
       "direction": "in",
-      "eventHubName": "iot-hub-grand-frog",
+      "eventHubName": "iot-hub-lola",
       "connection": "IOT_HUB_CONNECTION_STRING",
       "cardinality": "one"
     }

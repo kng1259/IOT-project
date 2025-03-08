@@ -11,4 +11,5 @@ variable "location" {
 variable "random_suffix" {
   description = "A random suffix to append to the key vault name."
   type        = string
+  default     = "lola"
 }

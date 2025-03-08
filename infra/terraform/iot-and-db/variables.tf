@@ -1,6 +1,6 @@
 variable "resource_group_name" {
   description = "The name of the resource group."
-  default     = "iot-only-rg"
+  default     = "iot-and-db"
 }
 
 variable "location" {

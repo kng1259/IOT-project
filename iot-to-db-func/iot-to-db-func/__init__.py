@@ -40,6 +40,17 @@ def main(event: func.EventHubEvent):
         # Establish connection to PostgreSQL
         conn = psycopg.connect(conninfo=database_url)
         cur = conn.cursor()
+
+        # Init table
+        cur.execute(
+            """
+            CREATE TABLE IF NOT EXISTS my_table (
+                device_id VARCHAR(255),
+                timestamp TIMESTAMP,
+                value FLOAT
+            )
+            """
+        )
         
         # Insert data into the table
         cur.execute(
@@ -49,7 +60,22 @@ def main(event: func.EventHubEvent):
         
         # Commit the transaction and clean up
         conn.commit()
-        print(f"Device ID: {device_id}, Timestamp: {timestamp}, Value: {value}")
+        # print(f"Device ID: {device_id}, Timestamp: {timestamp}, Value: {value}")
+
+        # Query to get 10 latest entries
+        cur.execute(
+            """
+            SELECT device_id, timestamp, value
+            FROM my_table
+            ORDER BY timestamp DESC
+            LIMIT 5
+            """
+        )
+        
+        # Print the results
+        print("\nLatest 10 entries:")
+        for row in cur.fetchall():
+            print(f"Device: {row[0]} | Time: {row[1]} | Value: {row[2]}")
 
         cur.close()
         conn.close()

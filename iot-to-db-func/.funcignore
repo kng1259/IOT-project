@@ -1,4 +1,5 @@
 **/__pycache__/**
-.python_packages/**
-functionapp.zip
+.venv
+.gitignore
+.git/**
 local.settings.json

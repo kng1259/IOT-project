@@ -9,7 +9,7 @@ resource "random_pet" "main" {
 }
 
 resource "azurerm_virtual_network" "main" {
-  name                = "vnet-${random_pet.main.id}"
+  name                = "vnet-lola"
   resource_group_name = azurerm_resource_group.main.name
   location            = azurerm_resource_group.main.location
   address_space       = var.vnet_address_space
@@ -26,22 +26,21 @@ module "iothub" {
   source              = "../modules/iothub"
   resource_group_name = azurerm_resource_group.main.name
   location            = azurerm_resource_group.main.location
-  iothub_name         = "iot-hub-${random_pet.main.id}"
-  dps_name            = "dps-${random_pet.main.id}"
+  key_vault_id        = module.key_vault.key_vault_id
 }
 
 module "postgres" {
-  source                          = "../modules/postgres"
-  resource_group_name             = azurerm_resource_group.main.name
-  location                        = azurerm_resource_group.main.location
-  function_location               = azurerm_resource_group.main.location
-  iot_hub_connection_string       = module.iothub.iothub_eventhub_connection_string
-  iot_to_db_subnet_address_prefix = var.iot_to_db_subnet_address_prefix
-  virtual_network_name            = azurerm_virtual_network.main.name
-  virtual_network_id              = azurerm_virtual_network.main.id
-  postgres_subnet_address_prefix  = var.postgres_subnet_address_prefix
-  key_vault_id                    = module.key_vault.key_vault_id
-  key_vault_name                  = module.key_vault.key_vault_name
+  source                                        = "../modules/postgres"
+  resource_group_name                           = azurerm_resource_group.main.name
+  location                                      = azurerm_resource_group.main.location
+  function_location                             = azurerm_resource_group.main.location
+  iot_to_db_subnet_address_prefix               = var.iot_to_db_subnet_address_prefix
+  virtual_network_name                          = azurerm_virtual_network.main.name
+  virtual_network_id                            = azurerm_virtual_network.main.id
+  postgres_subnet_address_prefix                = var.postgres_subnet_address_prefix
+  key_vault_id                                  = module.key_vault.key_vault_id
+  key_vault_name                                = module.key_vault.key_vault_name
+  iothub_eventhub_connection_string_secret_name = module.iothub.iothub_eventhub_connection_string_secret_name
 }
 
 module "webapp" {
