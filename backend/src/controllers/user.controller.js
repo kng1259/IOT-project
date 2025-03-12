@@ -42,8 +42,16 @@ const refreshToken = async (req, res) => {
   res.status(StatusCodes.OK).json()
 }
 
+const logout = (req, res) => {
+  res.clearCookie('accessToken')
+  res.clearCookie('refreshToken')
+
+  res.status(StatusCodes.OK).json({ loggedOut: true })
+}
+
 export const userController = {
   login,
   register,
-  refreshToken
+  refreshToken,
+  logout
 }

@@ -1,5 +1,6 @@
 import swaggerJsdoc from 'swagger-jsdoc'
 import swaggerUi from 'swagger-ui-express'
+import { env } from './helpers/environment.js'
 
 const options = {
   definition: {
@@ -12,10 +13,10 @@ const options = {
   },
   apis: ['./src/routes/*.js', './src/routes/**/*.js'],
   requestInterceptor: function (request) {
-    request.headers.Origin = `http://localhost:${process.env.PORT}`
+    request.headers.Origin = `http://localhost:${env.PORT}`
     return request
   },
-  url: `http://localhost:${process.env.PORT}/api-docs`
+  url: `http://localhost:${env.PORT}/api-docs`
 }
 
 const swaggerSpec = swaggerJsdoc(options)

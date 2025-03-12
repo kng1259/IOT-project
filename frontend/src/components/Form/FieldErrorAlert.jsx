@@ -1,5 +1,4 @@
-/* eslint-disable react/prop-types */
-import { MdErrorOutline } from "react-icons/md";
+import { MdErrorOutline } from 'react-icons/md'
 
 function FieldErrorAlert({ errors, fieldName }) {
   if (!errors || !errors[fieldName]) return null
@@ -10,7 +9,6 @@ function FieldErrorAlert({ errors, fieldName }) {
         <span className="font-semibold text-sm">Lỗi!</span>
         <span className="text-sm">{errors[fieldName]?.message}</span>
       </div>
-      
     </div>
   )
 }
