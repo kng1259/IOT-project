@@ -14,4 +14,7 @@ router.route('/register')
 router.route('/refresh-token')
   .get(asyncHandler(userController.refreshToken))
 
+router.route('/logout')
+  .delete(asyncHandler(userController.logout))
+
 export const userRoute = router

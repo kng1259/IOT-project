@@ -1,12 +1,12 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { toast } from 'react-toastify'
 import axiosInstance from '~/utils/axiosConfig'
-import { API_ROOT } from '~/utils/constants'
+import { env } from '~/utils/environment'
 
 export const loginUserAPI = createAsyncThunk(
   'user/loginUserAPI',
   async (data) => {
-    const response = await axiosInstance.post(`${API_ROOT}/api/v1/user/login`, data)
+    const response = await axiosInstance.post(`${env.API_ROOT}/api/v1/user/login`, data)
     return response.data
   }
 )
@@ -14,7 +14,7 @@ export const loginUserAPI = createAsyncThunk(
 export const logoutUserAPI = createAsyncThunk(
   'user/logoutUserAPI',
   async (showSuccessMessage = true) => {
-    const response = await axiosInstance.delete(`${API_ROOT}/api/v1/user/logout`)
+    const response = await axiosInstance.delete(`${env.API_ROOT}/api/v1/user/logout`)
     if (showSuccessMessage) {
       toast.success('Đăng xuất thành công!')
     }
