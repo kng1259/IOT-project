@@ -1,17 +1,17 @@
 import axiosInstance from '~/utils/axiosConfig'
-import { API_ROOT } from '~/utils/constants'
+import { env } from '~/utils/environment'
 
 export const refreshTokenAPI = async () => {
-  const response = await axiosInstance.get(`${API_ROOT}/api/v1/user/refresh-token`)
+  const response = await axiosInstance.get(`${env.API_ROOT}/api/v1/user/refresh-token`)
   return response.data
 }
 
 export const registerUserAPI = async (data) => {
-  const response = await axiosInstance.post(`${API_ROOT}/api/v1/user/register`, data)
+  const response = await axiosInstance.post(`${env.API_ROOT}/api/v1/user/register`, data)
   return response.data
 }
 
 export const testAPI = async () => {
-  const response = await axiosInstance.get(`${API_ROOT}/api/v1`)
+  const response = await axiosInstance.get(`${env.API_ROOT}/api/v1`)
   return response.data
 }

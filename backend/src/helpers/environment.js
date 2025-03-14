@@ -1,0 +1,8 @@
+export const env = {
+  NODE_ENV: process.env.NODE_ENV,
+  DATABASE_URL: process.env.DATABASE_URL,
+  PORT: process.env.PORT,
+  WHITELIST_DOMAINS: process.env.WHITELIST_DOMAINS,
+  ACCESS_TOKEN_PRIVATE_KEY: process.env.ACCESS_TOKEN_PRIVATE_KEY,
+  REFRESH_TOKEN_PRIVATE_KEY: process.env.REFRESH_TOKEN_PRIVATE_KEY
+}

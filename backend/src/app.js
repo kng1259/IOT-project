@@ -9,8 +9,8 @@ import { errorHandlingMiddleware } from './middlewares/errorHandler.js'
 import swagger from './swagger.js'
 import 'dotenv/config'
 import cookieParser from 'cookie-parser'
-import { WHITELIST_DOMAINS } from './helpers/constants.js'
 import { StatusCodes } from 'http-status-codes'
+import { env } from './helpers/environment.js'
 
 const app = express()
 
@@ -21,11 +21,11 @@ app.use((req, res, next) => {
 
 const corsOptions = {
   origin: function (origin, callback) {
-    if (process.env.NODE_ENV === 'development') {
+    if (env.NODE_ENV === 'development') {
       return callback(null, true)
     }
 
-    if (WHITELIST_DOMAINS.includes(origin)) {
+    if (env.WHITELIST_DOMAINS.split(',').includes(origin)) {
       return callback(null, true)
     }
     return callback(new ApiError(StatusCodes.FORBIDDEN, `${origin} not allowed by our CORS Policy.`))
@@ -34,7 +34,7 @@ const corsOptions = {
   credentials: true
 }
 
-if (process.env.NODE_ENV === 'development') {
+if (env.NODE_ENV === 'development') {
   app.use(morgan('dev'))
 } else {
   app.use(helmet())
