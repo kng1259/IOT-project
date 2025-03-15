@@ -48,6 +48,31 @@ resource "azurerm_container_app_environment" "backend" {
   infrastructure_subnet_id = azurerm_subnet.backend.id
 }
 
+resource "random_password" "jwt_access_token" {
+  length           = 32
+  special          = true
+  override_special = "!@#$%^&*()-_=+[]{}<>:?"
+}
+
+resource "azurerm_key_vault_secret" "jwt_access_token" {
+  name         = "jwt-access-token"
+  value        = base64encode(random_password.jwt_access_token.result)
+  key_vault_id = var.key_vault_id
+}
+
+resource "random_password" "jwt_refresh_token" {
+  length           = 32
+  special          = true
+  override_special = "!@#$%^&*()-_=+[]{}<>:?"
+}
+
+resource "azurerm_key_vault_secret" "jwt_refresh_token" {
+  name         = "jwt-refresh-token"
+  value        = base64encode(random_password.jwt_refresh_token.result)
+  key_vault_id = var.key_vault_id
+}
+
+
 resource "azurerm_container_app" "backend" {
   name                         = var.container_app_name
   container_app_environment_id = azurerm_container_app_environment.backend.id
@@ -56,24 +81,44 @@ resource "azurerm_container_app" "backend" {
   template {
     max_replicas = 2
     min_replicas = 1
-    # init_container {
-    #   name   = "backend-init"
-    #   cpu    = 0.25
-    #   memory = "0.5Gi"
-    #   image  = var.init_image_url
-    #   env {
-    #     name        = "DATABASE_URL"
-    #     secret_name = "database-url"
-    #   }
-    # }
+    init_container {
+      name   = "backend-init"
+      cpu    = 0.25
+      memory = "0.5Gi"
+      image  = var.init_image_url
+      env {
+        name        = "DATABASE_URL"
+        secret_name = "database-url"
+      }
+    }
     container {
       name   = "backend"
       cpu    = 0.5
       memory = "1Gi"
       image  = var.image_url
       env {
+        name  = "NODE_ENV"
+        value = "production"
+      }
+      env {
         name        = "DATABASE_URL"
         secret_name = "database-url"
+      }
+      env {
+        name  = "PORT"
+        value = "8080"
+      }
+      env {
+        name  = "WHITELIST_DOMAINS"
+        value = "\"${azurerm_static_web_app.frontend.default_host_name}\","
+      }
+      env {
+        name        = "ACCESS_TOKEN_PRIVATE_KEY"
+        secret_name = "jwt-access-token"
+      }
+      env {
+        name        = "REFRESH_TOKEN_PRIVATE_KEY"
+        secret_name = "jwt-refresh-token"
       }
     }
   }
@@ -92,6 +137,18 @@ resource "azurerm_container_app" "backend" {
     name                = "database-url"
     identity            = "System"
     key_vault_secret_id = var.db_url_secret_id
+  }
+
+  secret {
+    name                = "jwt-access-token"
+    identity            = "System"
+    key_vault_secret_id = azurerm_key_vault_secret.jwt_access_token.id
+  }
+
+  secret {
+    name                = "jwt-refresh-token"
+    identity            = "System"
+    key_vault_secret_id = azurerm_key_vault_secret.jwt_refresh_token.id
   }
 
   identity {
@@ -117,6 +174,7 @@ resource "azurerm_static_web_app" "frontend" {
 
   sku_size = "Standard"
   sku_tier = "Standard"
+
 }
 
 resource "azapi_resource" "linked_backend" {

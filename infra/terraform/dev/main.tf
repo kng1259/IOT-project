@@ -15,6 +15,14 @@ resource "azurerm_virtual_network" "main" {
   address_space       = var.vnet_address_space
 }
 
+data "azurerm_client_config" "current" {}
+
+resource "azurerm_role_assignment" "contributor" {
+  scope                = azurerm_resource_group.main.id
+  role_definition_name = "Contributor"
+  principal_id         = data.azurerm_client_config.current.object_id
+}
+
 module "key_vault" {
   source              = "../modules/key_vault"
   resource_group_name = azurerm_resource_group.main.name
@@ -48,7 +56,7 @@ module "webapp" {
   resource_group_name      = azurerm_resource_group.main.name
   location                 = azurerm_resource_group.main.location
   virtual_network_name     = azurerm_virtual_network.main.name
-  container_app_name       = "container-app-${random_pet.main.id}"
+  container_app_name       = "container-app-lola"
   image_url                = var.image_url
   init_image_url           = var.init_image_url
   frontend_location        = "East Asia"

@@ -25,7 +25,7 @@ const corsOptions = {
       return callback(null, true)
     }
 
-    if (env.WHITELIST_DOMAINS.split(',').includes(origin)) {
+    if (origin === undefined | env.WHITELIST_DOMAINS.split(',').includes(origin)) {
       return callback(null, true)
     }
     return callback(new ApiError(StatusCodes.FORBIDDEN, `${origin} not allowed by our CORS Policy.`))
