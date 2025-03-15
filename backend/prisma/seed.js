@@ -5,7 +5,7 @@ const require = createRequire(import.meta.url)
 const prisma = new PrismaClient()
 
 const main = async () => {
-  const tables = ['user', 'Farm', 'Area', 'Crop', 'PlantedCrop', 'DeviceLog', 'Record', 'Schedule']
+  const tables = ['User', 'Farm', 'Area', 'Crop', 'PlantedCrop', 'DeviceLog', 'Record', 'Schedule']
   for (const table of tables.slice().reverse()) {
     await prisma[table].deleteMany()
   }
