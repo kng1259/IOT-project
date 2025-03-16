@@ -1,0 +1,4 @@
+dbml/
+docs/
+migrations/
+Dockerfile.init

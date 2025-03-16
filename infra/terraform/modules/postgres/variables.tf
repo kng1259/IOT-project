@@ -1,6 +1,9 @@
 variable "postgres_subnet_address_prefix" {
   description = "The address prefix for the PostgreSQL Server subnet."
-  default     = ["10.0.1.0/24"]
+}
+
+variable "iot_to_db_subnet_address_prefix" {
+  description = "The address prefix for the PostgreSQL Server subnet."
 }
 
 variable "pg_admin_login" {
@@ -15,15 +18,19 @@ variable "pg_admin_password" {
 
 variable "random_suffix" {
   description = "A random suffix to append to the PostgreSQL Server name."
-  default     = "meomeo"
+  default     = "lola"
 }
 
 variable "resource_group_name" {
   description = "The name of the resource group in which to create the PostgreSQL Server."
 }
 
-variable "resource_group_location" {
+variable "location" {
   description = "The location of the resource group in which to create the PostgreSQL Server."
+}
+
+variable "function_location" {
+  description = "The location of the resource group in which to create the Storage Account."
 }
 
 variable "ssl" {
@@ -43,6 +50,10 @@ variable "key_vault_id" {
   description = "The ID of the Key Vault in which to store the PostgreSQL Server connection string."
 }
 
-variable "iot_hub_connection_string" {
-  description = "The connection string for the IoT Hub."
+variable "key_vault_name" {
+  description = "The name of the Key Vault in which to store the PostgreSQL Server connection string."
+}
+
+variable "iothub_eventhub_connection_string_secret_name" {
+  description = "The name of the Key Vault secret containing the IoT Hub Event Hub connection string."
 }

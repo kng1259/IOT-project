@@ -24,3 +24,8 @@ output "postgres_private_dns_zone_id" {
   description = "Value of the postgres private dns zone id"
   value       = azurerm_private_dns_zone.postgres.id
 }
+
+output "postgres_url_secret_id" {
+  description = "Value of the postgres url secret id"
+  value       = azurerm_key_vault_secret.postgres_connection_string.id
+}

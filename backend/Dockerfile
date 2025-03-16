@@ -15,8 +15,6 @@ COPY --from=prisma /build/node_modules ./node_modules
 
 ENV NODE_ENV=production
 ENV PORT=8080
-# env for testing purpose
-ENV DATABASE_URL=postgresql://iotdev:123456@host.docker.internal:5432/iotdevdb?schema=public
 
 EXPOSE 8080
 

@@ -2,8 +2,8 @@ import { PrismaClient } from '@prisma/client'
 import { createRequire } from 'module'
 import { v4 as uuidv4 } from 'uuid'
 
-const require = createRequire(import.meta.url)
-const prisma = new PrismaClient()
+const require = createRequire(import.meta.url);
+const prisma = new PrismaClient();
 
 const main = async () => {
   const tables = ['User', 'Farm', 'Area', 'Crop', 'PlantedCrop', 'DeviceLog', 'Record', 'Schedule']
@@ -63,9 +63,9 @@ const main = async () => {
 }
 
 main()
-  .catch((e) => {
-    throw e
-  })
-  .finally(async () => {
-    await prisma.$disconnect()
-  })
+    .catch((e) => {
+        throw e;
+    })
+    .finally(async () => {
+        await prisma.$disconnect();
+    });
