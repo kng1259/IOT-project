@@ -1,10 +1,11 @@
 [
     {
+        "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+        "fullName": "Nguyễn Văn A",
         "username": "demo",
-        "email": "liem.ho2211835@hcmut.edu.vn",
         "password_hashed": "$2a$08$BnBtrA5c6l0TpEpeDj24.OtKUaoFwjNNy0Mh1oD1gAYbtK52EYmdu",
         "salt": "NvxPruJLPCaLrKPJ+QC2k8o9YViq23RII9UhBeJX43leeLofjK6Z7kxfuoArlutAiEoiwZqoXT4r5r0+Fr+J5g==",
-        "role": "customer",
+        "email": "liem.ho2211835@hcmut.edu.vn",
         "phone_number": "0123456789"
     }
 ]
