@@ -22,14 +22,88 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model user {
-  user_id         String   @id @default(uuid())
-  username        String
+model User {
+  id              String  @id @default(uuid())
+  fullName        String
+  username        String  @unique
   password_hashed String
-  email           String   @unique
+  salt            String  @default("")
+  email           String  @unique
   phone_number    String?
-  salt            String   @default("")
-  role            String   @default("user")
-  created_at      DateTime @default(now())
-  updated_at      DateTime @updatedAt
+  farms           Farm[]
+}
+
+model Farm {
+  id            String   @id @default(uuid())
+  name          String
+  establishedAt DateTime
+  description   String?
+  size          Float
+  address       String
+  userId        String
+  user          User     @relation(fields: [userId], references: [id])
+  areas         Area[]
+}
+
+model Area {
+  id           String        @id @default(uuid())
+  name         String
+  size         Float
+  farmId       String
+  farm         Farm          @relation(fields: [farmId], references: [id])
+  records      Record[]
+  devices      DeviceLog[]
+  schedules    Schedule[]
+  plantedCrops PlantedCrop[]
+}
+
+model Crop {
+  id           String        @id @default(uuid())
+  name         String
+  notes        String?
+  seasonTime   String?
+  plantedCrops PlantedCrop[]
+}
+
+model PlantedCrop {
+  areaId   String
+  cropId   String
+  quantity Int
+
+  area Area @relation(fields: [areaId], references: [id], onDelete: Cascade)
+  crop Crop @relation(fields: [cropId], references: [id], onDelete: Cascade)
+
+  @@id([areaId, cropId])
+}
+
+model DeviceLog {
+  id         String   @id @default(uuid())
+  action     String
+  timestamp  DateTime
+  deviceType String
+  note       String?
+  areaId     String
+  area       Area     @relation(fields: [areaId], references: [id])
+}
+
+model Record {
+  id           String   @id @default(uuid())
+  timestamp    DateTime
+  light        Float
+  temperature  Float
+  humidity     Float
+  soilMoisture Float
+  areaId       String
+  area         Area     @relation(fields: [areaId], references: [id])
+}
+
+model Schedule {
+  id        String   @id @default(uuid())
+  startTime DateTime
+  endTime   DateTime
+  frequency String
+  activity  String
+  updatedAt DateTime @default(now()) @updatedAt
+  areaId    String
+  area      Area     @relation(fields: [areaId], references: [id])
 }

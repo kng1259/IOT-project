@@ -1,0 +1,11 @@
+[
+    {
+      "id": "farm1234-5678-90ab-cdef-1234567890ab",
+      "name": "Chúc Sơn Farm",
+      "establishedAt": "2020-05-20T00:00:00.000Z",
+      "description": "Trang trại rau quả sạch hiện đại",
+      "size": 100.5,
+      "address": "Chúc Sơn, Chương Mỹ, Hà Nội",
+      "userId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+    }
+  ]
