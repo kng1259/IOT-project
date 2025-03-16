@@ -110,7 +110,7 @@ resource "azurerm_container_app" "backend" {
       }
       env {
         name  = "WHITELIST_DOMAINS"
-        value = "\"${azurerm_static_web_app.frontend.default_host_name}\","
+        value = "\"https://${azurerm_static_web_app.frontend.default_host_name}\","
       }
       env {
         name        = "ACCESS_TOKEN_PRIVATE_KEY"

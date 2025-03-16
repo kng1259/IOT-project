@@ -3,6 +3,11 @@ variable "resource_group_name" {
   type        = string
 }
 
+variable "resource_group_id" {
+  description = "The ID of the resource group in which the key vault will be created."
+  type        = string
+}
+
 variable "location" {
   description = "The location/region where the key vault will be created."
   type        = string

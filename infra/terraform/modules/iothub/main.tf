@@ -77,4 +77,5 @@ resource "null_resource" "create_new_enrollment_group" {
 
 locals {
   group_sym_key = trimspace(file("keys/enrollment_group_sym.key"))
+  depends_on    = [null_resource.create_new_enrollment_group]
 }

@@ -10,4 +10,5 @@ variable "random_suffix" {
 }
 
 variable "key_vault_id" {
+  description = "The ID of the Key Vault to store the connection string"
 }

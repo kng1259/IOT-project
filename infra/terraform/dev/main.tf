@@ -26,6 +26,7 @@ resource "azurerm_role_assignment" "contributor" {
 module "key_vault" {
   source              = "../modules/key_vault"
   resource_group_name = azurerm_resource_group.main.name
+  resource_group_id   = azurerm_resource_group.main.id
   location            = azurerm_resource_group.main.location
   random_suffix       = random_pet.main.id
 }
