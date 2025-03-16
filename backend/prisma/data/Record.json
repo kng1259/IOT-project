@@ -1,6 +1,5 @@
 [
     {
-      "id": "rec1234-5678-90ab-cdef-1234567890ab",
       "timestamp": "2025-03-15T07:00:00.000Z",
       "light": 500.0,
       "temperature": 25.0,

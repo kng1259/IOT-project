@@ -19,3 +19,7 @@ output "dps_id_scope" {
 output "group_sym_key" {
   value = local.group_sym_key
 }
+
+output "iothub_eventhub_connection_string_secret_name" {
+  value = azurerm_key_vault_secret.iothub_eventhub_connection_string.name
+}

@@ -1,3 +1,7 @@
+output "backend_latest_revision_https_url" {
+  value = module.webapp.backend_latest_revision_https_url
+}
+
 output "dps_id_scope" {
   value     = module.iothub.dps_id_scope
   sensitive = true

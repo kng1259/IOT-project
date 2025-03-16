@@ -1,0 +1,13 @@
+{
+  "scriptFile": "__init__.py",
+  "bindings": [
+    {
+      "type": "eventHubTrigger",
+      "name": "event",
+      "direction": "in",
+      "eventHubName": "iot-hub-lola",
+      "connection": "IOT_HUB_CONNECTION_STRING",
+      "cardinality": "one"
+    }
+  ]
+}

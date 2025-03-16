@@ -4,7 +4,7 @@ import { env } from './src/helpers/environment.js'
 
 const PORT = env.PORT || 8080
 
-const server = app.listen(PORT, () => {
+const server = app.listen(PORT, '0.0.0.0', () => {
   console.log(`Listening on port ${PORT}`)
   console.log('Document available at:', `http://localhost:${PORT}/api-docs`)
 })
