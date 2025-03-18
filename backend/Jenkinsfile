@@ -32,9 +32,11 @@ pipeline{
 
         stage('Push to Registry'){
             steps{
-                docker.withRegistry("https://${DOCKER_REGISTRY}", DOCKER_CREDENTIAL_ID){ 
-                    dockerImage.push()
-                    dockerInitImage.push()
+                script{
+                    docker.withRegistry("https://${DOCKER_REGISTRY}", DOCKER_CREDENTIAL_ID){ 
+                        dockerImage.push()
+                        dockerInitImage.push()
+                    }
                 }
             }
         }
