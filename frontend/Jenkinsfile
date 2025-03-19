@@ -12,8 +12,10 @@ pipeline{
         // Assuming swa npm package is installed globally
         stage('Deploy'){
             steps{
-                script{
-                    sh 'npx swa deploy --env production'
+                dir('frontend'){
+                    script{
+                        sh 'npx swa deploy --env production'
+                    }
                 }
             }
         }
