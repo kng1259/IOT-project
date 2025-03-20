@@ -7,4 +7,7 @@ const router = express.Router();
 // Lấy record mới nhất theo areaId
 router.get('/latest', asyncHandler(recordController.getLatestRecordByArea));
 
+// get latest 7 records
+router.get('/chart-data', asyncHandler(recordController.getChartData));
+
 export const recordRoute = router;

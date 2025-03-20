@@ -2,8 +2,8 @@ import { PrismaClient } from '@prisma/client'
 import { createRequire } from 'module'
 import { v4 as uuidv4 } from 'uuid'
 
-const require = createRequire(import.meta.url);
-const prisma = new PrismaClient();
+const require = createRequire(import.meta.url)
+const prisma = new PrismaClient()
 
 const main = async () => {
   const tables = ['User', 'Farm', 'Area', 'Crop', 'PlantedCrop', 'DeviceLog', 'Record', 'Schedule']
@@ -30,7 +30,7 @@ const main = async () => {
   }
 
   // Cập nhật ID trong dữ liệu (bỏ qua PlantedCrop)
-  for (const table of tables.filter(t => t !== "PlantedCrop")) {
+  for (const table of tables.filter(t => t !== "PlantedCrop" && t!=="Record")) {
     const data = require(`./data/${table}.json`).map(item => {
       if (uuidMap[table][item.id]) item.id = uuidMap[table][item.id]
 
@@ -59,13 +59,40 @@ const main = async () => {
     })
   }
 
+  // Xử lý riêng Record (do khóa chính tổng hợp không hỗ trợ createMany)
+  const recordData = require(`./data/Record.json`);
+  for (const record of recordData) {
+    try {
+      await prisma.record.upsert({
+        where: {
+          timestamp_areaId: {
+            timestamp: record.timestamp,  // No conversion needed
+            areaId: uuidMap["Area"][record.areaId]
+          }
+        },
+        update: {}, // Không cập nhật, chỉ insert nếu chưa có
+        create: {
+          timestamp: record.timestamp,  // Use as is
+          light: record.light,
+          temperature: record.temperature,
+          humidity: record.humidity,
+          soilMoisture: record.soilMoisture,
+          areaId: uuidMap["Area"][record.areaId]
+        }
+      });
+    } catch (error) {
+      console.error(`Error: ${error.message}`);
+    }
+  }
+
   console.log("Seed dữ liệu thành công!")
 }
 
+
 main()
-    .catch((e) => {
-        throw e;
-    })
-    .finally(async () => {
-        await prisma.$disconnect();
-    });
+  .catch((e) => {
+    throw e
+  })
+  .finally(async () => {
+    await prisma.$disconnect()
+  })

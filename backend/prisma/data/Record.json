@@ -1,6 +1,6 @@
 [
     {
-      "id": "rec1",
+      
       "timestamp": "2025-03-15T07:00:00.000Z",
       "light": 500.0,
       "temperature": 25.0,
@@ -9,7 +9,7 @@
       "areaId": "area1"
     },
     {
-      "id": "rec2",
+      
       "timestamp": "2025-03-15T07:05:00.000Z",
       "light": 520.0,
       "temperature": 25.2,
@@ -18,7 +18,7 @@
       "areaId": "area1"
     },
     {
-      "id": "rec3",
+      
       "timestamp": "2025-03-15T07:10:00.000Z",
       "light": 530.0,
       "temperature": 25.5,
@@ -27,7 +27,7 @@
       "areaId": "area1"
     },
     {
-      "id": "rec4",
+      
       "timestamp": "2025-03-19T07:10:00.000Z",
       "light": 530.0,
       "temperature": 25.5,
