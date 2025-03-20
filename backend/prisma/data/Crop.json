@@ -1,7 +1,13 @@
 [
     {
-      "id": "crop1234-5678-90ab-cdef-1234567890ab",
+      "id": "crop1",
       "name": "Cà chua",
+      "notes": "Phù hợp trồng mùa đông",
+      "seasonTime": "Winter"
+    },
+    {
+      "id": "crop2",
+      "name": "Khoai tây",
       "notes": "Phù hợp trồng mùa đông",
       "seasonTime": "Winter"
     }

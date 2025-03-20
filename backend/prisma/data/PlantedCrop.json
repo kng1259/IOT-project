@@ -1,7 +1,12 @@
 [
     {
-      "areaId": "area1234-5678-90ab-cdef-1234567890ab",
-      "cropId": "crop1234-5678-90ab-cdef-1234567890ab",
+      "areaId": "area1",
+      "cropId": "crop1",
       "quantity": 100
+    }, 
+    {
+      "areaId": "area2",
+      "cropId": "crop2",
+      "quantity": 50
     }
 ]
