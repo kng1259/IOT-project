@@ -8,14 +8,73 @@ import { BarChart, Bar, Rectangle, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
 
 import Header from '../../components/Header/Header'
 import { useEffect, useState } from 'react'
-import { testAPI } from '~/apis'
+import { fetchLatestRecordOfAreaPI, fetchListAreasAPI, testAPI } from '~/apis'
+import { Button, Radio } from 'antd'
+import { useSearchParams } from 'react-router-dom'
+import { cloneDeep } from 'lodash'
+import { toast } from 'react-toastify'
+
+const initialParameters = [
+    {
+        icon: CiTempHigh,
+        size: 'text-4xl',
+        name: 'Nhiệt độ',
+        value: 0,
+        unit: '°C'
+    },
+    {
+        icon: LuSun,
+        size: 'text-3xl',
+        name: 'Ánh sáng',
+        value: 0,
+        unit: 'lx'
+    },
+    {
+        icon: BsMoisture,
+        size: 'text-3xl',
+        name: 'Độ ẩm đất',
+        value: 0,
+        unit: '%'
+    },
+    {
+        icon: WiHumidity,
+        size: 'text-[50px]',
+        name: 'Độ ẩm không khí',
+        value: 0,
+        unit: '%'
+    },
+]
 
 function Dashboard() {
     const [tab, setTab] = useState('chart')
 
+    const [areaId, setAreaId] = useState()
+    const [areas, setAreas] = useState([])
+
+    const [searchParams] = useSearchParams()
+    const farmId = searchParams.get('farmId')
+    const [parameters, setParameters] = useState(initialParameters)
+
     useEffect(() => {
-        testAPI()
-    })
+        fetchListAreasAPI(farmId).then(data => setAreas(data))
+    }, [farmId])
+
+
+    const handleChooseArea = () => {
+        fetchLatestRecordOfAreaPI(areaId).then(data => {
+            if (!data) {
+                toast.error('Chưa có dữ liệu!')
+                return
+            }
+            const newParameters = cloneDeep(parameters)
+            newParameters[0].value = data.temperature
+            newParameters[1].value = data.light
+            newParameters[2].value = data.soilMoisture
+            newParameters[3].value = data.humidity
+            setParameters(newParameters)
+        })
+    }
+
     const data = [
         { name: 'Page A', uv: 400 },
         { name: 'Page B', uv: 300 },
@@ -26,32 +85,6 @@ function Dashboard() {
         { name: 'Page G', uv: 349 },
     ]
 
-    const parameters = [
-        {
-            icon: CiTempHigh,
-            size: 'text-4xl',
-            name: 'Nhiệt độ',
-            value: '20 °C',
-        },
-        {
-            icon: LuSun,
-            size: 'text-3xl',
-            name: 'Ánh sáng',
-            value: '21 °C',
-        },
-        {
-            icon: BsMoisture,
-            size: 'text-3xl',
-            name: 'Độ ẩm đất',
-            value: '22 °C',
-        },
-        {
-            icon: WiHumidity,
-            size: 'text-[50px]',
-            name: 'Độ ẩm không khí',
-            value: '23 °C',
-        },
-    ]
 
     const toggleTab = (e, value) => {
         document.querySelectorAll('.tab').forEach((tab) => {
@@ -68,6 +101,21 @@ function Dashboard() {
     return (
         <div className=''>
             <Header />
+
+            <div className='my-2'>
+                <div className='text-gray-400 font-medium'>Chọn 1 nông trại mà bạn muốn quản lý:</div>
+                <Radio.Group
+                    value={areaId}
+                    options={areas.map(item => ({
+                        value: item.id, label: item.name
+                    }))}
+                    onChange={(event) => { setAreaId(event.target.value)}}
+                    className='ml-4 my-2'
+                />
+                <br />
+                <Button onClick={handleChooseArea}>Xác nhận</Button>
+            </div>
+
             {/* show parameters of each farm */}
             <div className='mt-8 flex justify-between'>
                 {parameters.map((param, index) => {
@@ -77,7 +125,7 @@ function Dashboard() {
                                 <param.icon className={`${param.size}`} />
                             </div>
                             <div className=''>
-                                <span className='text-2xl font-semibold text-textColor1'>{param.value}</span>
+                                <span className='text-2xl font-semibold text-textColor1'>{param.value} {param.unit}</span>
                                 <p className='mt-2 text-second'>{param.name}</p>
                             </div>
                         </div>
