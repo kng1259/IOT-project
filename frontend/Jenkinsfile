@@ -1,0 +1,23 @@
+pipeline{
+    agent{
+        label "physical"
+    }
+    stages{
+        stage('Checkout'){
+            steps{
+                checkout scm
+            }
+        }
+
+        // Assuming swa npm package is installed globally
+        stage('Deploy'){
+            steps{
+                dir('frontend'){
+                    script{
+                        sh 'npx swa deploy --env production'
+                    }
+                }
+            }
+        }
+    }
+}
