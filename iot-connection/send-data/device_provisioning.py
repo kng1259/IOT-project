@@ -5,6 +5,7 @@ from datetime import datetime
 import time
 import json
 
+
 def provision_device(provisioning_host, id_scope, registration_id, device_symmetric_key):
     # --- Create the Provisioning Device Client ---
     prov_client = ProvisioningDeviceClient.create_from_symmetric_key(
@@ -33,7 +34,7 @@ def send_telemetry(registration_id, device_symmetric_key, assigned_hub, device_i
         symmetric_key=device_symmetric_key,
         hostname=assigned_hub,
         device_id=device_id,
-    ) 
+    )
 
     # --- Connect to the IoT Hub ---
     device_client.connect()
@@ -58,12 +59,14 @@ def send_telemetry(registration_id, device_symmetric_key, assigned_hub, device_i
     # --- Disconnect ---
     device_client.disconnect()
 
+
 if __name__ == "__main__":
     load_dotenv()
 
     # --- DPS Configuration ---
     # The global endpoint for DPS
-    provisioning_host = environ.get("PROVISIONING_HOST", "global.azure-devices-provisioning.net")
+    provisioning_host = environ.get(
+        "PROVISIONING_HOST", "global.azure-devices-provisioning.net")
 
     # Your DPS ID Scope (available in the DPS overview in the Azure portal)
     id_scope = environ["DPS_ID_SCOPE"]
@@ -78,13 +81,15 @@ if __name__ == "__main__":
     try:
         assigned_hub = environ["ASSIGNED_HUB"]
         device_id = environ["DEVICE_ID"]
-        if assigned_hub=="" or device_id=="":
+        if assigned_hub == "" or device_id == "":
             raise KeyError
         print("Device already provisioned.")
     except KeyError:
-        assigned_hub, device_id = provision_device(provisioning_host, id_scope, registration_id, device_symmetric_key)
+        assigned_hub, device_id = provision_device(
+            provisioning_host, id_scope, registration_id, device_symmetric_key)
         set_key(".env", "ASSIGNED_HUB", assigned_hub)
         set_key(".env", "DEVICE_ID", device_id)
 
     # Send telemetry to the assigned hub
-    send_telemetry(registration_id, device_symmetric_key, assigned_hub, device_id)
+    send_telemetry(registration_id, device_symmetric_key,
+                   assigned_hub, device_id)
