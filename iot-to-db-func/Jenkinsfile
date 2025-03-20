@@ -1,0 +1,23 @@
+pipeline{
+    agent{
+        label "physical"
+    }
+    stages{
+        stage('Checkout'){
+            steps{
+                checkout scm
+            }
+        }
+
+        // Assuming AZ CLI and Function Core Tools are installed
+        stage('Publish'){
+            steps{
+                dir('iot-to-db-func'){
+                    script{
+                        sh 'func azure functionapp publish iot-to-db-lola --build-native-deps'
+                    }
+                }
+            }
+        }
+    }
+}
