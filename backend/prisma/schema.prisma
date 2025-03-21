@@ -87,6 +87,7 @@ model DeviceLog {
 }
 
 model Record {
+  id           String   @id @default(uuid())
   timestamp    DateTime
   light        Float
   temperature  Float
@@ -94,8 +95,6 @@ model Record {
   soilMoisture Float
   areaId       String
   area         Area     @relation(fields: [areaId], references: [id])
-
-  @@id([timestamp, areaId])
 }
 
 model Schedule {

@@ -1,8 +1,15 @@
 [
     {
-      "id": "area1234-5678-90ab-cdef-1234567890ab",
+      "id": "area1",
       "name": "Khu trồng rau",
       "size": 50.0,
-      "farmId": "farm1234-5678-90ab-cdef-1234567890ab"
+      "farmId": "farm1"
+    },
+
+    {
+      "id": "area2",
+      "name": "Khu trồng khoai",
+      "size": 50.0,
+      "farmId": "farm1"
     }
 ]
