@@ -1,11 +1,14 @@
 import { PrismaClient } from '@prisma/client';
 import { createRequire } from 'module';
 import { v4 as uuidv4 } from 'uuid';
+import { seedRecordData } from './records.js';
 
 const require = createRequire(import.meta.url);
 const prisma = new PrismaClient();
 
 const main = async () => {
+    seedRecordData();
+
     const tables = ['User', 'Farm', 'Area', 'Crop', 'PlantedCrop', 'DeviceLog', 'Record', 'Schedule'];
     for (const table of tables.slice().reverse()) {
         await prisma[table].deleteMany({});
@@ -45,7 +48,7 @@ const main = async () => {
     }
 
     // Xử lý riêng PlantedCrop
-    const plantedCropData = require(`./data/PlantedCrop.json`);
+    const plantedCropData = require('./data/PlantedCrop.json');
     for (const item of plantedCropData) {
         const newAreaId = uuidMap['Area'][item.areaId];
         const newCropId = uuidMap['Crop'][item.cropId];
