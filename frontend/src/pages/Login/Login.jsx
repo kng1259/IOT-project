@@ -37,7 +37,7 @@ function LoginPage() {
       dispatch(loginUserAPI(data)),
       { pending: 'Đang đăng nhập...' }
     ).then(res => {
-      if (!res.error) navigate('/dashboard')
+      if (!res.error) navigate('/choose-farm')
     })
   }
   return (
