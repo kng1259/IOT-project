@@ -34,5 +34,14 @@
       "humidity": 59.0,
       "soilMoisture": 34.5,
       "areaId": "area1"
+    },
+    {
+      "id": "rec5",
+      "timestamp": "2025-03-19T07:10:00.000Z",
+      "light": 500.0,
+      "temperature": 20.5,
+      "humidity": 59.0,
+      "soilMoisture": 34.5,
+      "areaId": "area2"
     }
 ]

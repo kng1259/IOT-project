@@ -8,32 +8,34 @@ import ConfigPage from './pages/ConfigPage/ConfigPage'
 import ReportPage from './pages/ReportPage/ReportPage'
 import { useSelector } from 'react-redux'
 import { selectCurrentUser } from './redux/user/userSlice'
+import ChooseFarmPage from '~/pages/ChooseFarmPage/ChooseFarmPage'
 
 const PrivateRoute = ({ user }) => {
-  if (!user) return <Navigate to={'/login'} replace={true} />
-  return <Outlet />
+    if (!user) return <Navigate to={'/login'} replace={true} />
+    return <Outlet />
 }
 
 function App() {
-  const currentUser = useSelector(selectCurrentUser)
+    const currentUser = useSelector(selectCurrentUser)
 
-  return (
-    <Routes>
-      <Route path='/' element={<LandingPage />} />
+    return (
+        <Routes>
+            <Route path='/' element={<LandingPage />} />
 
-      {/* Auth Routes */}
-      <Route path='/login' element={<LoginPage />} />
-      <Route path='/register' element={<RegisterPage />} />
+            {/* Auth Routes */}
+            <Route path='/login' element={<LoginPage />} />
+            <Route path='/register' element={<RegisterPage />} />
 
-      <Route element={<PrivateRoute user={currentUser} />} >
-        <Route element={<PrimaryLayout />}>
-          <Route path='/dashboard' element={<Dashboard />} />
-          <Route path='/config' element={<ConfigPage />} />
-          <Route path='/report' element={<ReportPage />} />
-        </Route>
-      </Route>
-    </Routes>
-  )
+            <Route element={<PrivateRoute user={currentUser} />} >
+                <Route element={<PrimaryLayout />}>
+                    <Route path='/choose-farm' element={<ChooseFarmPage />} />
+                    <Route path='/dashboard' element={<Dashboard />} />
+                    <Route path='/config' element={<ConfigPage />} />
+                    <Route path='/report' element={<ReportPage />} />
+                </Route>
+            </Route>
+        </Routes>
+    )
 }
 
 export default App
