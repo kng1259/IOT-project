@@ -1,33 +1,56 @@
 import { IoFilter } from 'react-icons/io5'
 import { IoNotificationsOutline } from 'react-icons/io5'
-import { Dropdown, Select } from 'antd'
+import { Dropdown } from 'antd'
 
 import bg from '../../assets/images/bgFarm.png'
 import { toast } from 'react-toastify'
 import { useDispatch, useSelector } from 'react-redux'
 import { logoutUserAPI, selectCurrentUser } from '~/redux/user/userSlice'
 import { Confirm } from '~/utils/sweet'
-import { fetchListFarmsAPI } from '~/apis'
+import { fetchListAreasAPI, fetchListFarmsAPI } from '~/apis'
 import { useEffect, useState } from 'react'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { selectActiveAreaId, selectActiveFarmId, setDashboardAreaId, setDashboardFarmId } from '~/redux/dashboard/dashboardSlice'
 
 function Header() {
     const dispatch = useDispatch()
+    const activeFarmId = useSelector(selectActiveFarmId)
+    const activeAreaId = useSelector(selectActiveAreaId)
 
-    const [searchParams] = useSearchParams()
-
-    const [farmId] = useState(searchParams.get('farmId'))
     const [farms, setFarms] = useState([])
 
+    const [areas, setAreas] = useState([])
+
     const currentUser = useSelector(selectCurrentUser)
-    const navigate = useNavigate()
 
     useEffect(() => {
-        fetchListFarmsAPI(currentUser.user_id).then(data => setFarms(data))
-    }, [currentUser.user_id])
+        fetchListFarmsAPI(currentUser.user_id).then(data => {
+            setFarms(data)
+            if (data.length) {
+                dispatch(setDashboardFarmId(data[0].id))
+            }
+        })
+    }, [currentUser.user_id, dispatch])
 
-    const handleChange = (value) => {
-        navigate(`/dashboard?farmId=${value}`)
+    useEffect(() => {
+        if (activeFarmId) {
+            fetchListAreasAPI(activeFarmId).then((data) => {
+                setAreas(data)
+                if (data.length && !selectActiveAreaId) {
+                    dispatch(setDashboardAreaId(data[0].id))
+                }
+            })
+        } else {
+            setAreas([])
+        }
+
+    }, [activeFarmId, dispatch])
+
+    const handleChangeFarmId = (event) => {
+        dispatch(setDashboardFarmId(event.target.value))
+    }
+
+    const handleChangeAreaId = (event) => {
+        dispatch(setDashboardAreaId(event.target.value))
     }
 
     const handleLogout = () => {
@@ -57,30 +80,22 @@ function Header() {
             key: '3'
         }
     ]
+
     return (
         <header className="flex items-center justify-between">
             <div className="flex gap-4">
                 <IoFilter className="text-3xl" />
-                <select className="cursor-pointer rounded-lg px-4 py-1 shadow outline-none">
-                    <option value="volvo">Khu bí ngô</option>
-                    <option value="saab">Khu thanh long</option>
-                    <option value="opel">Khu khoai lang</option>
-                    <option value="audi">Khu sà lách</option>
+                <select className="cursor-pointer rounded-lg px-4 py-1 shadow outline-none" onChange={handleChangeAreaId}>
+                    {areas.map(area => <option key={area.id} value={area.id} selected={area.id === activeAreaId}>{area.name}</option>)}
                 </select>
             </div>
 
             {/* avatar */}
             <div className="flex items-center gap-6">
-                <Select
-                    defaultValue={farmId}
-                    style={{
-                        width: 120,
-                    }}
-                    onChange={handleChange}
-                    options={farms.map(item => ({
-                        value: item.id, label: item.name
-                    }))}
-                />
+                <select className="cursor-pointer rounded-lg px-4 py-1 shadow outline-none" onChange={handleChangeFarmId}>
+                    <option value=""> -- Chọn nông trại -- </option>
+                    {farms.map(farm => <option key={farm.id} value={farm.id} selected={farm.id === activeFarmId}>{farm.name}</option>)}
+                </select>
 
                 <IoNotificationsOutline className="rounded-full p-2 text-[40px] hover:cursor-pointer hover:shadow-inner hover:shadow-black" />
 
