@@ -26,11 +26,7 @@ function getRandomInRange() {
 
 function generateData(amount) {
     let data = [];
-    const options = {
-        timeZone: 'Asia/Ho_Chi_Minh',
-        hour12: false,
-    };
-    const timestamp = new Date(Date.now() + 3600000 * 7 - amount * 60000 * 5);
+    const timestamp = new Date(Date.now() - amount * 60000 * 5);
     for (var i = 1; i <= amount; i++) {
         const recordTimestamp = new Date(timestamp.getTime() + i * 60000 * 5);
         data.push({
