@@ -18,6 +18,7 @@ pipeline{
         }
 
         // Using docker plugin
+        // Assuming docker and az cli is installed on the agent
         stage('Build'){
             steps{
                 dir('backend'){
@@ -44,6 +45,14 @@ pipeline{
                             error "Failed to push to registry: ${e}"
                         }
                     }
+                }
+            }
+        }
+
+        stage('Deploy'){
+            steps{
+                script{
+                    sh 'az containerapp update -n container-app-lola -g dev-rg --set image=${DOCKER_REGISTRY}/${DOCKERHUB_USERNAME}/iot-backend:${IMAGE_TAG}'
                 }
             }
         }
