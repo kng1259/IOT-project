@@ -36,8 +36,12 @@ pipeline{
             steps{
                 script{
                     docker.withRegistry("https://${DOCKER_REGISTRY}", DOCKER_CREDENTIALS_ID){ 
-                        dockerImage.push()
-                        dockerInitImage.push()
+                        try{
+                            dockerImage.push()
+                            dockerInitImage.push()
+                        }catch(Exception e){
+                            error "Failed to push to registry: ${e}"
+                        }
                     }
                 }
             }
