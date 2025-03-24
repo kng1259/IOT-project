@@ -14,7 +14,7 @@ pipeline{
                 dir('frontend'){
                     script{
                         sh 'npm install'
-                        sh 'vite build'
+                        sh 'npx vite build'
                     }
                 }
             }
