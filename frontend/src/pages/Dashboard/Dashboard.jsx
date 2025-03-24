@@ -20,12 +20,11 @@ import {
 import Header from '../../components/Header/Header'
 import { useEffect, useState } from 'react'
 
-import { fetchLatestRecordOfAreaPI, fetchListAreasAPI, testAPI, fetchChartData } from '~/apis'
-
-import { Button, Radio } from 'antd'
-import { useSearchParams } from 'react-router-dom'
+import { fetchLatestRecordOfAreaPI, fetchChartData } from '~/apis'
 import { cloneDeep } from 'lodash'
 import { toast } from 'react-toastify'
+import { useSelector } from 'react-redux'
+import { selectActiveAreaId } from '~/redux/dashboard/dashboardSlice'
 
 const initialParameters = [
     {
@@ -61,8 +60,7 @@ const initialParameters = [
 function Dashboard() {
     const [tab, setTab] = useState('chart')
 
-    const [areaId, setAreaId] = useState()
-    const [areas, setAreas] = useState([])
+    const areaId = useSelector(selectActiveAreaId)
 
     const [avgLight, setAvgLight] = useState([])
     const [avgTemp, setAvgTemp] = useState([])
@@ -71,8 +69,6 @@ function Dashboard() {
 
     const [typeDateChart, setTypeDateChart] = useState('avgLight')
 
-    const [searchParams] = useSearchParams()
-    const farmId = searchParams.get('farmId')
     const [parameters, setParameters] = useState(initialParameters)
 
     let chartDataOrigin = []
@@ -103,7 +99,7 @@ function Dashboard() {
         setAvgSoilMoisture(soilMoisture)
     }
 
-    const handleChooseArea = () => {
+    useEffect(() => {
         fetchLatestRecordOfAreaPI(areaId).then((data) => {
             if (!data) {
                 toast.error('Chưa có dữ liệu!')
@@ -116,7 +112,7 @@ function Dashboard() {
             newParameters[3].value = data.humidity.toFixed(2)
             setParameters(newParameters)
         })
-    }
+    }, [areaId])
 
     const toggleTab = (e, value) => {
         document.querySelectorAll('.tab').forEach((tab) => {
@@ -135,33 +131,12 @@ function Dashboard() {
     }
 
     useEffect(() => {
-        fetchListAreasAPI(farmId).then((data) => setAreas(data))
-    }, [farmId])
-
-    useEffect(() => {
         fetchChartData(areaId).then((data) => handleClassifyData(data.slice(0, 10).reverse()))
     }, [areaId])
 
     return (
         <div className=''>
             <Header />
-
-            <div className='my-2'>
-                <div className='font-medium text-gray-400'>Chọn 1 nông trại mà bạn muốn quản lý:</div>
-                <Radio.Group
-                    value={areaId}
-                    options={areas.map((item) => ({
-                        value: item.id,
-                        label: item.name,
-                    }))}
-                    onChange={(event) => {
-                        setAreaId(event.target.value)
-                    }}
-                    className='my-2 ml-4'
-                />
-                <br />
-                <Button onClick={handleChooseArea}>Xác nhận</Button>
-            </div>
 
             {/* show parameters of each farm */}
             <div className='mt-8 flex justify-between'>
