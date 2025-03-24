@@ -4,7 +4,8 @@ pipeline{
     }
 
     environment{
-        DOCKER_REGISTRY = "docker.io/kng1259"
+        DOCKER_REGISTRY = "docker.io"
+        DOCKERHUB_USERNAME = "kng1259"
         DOCKER_CREDENTIALS_ID = "dockerhub-credentials"
         IMAGE_TAG = "0.0.1"
     }
@@ -21,12 +22,12 @@ pipeline{
             steps{
                 dir('backend'){
                     script{
-                        dockerImage = docker.build("${DOCKER_REGISTRY}/iot-backend:${IMAGE_TAG}")
+                        dockerImage = docker.build("${DOCKER_REGISTRY}/${DOCKERHUB_USERNAME}/iot-backend:${IMAGE_TAG}")
                     }
                 }
                 dir('backend/prisma'){
                     script{
-                        dockerInitImage = docker.build("${DOCKER_REGISTRY}/iot-backend-init:${IMAGE_TAG}", "-f Dockerfile.init .")
+                        dockerInitImage = docker.build("${DOCKER_REGISTRY}/${DOCKERHUB_USERNAME}/iot-backend-init:${IMAGE_TAG}", "-f Dockerfile.init .")
                     }
                 }
             }
