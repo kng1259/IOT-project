@@ -28,7 +28,6 @@
     "sweetalert2": "^11.17.2"
   },
   "devDependencies": {
-    "@azure/static-web-apps-cli": "^2.0.4",
     "@eslint/js": "^9.19.0",
     "@types/react": "^19.0.8",
     "@types/react-dom": "^19.0.3",
