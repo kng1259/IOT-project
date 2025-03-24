@@ -8,6 +8,11 @@ const getLatestRecordByArea = async (areaId) => {
   return await recordRepo.findLatestRecordByAreaId(areaId);
 };
 
+const getChartData = async (areaId) => {
+  return await recordRepo.getAverageRecordsForLast8Hours(areaId);
+};
+
 export const recordService = {
-  getLatestRecordByArea
+  getLatestRecordByArea,
+  getChartData
 };

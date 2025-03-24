@@ -4,11 +4,24 @@ import { BsMoisture } from 'react-icons/bs'
 import { WiHumidity } from 'react-icons/wi'
 import { IoFilter } from 'react-icons/io5'
 
-import { BarChart, Bar, Rectangle, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
+import {
+    XAxis,
+    YAxis,
+    CartesianGrid,
+    Tooltip,
+    Legend,
+    ResponsiveContainer,
+    AreaChart,
+    Area,
+    Line,
+    LineChart,
+} from 'recharts'
 
 import Header from '../../components/Header/Header'
 import { useEffect, useState } from 'react'
-import { fetchLatestRecordOfAreaPI, fetchListAreasAPI, testAPI } from '~/apis'
+
+import { fetchLatestRecordOfAreaPI, fetchListAreasAPI, testAPI, fetchChartData } from '~/apis'
+
 import { Button, Radio } from 'antd'
 import { useSearchParams } from 'react-router-dom'
 import { cloneDeep } from 'lodash'
@@ -20,28 +33,28 @@ const initialParameters = [
         size: 'text-4xl',
         name: 'Nhiệt độ',
         value: 0,
-        unit: '°C'
+        unit: '°C',
     },
     {
         icon: LuSun,
         size: 'text-3xl',
         name: 'Ánh sáng',
         value: 0,
-        unit: 'lx'
+        unit: 'lx',
     },
     {
         icon: BsMoisture,
         size: 'text-3xl',
         name: 'Độ ẩm đất',
         value: 0,
-        unit: '%'
+        unit: '%',
     },
     {
         icon: WiHumidity,
         size: 'text-[50px]',
         name: 'Độ ẩm không khí',
         value: 0,
-        unit: '%'
+        unit: '%',
     },
 ]
 
@@ -51,40 +64,59 @@ function Dashboard() {
     const [areaId, setAreaId] = useState()
     const [areas, setAreas] = useState([])
 
+    const [avgLight, setAvgLight] = useState([])
+    const [avgTemp, setAvgTemp] = useState([])
+    const [avgHumidity, setAvgHumidity] = useState([])
+    const [avgSoilMoisture, setAvgSoilMoisture] = useState([])
+
+    const [typeDateChart, setTypeDateChart] = useState('avgLight')
+
     const [searchParams] = useSearchParams()
     const farmId = searchParams.get('farmId')
     const [parameters, setParameters] = useState(initialParameters)
 
-    useEffect(() => {
-        fetchListAreasAPI(farmId).then(data => setAreas(data))
-    }, [farmId])
+    let chartDataOrigin = []
 
+    const getTime = (timestamp) => {
+        const date = new Date(timestamp)
+        const hours = String(date.getHours()).padStart(2, '0')
+        const minutes = String(date.getMinutes()).padStart(2, '0')
+        return `${hours}:${minutes}`
+    }
+
+    const handleClassifyData = (data) => {
+        const avgLight = []
+        const avgTemp = []
+        const humidity = []
+        const soilMoisture = []
+
+        data.forEach((item) => {
+            avgLight.push({ name: getTime(item.time_slot), data: item.avg_light.toFixed(2) })
+            avgTemp.push({ name: getTime(item.time_slot), data: item.avg_temperature.toFixed(2) })
+            humidity.push({ name: getTime(item.time_slot), data: item.avg_humidity.toFixed(2) })
+            soilMoisture.push({ name: getTime(item.time_slot), data: item.avg_soil_moisture.toFixed(2) })
+        })
+
+        setAvgLight(avgLight)
+        setAvgTemp(avgTemp)
+        setAvgHumidity(humidity)
+        setAvgSoilMoisture(soilMoisture)
+    }
 
     const handleChooseArea = () => {
-        fetchLatestRecordOfAreaPI(areaId).then(data => {
+        fetchLatestRecordOfAreaPI(areaId).then((data) => {
             if (!data) {
                 toast.error('Chưa có dữ liệu!')
                 return
             }
             const newParameters = cloneDeep(parameters)
-            newParameters[0].value = data.temperature
-            newParameters[1].value = data.light
-            newParameters[2].value = data.soilMoisture
-            newParameters[3].value = data.humidity
+            newParameters[0].value = data.temperature.toFixed(2)
+            newParameters[1].value = data.light.toFixed(2)
+            newParameters[2].value = data.soilMoisture.toFixed(2)
+            newParameters[3].value = data.humidity.toFixed(2)
             setParameters(newParameters)
         })
     }
-
-    const data = [
-        { name: 'Page A', uv: 400 },
-        { name: 'Page B', uv: 300 },
-        { name: 'Page C', uv: 200 },
-        { name: 'Page D', uv: 278 },
-        { name: 'Page E', uv: 189 },
-        { name: 'Page F', uv: 239 },
-        { name: 'Page G', uv: 349 },
-    ]
-
 
     const toggleTab = (e, value) => {
         document.querySelectorAll('.tab').forEach((tab) => {
@@ -98,19 +130,34 @@ function Dashboard() {
         setTab(value)
     }
 
+    const handleChangeChartDataType = (e) => {
+        setTypeDateChart(e.target.value)
+    }
+
+    useEffect(() => {
+        fetchListAreasAPI(farmId).then((data) => setAreas(data))
+    }, [farmId])
+
+    useEffect(() => {
+        fetchChartData(areaId).then((data) => handleClassifyData(data.slice(0, 10).reverse()))
+    }, [areaId])
+
     return (
         <div className=''>
             <Header />
 
             <div className='my-2'>
-                <div className='text-gray-400 font-medium'>Chọn 1 nông trại mà bạn muốn quản lý:</div>
+                <div className='font-medium text-gray-400'>Chọn 1 nông trại mà bạn muốn quản lý:</div>
                 <Radio.Group
                     value={areaId}
-                    options={areas.map(item => ({
-                        value: item.id, label: item.name
+                    options={areas.map((item) => ({
+                        value: item.id,
+                        label: item.name,
                     }))}
-                    onChange={(event) => { setAreaId(event.target.value)}}
-                    className='ml-4 my-2'
+                    onChange={(event) => {
+                        setAreaId(event.target.value)
+                    }}
+                    className='my-2 ml-4'
                 />
                 <br />
                 <Button onClick={handleChooseArea}>Xác nhận</Button>
@@ -125,7 +172,9 @@ function Dashboard() {
                                 <param.icon className={`${param.size}`} />
                             </div>
                             <div className=''>
-                                <span className='text-2xl font-semibold text-textColor1'>{param.value} {param.unit}</span>
+                                <span className='text-2xl font-semibold text-textColor1'>
+                                    {param.value} {param.unit}
+                                </span>
                                 <p className='mt-2 text-second'>{param.name}</p>
                             </div>
                         </div>
@@ -168,35 +217,40 @@ function Dashboard() {
                 </div>
                 <div className='ml-auto flex gap-4'>
                     <IoFilter className='text-3xl' />
-                    <select className='h-fit cursor-pointer rounded-lg px-4 py-1 shadow outline-none'>
-                        <option value='volvo'>Khu bí ngô</option>
-                        <option value='saab'>Khu thanh long</option>
-                        <option value='opel'>Khu khoai lang</option>
-                        <option value='audi'>Khu sà lách</option>
+                    <select
+                        onChange={handleChangeChartDataType}
+                        className='h-fit cursor-pointer rounded-lg px-4 py-1 shadow outline-none'
+                    >
+                        <option value='avgLight'>Ánh sáng</option>
+                        <option value='avgTemp'>Nhiệt độ</option>
+                        <option value='avgHumidity'>Độ ẩm đất</option>
+                        <option value='avgSoilMoisture'>Độ ẩm không khí</option>
                     </select>
                 </div>
             </div>
             <div className='h-[400px] overflow-x-auto pt-12'>
                 {tab == 'chart' && (
                     <ResponsiveContainer width='100%' height='100%'>
-                        <BarChart
-                            width={900}
+                        <LineChart
+                            width={500}
                             height={300}
-                            data={data}
-                            margin={{
-                                top: 5,
-                                right: 0,
-                                left: 0,
-                                bottom: 5,
-                            }}
+                            data={
+                                {
+                                    avgLight,
+                                    avgTemp,
+                                    avgHumidity,
+                                    avgSoilMoisture,
+                                }[typeDateChart] || chartDataOrigin
+                            }
                         >
-                            <CartesianGrid strokeDasharray='5 3' />
-                            <XAxis dataKey='name' scrollable />
-                            <YAxis scrollable />
+                            <CartesianGrid strokeDasharray='3 3' />
+                            <XAxis dataKey='name' />
+                            <YAxis />
                             <Tooltip />
                             <Legend />
-                            <Bar dataKey='uv' fill='#82ca9d' activeBar={<Rectangle fill='gold' stroke='purple' />} />
-                        </BarChart>
+                            <Area type='monotone' dataKey='data' fill='#82ca9d' stroke='none' fillOpacity={0.3} />
+                            <Line type='monotone' dataKey='data' stroke='#82ca9d' strokeWidth={3} />
+                        </LineChart>
                     </ResponsiveContainer>
                 )}
                 {tab == 'infor' && (
