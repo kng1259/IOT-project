@@ -9,6 +9,17 @@ pipeline{
             }
         }
 
+        stage('Build'){
+            steps{
+                dir('frontend'){
+                    script{
+                        sh 'npm install'
+                        sh 'vite build'
+                    }
+                }
+            }
+        }
+
         // Assuming swa npm package is installed globally
         stage('Deploy'){
             steps{

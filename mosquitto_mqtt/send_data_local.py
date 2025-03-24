@@ -11,7 +11,7 @@ KEEPALIVE = 60
 
 # Sample JSON payload
 sample_payload = {
-    "deviceId": "0ec404ea-c70a-44e0-83d1-b8a120c61190",
+    "deviceId": "863225a7-644e-4901-ba91-dfb5dd8bf4b1",
     "timestamp": datetime.now().isoformat(),
     "light": 500,
     "temperature": 25.0,
