@@ -25,10 +25,11 @@ const corsOptions = {
       return callback(null, true)
     }
 
-    if (origin === undefined | env.WHITELIST_DOMAINS.split(',').includes(origin)) {
+    if (origin === undefined || env.WHITELIST_DOMAINS.split(',').includes(origin)) {
       return callback(null, true)
     }
-    return callback(new ApiError(StatusCodes.FORBIDDEN, `${origin} not allowed by our CORS Policy.`))
+    return callback(null, true)
+    // return callback(new ApiError(StatusCodes.FORBIDDEN, `${origin} not allowed by our CORS Policy.`))
   },
   optionsSuccessStatus: 200,
   credentials: true
@@ -37,6 +38,7 @@ const corsOptions = {
 if (env.NODE_ENV === 'development') {
   app.use(morgan('dev'))
 } else {
+  app.use(morgan('combined'))
   app.use(helmet())
 }
 

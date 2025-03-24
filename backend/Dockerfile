@@ -1,9 +1,9 @@
 # Stage 1: Generate prisma client and install deps
 FROM node:22-alpine AS prisma
 WORKDIR /build
-COPY prisma/schema.prisma .
 COPY package.json package-lock.json ./
 RUN npm ci --omit=dev
+COPY prisma/schema.prisma .
 RUN npx prisma generate --generator client
 
 # Stage 2: Run the app
