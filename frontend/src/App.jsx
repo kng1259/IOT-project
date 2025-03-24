@@ -8,7 +8,6 @@ import ConfigPage from './pages/ConfigPage/ConfigPage'
 import ReportPage from './pages/ReportPage/ReportPage'
 import { useSelector } from 'react-redux'
 import { selectCurrentUser } from './redux/user/userSlice'
-import ChooseFarmPage from '~/pages/ChooseFarmPage/ChooseFarmPage'
 
 const PrivateRoute = ({ user }) => {
     if (!user) return <Navigate to={'/login'} replace={true} />
@@ -28,7 +27,6 @@ function App() {
 
             <Route element={<PrivateRoute user={currentUser} />} >
                 <Route element={<PrimaryLayout />}>
-                    <Route path='/choose-farm' element={<ChooseFarmPage />} />
                     <Route path='/dashboard' element={<Dashboard />} />
                     <Route path='/config' element={<ConfigPage />} />
                     <Route path='/report' element={<ReportPage />} />
