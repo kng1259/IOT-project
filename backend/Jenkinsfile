@@ -23,12 +23,12 @@ pipeline{
             steps{
                 dir('backend'){
                     script{
-                        dockerImage = docker.build("${DOCKERHUB_USERNAME}/iot-backend:${IMAGE_TAG}")
+                        docker.build("${DOCKERHUB_USERNAME}/iot-backend:${IMAGE_TAG}").push()
                     }
                 }
                 dir('backend/prisma'){
                     script{
-                        dockerInitImage = docker.build("${DOCKERHUB_USERNAME}/iot-backend-init:${IMAGE_TAG}", "-f Dockerfile.init .")
+                         docker.build("${DOCKERHUB_USERNAME}/iot-backend-init:${IMAGE_TAG}", "-f Dockerfile.init .").push()
                     }
                 }
             }
@@ -39,8 +39,8 @@ pipeline{
                 script{
                     docker.withRegistry("https://${DOCKER_REGISTRY}", DOCKER_CREDENTIALS_ID){ 
                         try{
-                            dockerImage.push()
-                            dockerInitImage.push()
+                            // dockerImage.push()
+                            // dockerInitImage.push()
                         }catch(Exception e){
                             error "Failed to push to registry: ${e}"
                         }
