@@ -19,7 +19,7 @@ pipeline{
 
         // Using docker plugin
         // Assuming docker and az cli is installed on the agent
-        stage('Build'){
+        stage('Build and push to registry'){
             steps{
                 dir('backend'){
                     script{
@@ -29,21 +29,6 @@ pipeline{
                 dir('backend/prisma'){
                     script{
                          docker.build("${DOCKERHUB_USERNAME}/iot-backend-init:${IMAGE_TAG}", "-f Dockerfile.init .").push()
-                    }
-                }
-            }
-        }
-
-        stage('Push to Registry'){
-            steps{
-                script{
-                    docker.withRegistry("https://${DOCKER_REGISTRY}", DOCKER_CREDENTIALS_ID){ 
-                        try{
-                            // dockerImage.push()
-                            // dockerInitImage.push()
-                        }catch(Exception e){
-                            error "Failed to push to registry: ${e}"
-                        }
                     }
                 }
             }
