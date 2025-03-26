@@ -32,19 +32,24 @@ def on_connect(client, userdata, flags, rc):
     """Callback triggered when the MQTT client connects to the local server."""
     if rc == 0:
         client.subscribe("V1")  # Subscribe to the desired topic
-        print("Subscribed to local sensor/data")
+        client.subscribe("V2")
+        client.subscribe("V3")
+        client.subscribe("V4")
+        client.subscribe("V5")
+        print("Connected")
     else:
         print(f"Failed to connect to local MQTT server, return code {rc}")
 
 
 def on_message(client, userdata, msg):
     """Callback triggered when a message is received from the local MQTT server."""
-    print(f"Received message on topic {msg.topic}")
-    msg = Message(msg.payload)  # Create a message with the MQTT payload
+    iot_msg = Message(msg.payload)  # Create a message with the MQTT payload
     try:
         # Send the message to Azure IoT Hub
-        device_client.send_message(msg)
-        print("Message sent to IoT Hub")
+        # device_client.send_message(iot_msg)
+        print(
+            f"Received from topic {msg.topic} message {msg.payload} at {time.localtime()}")
+        # print("Message sent to IoT Hub")
     except Exception as e:
         print(f"Failed to send message to IoT Hub: {e}")
 
@@ -64,6 +69,10 @@ registration_id = environ["REGISTRATION_ID"]
 
 # The device's registration ID (calculated and sent to device beforehand)
 device_symmetric_key = environ["DEVICE_SYMMETRIC_KEY"]
+
+# MQTT host
+mqtt_host = environ.get("MQTT_HOST", "localhost")
+print(f"MQTT host: {mqtt_host}")
 
 # Check if the device is already registered
 try:
@@ -95,7 +104,7 @@ mqtt_client.on_connect = on_connect
 mqtt_client.on_message = on_message
 
 # Connect to the local MQTT server
-mqtt_client.connect("localhost", 1883, 60)
+mqtt_client.connect(mqtt_host, 1883, 60)
 
 # Start the MQTT client loop to listen for messages
 try:
