@@ -5,7 +5,6 @@ import './index.css'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
-
 import { Provider } from 'react-redux'
 import { store } from './redux/store.js'
 
@@ -19,13 +18,12 @@ import { injectStore } from './utils/axiosConfig.js'
 injectStore(store)
 
 createRoot(document.getElementById('root')).render(
-  <Provider store={store}>
-    <PersistGate persistor={persistor}>
-      <BrowserRouter basename='/'>
-        <App />
-        <ToastContainer position='bottom-left' theme='colored' />
-      </BrowserRouter>
-    </PersistGate>
-  </Provider>
-
+    <Provider store={store}>
+        <PersistGate persistor={persistor}>
+            <BrowserRouter basename='/'>
+                <App />
+                <ToastContainer position='bottom-left' theme='colored' autoClose={2000} />
+            </BrowserRouter>
+        </PersistGate>
+    </Provider>,
 )
