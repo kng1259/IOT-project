@@ -44,8 +44,8 @@ def on_message(client, userdata, msg):
     try:
         # Send the message to Azure IoT Hub
         payload = {
-            "deviceId": data[0],
-            "areaId": area_id,
+            "areaId": data[0],
+            "farmId": farm_id,
             "timestamp": datetime.now().isoformat(),
             "temperature": data[1],
             "humidity": data[2],
@@ -65,7 +65,8 @@ def method_request_handler(method_request: MethodRequest):
     print(f"Payload: {method_request.payload}")
 
     if method_request.name == "waterPlants":
-        print("Called waterPlants method")
+        area_id = method_request.payload["areaId"]
+        print("Called waterPlants method on area", area_id)
         mqtt_client.publish("V11", "1")
         payload = {"result": "Watering plants"}
         status = 200
@@ -86,7 +87,7 @@ if __name__ == '__main__':
     id_scope = environ["DPS_ID_SCOPE"]
 
     # Device registration ID (preassigned)
-    area_id = environ["AREA_ID"]
+    farm_id = environ["FARM_ID"]
 
     # The device's registration ID (calculated and sent to device beforehand)
     device_symmetric_key = environ["DEVICE_SYMMETRIC_KEY"]
@@ -97,9 +98,9 @@ if __name__ == '__main__':
 
     assigned_hub = environ.get("ASSIGNED_HUB", None)
     if assigned_hub == None:
-        assigned_hub, device_id = provision_device(provisioning_host, id_scope, area_id, device_symmetric_key)
+        assigned_hub, device_id = provision_device(provisioning_host, id_scope, farm_id, device_symmetric_key)
         set_key(".env", "ASSIGNED_HUB", assigned_hub)
-        if device_id != area_id:
+        if device_id != farm_id:
             raise "WTF"
     else:
         print("Device already provisioned.")
@@ -108,7 +109,7 @@ if __name__ == '__main__':
     device_client = IoTHubDeviceClient.create_from_symmetric_key(
         symmetric_key=device_symmetric_key,
         hostname=assigned_hub,
-        device_id=area_id,
+        device_id=farm_id,
     )
 
     # --- Connect to the IoT Hub ---

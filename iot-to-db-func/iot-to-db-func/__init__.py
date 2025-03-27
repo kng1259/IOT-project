@@ -19,8 +19,8 @@ def main(event: func.EventHubEvent):
         data = json.loads(body)
 
         # Extract fields from the JSON message
-        device_id = data.get('deviceId')
         area_id = data.get('areaId')
+        farm_id = data.get('farmId')
         timestamp = data.get('timestamp')
         light = data.get('light')
         temperature = data.get('temperature')
@@ -28,7 +28,7 @@ def main(event: func.EventHubEvent):
         soilMoisture = data.get('soilMoisture')
 
         # Check for missing fields
-        if not all([device_id, area_id, timestamp, light, temperature, humidity]):
+        if not all([area_id, farm_id, timestamp, light, temperature, humidity]):
             logging.warning("Missing required fields in the message")
             return
 
@@ -43,7 +43,7 @@ def main(event: func.EventHubEvent):
         cur.execute(
             """INSERT INTO "Record" (id, timestamp, light, temperature, humidity, "soilMoisture", "areaId") VALUES (%s, %s, %s, %s, %s, %s, %s)""",
             (uuid4(), timestamp, light, temperature,
-             humidity, soilMoisture, device_id)
+             humidity, soilMoisture, area_id)
         )
 
         # Commit the transaction and clean up
