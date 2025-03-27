@@ -1,10 +1,10 @@
 [
     {
-      "id": "dev1",
+      "id": "aadb9c56-5a39-4aeb-9365-c4f1978185c8",
       "action": "Watering",
       "timestamp": "2025-03-15T08:00:00.000Z",
       "deviceType": "Sprinkler",
       "note": "Tưới nước sáng sớm",
-      "areaId": "area1"
+      "areaId": 1
     }
 ]
