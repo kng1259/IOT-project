@@ -10,6 +10,22 @@ const syncDeviceLogs = async (areaId) => {
     return logs; 
 };
   
+const createDeviceLog = async ({ action, deviceType, areaId, note }) => {
+    if (!action || !deviceType || !areaId) {
+        throw new ApiError(StatusCodes.BAD_REQUEST, 'Thiếu dữ liệu bắt buộc');
+    }
+    const logs = await deviceRepo.createDeviceLog({
+      action,
+      deviceType,
+      areaId,
+      note,
+    });
+    
+   
+    return logs;
+};
+  
 export const deviceService = {
-    syncDeviceLogs
+    syncDeviceLogs,
+    createDeviceLog,
 };

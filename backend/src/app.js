@@ -55,6 +55,8 @@ app.use(
 
 swagger(app)
 app.use('/api/v1', router)
+
+
 app.all('*', (req, res, next) => {
   // disable stack trace for stupid error
   const err = new ApiError(404, 'Not Found', true, '')

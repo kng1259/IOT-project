@@ -25,8 +25,44 @@ const getAverageRecordsForLast8Hours = async (areaId) => {
   `;
 };
 
+const createSensorRecord = async ({ sensorData, areaId, note }) => {
+  const area = await prisma.area.findUnique({
+    where: { id: areaId },
+  });
+
+  if (!area) {
+    throw new Error(`Khu vực area với id ${areaId} không tồn tại`);
+  }
+
+  const { temperature, humidity, light, soilMoisture } = sensorData;
+
+  const record = await prisma.record.create({
+    data: {
+      ...sensorData,
+      areaId,
+      timestamp: new Date(),
+    },
+  });
+
+  // Có cần log hoạt động sensor không nhỉ?
+  await prisma.deviceLog.create({
+    data: {
+      action: 'collect_sensor',
+      deviceType: 'sensor',
+      areaId,
+      timestamp: new Date(),
+      note:
+        note ||
+        `Sensor values: Temp ${temperature}°C, Humid ${humidity}%, Light ${light}lux, Soil ${soilMoisture}%`,
+    },
+  });
+
+  return record;
+};
+
 
 export const recordRepo = {
   findLatestRecordByAreaId,
-  getAverageRecordsForLast8Hours
+  getAverageRecordsForLast8Hours,
+  createSensorRecord
 };

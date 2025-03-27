@@ -7,5 +7,6 @@ const router = express.Router();
 router.route('/sync').get(asyncHandler(deviceController.syncDeviceLogs));
 //http://localhost:8080/api/v1/device-logs/sync?areaId=
 
+router.route('/create').post(asyncHandler(deviceController.createDeviceLogs));
 
 export const deviceRoute = router;

@@ -6,6 +6,7 @@ const createSchedule = async (areaId, scheduleData) => {
     if (!scheduleData) {
         throw new ApiError(StatusCodes.BAD_REQUEST, 'Dữ liệu lịch không hợp lệ');
     }
+    
     return await scheduleRepo.createSchedule(areaId, scheduleData);
 };
 
