@@ -99,7 +99,7 @@ function Dashboard() {
         setAvgSoilMoisture(soilMoisture)
     }
 
-    useEffect(() => {
+    const fetchLatestRecord = async (areaId) => {
         fetchLatestRecordOfAreaPI(areaId).then((data) => {
             if (!data) {
                 toast.error('Chưa có dữ liệu!')
@@ -112,6 +112,10 @@ function Dashboard() {
             newParameters[3].value = data.humidity.toFixed(2)
             setParameters(newParameters)
         })
+    }
+
+    useEffect(() => {
+        fetchLatestRecord(areaId)
     }, [areaId])
 
     const toggleTab = (e, value) => {
@@ -159,7 +163,15 @@ function Dashboard() {
 
             {/* buttons handle activities */}
             <div className='mt-8 flex gap-10'>
-                <button className='btn-primary'>Cập nhật</button>
+                <button
+                    className='btn-primary'
+                    onClick={() => {
+                        fetchLatestRecord(areaId)
+                        toast.success('Cập nhật thành công!')
+                    }}
+                >
+                    Cập nhật
+                </button>
                 <button className='btn-primary'>
                     <span>Bật </span>
                     <span> / </span>
