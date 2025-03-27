@@ -46,7 +46,7 @@ model Farm {
 }
 
 model Area {
-  id           String        @id @default(uuid())
+  id           Int           @id @default(autoincrement())
   name         String
   size         Float
   farmId       String
@@ -66,7 +66,7 @@ model Crop {
 }
 
 model PlantedCrop {
-  areaId   String
+  areaId   Int
   cropId   String
   quantity Int
 
@@ -82,7 +82,7 @@ model DeviceLog {
   timestamp  DateTime
   deviceType String
   note       String?
-  areaId     String
+  areaId     Int
   area       Area     @relation(fields: [areaId], references: [id])
 }
 
@@ -93,17 +93,17 @@ model Record {
   temperature  Float
   humidity     Float
   soilMoisture Float
-  areaId       String
+  areaId       Int
   area         Area     @relation(fields: [areaId], references: [id])
 }
 
 model Schedule {
   id        String   @id @default(uuid())
-  startTime DateTime
-  endTime   DateTime
-  frequency String
+  startTime String    // Giờ bắt đầu, lưu dưới dạng "HH:mm"
+  endTime   String    // Giờ kết thúc, lưu dưới dạng "HH:mm"
+  frequency String[]  // Danh sách ngày trong tuần, e.g., ["Monday", "Wednesday"]
   activity  String
   updatedAt DateTime @default(now()) @updatedAt
-  areaId    String
+  areaId    Int
   area      Area     @relation(fields: [areaId], references: [id])
 }
