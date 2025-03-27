@@ -1,4 +1,5 @@
 import fs from 'fs';
+import { v4 as uuidv4 } from 'uuid';
 
 /**
  * Write an array of objects to a JSON file.
@@ -30,22 +31,22 @@ function generateData(amount) {
     for (var i = 1; i <= amount; i++) {
         const recordTimestamp = new Date(timestamp.getTime() + i * 60000 * 5);
         data.push({
-            id: `rec${i}`,
+            id: uuidv4(),
             timestamp: recordTimestamp,
             light: getRandomInRange() * 500,
             temperature: getRandomInRange() * 25,
             humidity: getRandomInRange() * 60,
             soilMoisture: getRandomInRange() * 40,
-            areaId: 'area1',
+            areaId: 1,
         });
         data.push({
-            id: `rec${i}`,
+            id: uuidv4(),
             timestamp: recordTimestamp,
             light: getRandomInRange() * 500,
             temperature: getRandomInRange() * 25,
             humidity: getRandomInRange() * 60,
             soilMoisture: getRandomInRange() * 40,
-            areaId: 'area2',
+            areaId: 2,
         });
     }
     return data;
