@@ -85,12 +85,12 @@ function Header() {
         <header className="flex items-center justify-between">
             <div className="flex gap-4">
                 <IoFilter className="text-3xl" />
-                <select className="cursor-pointer rounded-lg px-4 py-1 shadow outline-none" onChange={handleChangeFarmId}>
+                <select className="cursor-pointer rounded-lg px-4 py-1 shadow outline-none" onChange={handleChangeFarmId} value={activeFarmId}>
                     <option value=""> -- Chọn nông trại -- </option>
-                    {farms.map(farm => <option key={farm.id} value={farm.id} selected={farm.id === activeFarmId}>{farm.name}</option>)}
+                    {farms.map(farm => <option key={farm.id} value={farm.id}>{farm.name}</option>)}
                 </select>
-                <select className="cursor-pointer rounded-lg px-4 py-1 shadow outline-none" onChange={handleChangeAreaId}>
-                    {areas.map(area => <option key={area.id} value={area.id} selected={area.id === activeAreaId}>{area.name}</option>)}
+                <select className="cursor-pointer rounded-lg px-4 py-1 shadow outline-none" onChange={handleChangeAreaId} value={activeAreaId}>
+                    {areas.map(area => <option key={area.id} value={area.id}>{area.name}</option>)}
                 </select>
             </div>
 
