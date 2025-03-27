@@ -2,10 +2,25 @@ pipeline{
     agent{
         label "physical"
     }
+    environment{
+        API_ROOT
+    }
     stages{
         stage('Checkout'){
             steps{
                 checkout scm
+            }
+        }
+
+        stage('Build'){
+            steps{
+                dir('frontend'){
+                    script{
+                        sh 'npm install'
+                        sh 'echo "VITE_API_ROOT=${API_ROOT} > .env.production'
+                        sh 'npx vite build'
+                    }
+                }
             }
         }
 

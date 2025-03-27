@@ -53,5 +53,6 @@ function generateData(amount) {
 }
 
 export function seedRecordData() {
-    writeDataToJsonFile(generateData(96), 'prisma/data/Record.json');
+    writeDataToJsonFile(generateData(96), './data/Record.json');
+    console.log('Record data seeded');
 }

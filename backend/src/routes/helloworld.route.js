@@ -1,9 +1,9 @@
-import * as helloworldCtrl from '../controllers/helloworld.ctrl.js'
-import express from 'express'
-import asyncHandler from '../helpers/asyncHandler.js'
-import { authMiddleware } from '../middlewares/authMiddleware.js'
+import * as helloworldCtrl from '../controllers/helloworld.ctrl.js';
+import express from 'express';
+import asyncHandler from '../helpers/asyncHandler.js';
+import { authMiddleware } from '../middlewares/authMiddleware.js';
 
-const router = express.Router()
+const router = express.Router();
 
 /**
  * @swagger
@@ -30,6 +30,7 @@ const router = express.Router()
  *                   type: string
  *                   example: Hello World
  */
-router.get('/', authMiddleware.isAuthorized, asyncHandler(helloworldCtrl.helloworld))
+router.get('/', authMiddleware.isAuthorized, asyncHandler(helloworldCtrl.helloworld));
+router.get('/watering/:farmId/:areaId', asyncHandler(helloworldCtrl.testFunction));
 
-export default router
+export default router;

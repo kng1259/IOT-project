@@ -14,7 +14,7 @@ pipeline{
             steps{
                 dir('iot-to-db-func'){
                     script{
-                        sh 'func azure functionapp publish iot-to-db-lola --build-native-deps'
+                        sh 'func azure functionapp publish iot-to-db-lola --build-native-deps --python'
                     }
                 }
             }

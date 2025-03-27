@@ -4,7 +4,8 @@ pipeline{
     }
 
     environment{
-        DOCKER_REGISTRY = "docker.io/kng1259"
+        DOCKER_REGISTRY = "docker.io"
+        DOCKERHUB_USERNAME = "kng1259"
         DOCKER_CREDENTIALS_ID = "dockerhub-credentials"
         IMAGE_TAG = "0.0.1"
     }
@@ -17,28 +18,26 @@ pipeline{
         }
 
         // Using docker plugin
-        stage('Build'){
+        // Assuming docker and az cli is installed on the agent
+        stage('Build and push to registry'){
             steps{
                 dir('backend'){
                     script{
-                        dockerImage = docker.build("${DOCKER_REGISTRY}/backend:${IMAGE_TAG}")
+                        docker.build("${DOCKERHUB_USERNAME}/iot-backend:${IMAGE_TAG}").push()
                     }
                 }
                 dir('backend/prisma'){
                     script{
-                        dockerInitImage = docker.build("${DOCKER_REGISTRY}/backend-init:${IMAGE_TAG}", "-f Dockerfile.init .")
+                         docker.build("${DOCKERHUB_USERNAME}/iot-backend-init:${IMAGE_TAG}", "-f Dockerfile.init .").push()
                     }
                 }
             }
         }
 
-        stage('Push to Registry'){
+        stage('Deploy'){
             steps{
                 script{
-                    docker.withRegistry("https://${DOCKER_REGISTRY}", DOCKER_CREDENTIAL_ID){ 
-                        dockerImage.push()
-                        dockerInitImage.push()
-                    }
+                    sh 'az containerapp update -n container-app-lola -g dev-rg --set image=${DOCKER_REGISTRY}/${DOCKERHUB_USERNAME}/iot-backend:${IMAGE_TAG}'
                 }
             }
         }

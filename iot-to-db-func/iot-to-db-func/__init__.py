@@ -19,7 +19,8 @@ def main(event: func.EventHubEvent):
         data = json.loads(body)
 
         # Extract fields from the JSON message
-        device_id = data.get('deviceId')
+        area_id = data.get('areaId')
+        farm_id = data.get('farmId')
         timestamp = data.get('timestamp')
         light = data.get('light')
         temperature = data.get('temperature')
@@ -27,16 +28,9 @@ def main(event: func.EventHubEvent):
         soilMoisture = data.get('soilMoisture')
 
         # Check for missing fields
-        if not all([device_id, timestamp, light, temperature, humidity, soilMoisture]):
+        if not all([area_id, farm_id, timestamp, light, temperature, humidity]):
             logging.warning("Missing required fields in the message")
             return
-
-        # enqueued_time = event.system_properties.get(b'iothub-enqueuedtime')
-        # if enqueued_time:
-        #     timestamp = datetime.datetime.fromisoformat(
-        #         enqueued_time.decode('utf-8').replace('Z', '+00:00')
-        #     )
-        # else:
 
         # Retrieve database connection parameters from environment variables
         database_url = os.environ.get('DATABASE_URL')
@@ -49,7 +43,7 @@ def main(event: func.EventHubEvent):
         cur.execute(
             """INSERT INTO "Record" (id, timestamp, light, temperature, humidity, "soilMoisture", "areaId") VALUES (%s, %s, %s, %s, %s, %s, %s)""",
             (uuid4(), timestamp, light, temperature,
-             humidity, soilMoisture, device_id)
+             humidity, soilMoisture, area_id)
         )
 
         # Commit the transaction and clean up
