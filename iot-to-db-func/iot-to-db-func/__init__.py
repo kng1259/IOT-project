@@ -27,7 +27,7 @@ def main(event: func.EventHubEvent):
         soilMoisture = data.get('soilMoisture')
 
         # Check for missing fields
-        if not all([device_id, timestamp, light, temperature, humidity, soilMoisture]):
+        if not all([device_id, timestamp, light, temperature, humidity]):
             logging.warning("Missing required fields in the message")
             return
 

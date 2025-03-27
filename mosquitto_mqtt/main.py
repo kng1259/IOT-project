@@ -31,11 +31,7 @@ def provision_device(provisioning_host, id_scope, registration_id, device_symmet
 def on_connect(client, userdata, flags, rc):
     """Callback triggered when the MQTT client connects to the local server."""
     if rc == 0:
-        client.subscribe("V1")  # Subscribe to the desired topic
-        client.subscribe("V2")
-        client.subscribe("V3")
-        client.subscribe("V4")
-        client.subscribe("V5")
+        client.subscribe("Me")
         print("Connected")
     else:
         print(f"Failed to connect to local MQTT server, return code {rc}")
@@ -44,12 +40,23 @@ def on_connect(client, userdata, flags, rc):
 def on_message(client, userdata, msg):
     """Callback triggered when a message is received from the local MQTT server."""
     iot_msg = Message(msg.payload)  # Create a message with the MQTT payload
+    data = [float(x) for x in msg.payload.decode("utf-8").split()]
     try:
+        print(f"Received from topic {msg.topic} message {msg.payload} at {datetime.now().isoformat()}")
+
         # Send the message to Azure IoT Hub
-        # device_client.send_message(iot_msg)
-        print(
-            f"Received from topic {msg.topic} message {msg.payload} at {time.localtime()}")
-        # print("Message sent to IoT Hub")
+        payload = {
+            "deviceId": registration_id,
+            "timestamp": datetime.now().isoformat(),
+            "light": data[2],
+            "temperature": data[0],
+            "humidity": data[1],
+            "soilMoisture": data[3]
+        }
+        # Convert the payload to a JSON string
+        message_json = json.dumps(payload)
+        print(message_json)
+        device_client.send_message(message_json)
     except Exception as e:
         print(f"Failed to send message to IoT Hub: {e}")
 
