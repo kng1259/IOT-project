@@ -31,7 +31,6 @@ def on_connect(client, userdata, flags, rc):
     """Callback triggered when the MQTT client connects to the local server."""
     if rc == 0:
         client.subscribe("sensor/data")
-        print("Connected")
     else:
         print(f"Failed to connect to local MQTT server, return code {rc}")
 
@@ -94,7 +93,6 @@ if __name__ == '__main__':
 
     # MQTT host
     mqtt_host = environ.get("MQTT_HOST", "localhost")
-    print(f"MQTT host: {mqtt_host}")
 
     assigned_hub = environ.get("ASSIGNED_HUB", None)
     if assigned_hub == None:
@@ -121,9 +119,10 @@ if __name__ == '__main__':
     mqtt_client = mqtt.Client()
     mqtt_client.on_connect = on_connect
     mqtt_client.on_message = on_message
+    print("Connected to local MQTT server")
 
     # Connect to the local MQTT server
-    mqtt_client.connect(mqtt_host, 1883, 120)
+    mqtt_client.connect(mqtt_host, 1883)
 
     # Start the MQTT client loop to listen for messages
     try:
