@@ -2,14 +2,14 @@ import { StatusCodes } from 'http-status-codes';
 import { recordService } from '../services/record.service.js';
 
 const getLatestRecordByArea = async (req, res) => {
-    const { areaId } = req.query;
+    const areaId = parseInt(req.query.areaId);
     const record = await recordService.getLatestRecordByArea(areaId);
     res.status(StatusCodes.OK).json(record);
 };
 
 const getChartData = async (req, res) => {
     try {
-        const { areaId } = req.query;
+        const areaId = parseInt(req.query.areaId);
 
         if (!areaId) {
             return res.status(StatusCodes.BAD_REQUEST).json({ error: 'areaId is required' });
