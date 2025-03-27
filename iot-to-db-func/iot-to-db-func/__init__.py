@@ -20,6 +20,7 @@ def main(event: func.EventHubEvent):
 
         # Extract fields from the JSON message
         device_id = data.get('deviceId')
+        area_id = data.get('areaId')
         timestamp = data.get('timestamp')
         light = data.get('light')
         temperature = data.get('temperature')
@@ -27,16 +28,9 @@ def main(event: func.EventHubEvent):
         soilMoisture = data.get('soilMoisture')
 
         # Check for missing fields
-        if not all([device_id, timestamp, light, temperature, humidity]):
+        if not all([device_id, area_id, timestamp, light, temperature, humidity]):
             logging.warning("Missing required fields in the message")
             return
-
-        # enqueued_time = event.system_properties.get(b'iothub-enqueuedtime')
-        # if enqueued_time:
-        #     timestamp = datetime.datetime.fromisoformat(
-        #         enqueued_time.decode('utf-8').replace('Z', '+00:00')
-        #     )
-        # else:
 
         # Retrieve database connection parameters from environment variables
         database_url = os.environ.get('DATABASE_URL')
