@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { PrismaClient } from '@prisma/client'
 import { createRequire } from 'module'
 import { seedRecordData } from './records.js'

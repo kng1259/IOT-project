@@ -15,5 +15,5 @@ export default {
     tabWidth: 4,
     trailingComma: 'all',
     useTabs: false,
-    vueIndentScriptAndStyle: false,
-};
+    vueIndentScriptAndStyle: false
+}
