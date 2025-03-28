@@ -29,7 +29,7 @@ const main = async () => {
       `)
 
     await prisma.$executeRawUnsafe(`
-        CREATE TRIGGER record_update_trigger
+        CREATE OR REPLACE TRIGGER record_update_trigger
         AFTER INSERT OR UPDATE OR DELETE ON "Record"
         FOR EACH ROW
         EXECUTE FUNCTION notify_record_update();

@@ -82,13 +82,13 @@ io.on('connection', (socket) => {
 
     socket.on('FE_DASHBOARD_FETCH_STATISTICS', async (areaId) => {
         currentSocket1 = socket
-        currentAreaId = areaId
+        currentAreaId = parseInt(areaId)
         fetchStatisticsSocket(socket, currentAreaId)
     })
 
     socket.on('FE_DASHBOARD_FETCH_CHART_DATA', async (areaId) => {
         currentSocket2 = socket
-        currentAreaId = areaId
+        currentAreaId = parseInt(areaId)
         fetchChartDataSocket(socket, currentAreaId)
     })
 
