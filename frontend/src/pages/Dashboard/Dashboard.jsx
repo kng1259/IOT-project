@@ -100,23 +100,25 @@ function Dashboard() {
         setAvgSoilMoisture(soilMoisture)
     }
 
+    const updateParameters = (data) => {
+        setParameters(prevParameters => {
+            const newParameters = cloneDeep(prevParameters)
+            newParameters[0].value = data?.temperature?.toFixed(2) || 0
+            newParameters[1].value = data?.light?.toFixed(2) || 0
+            newParameters[2].value = data?.soilMoisture?.toFixed(2) || 0
+            newParameters[3].value = data?.humidity?.toFixed(2) || 0
+            return newParameters
+        })
+    }
+
+    const updateChartData = (data) => handleClassifyData(data.slice(0, 10).reverse())
+
     useEffect(() => {
-        const updateParameters = (data) => {
-            setParameters(prevParameters => {
-                const newParameters = cloneDeep(prevParameters)
-                newParameters[0].value = data?.temperature?.toFixed(2) || 0
-                newParameters[1].value = data?.light?.toFixed(2) || 0
-                newParameters[2].value = data?.soilMoisture?.toFixed(2) || 0
-                newParameters[3].value = data?.humidity?.toFixed(2) || 0
-                return newParameters
-            })
-        }
-
-        const updateChartData = (data) => handleClassifyData(data.slice(0, 10).reverse())
-
         socketIoInstance.emit('FE_DASHBOARD_FETCH_STATISTICS', areaId)
         socketIoInstance.emit('FE_DASHBOARD_FETCH_CHART_DATA', areaId)
+    }, [areaId])
 
+    useEffect(() => {
         socketIoInstance.on('BE_DASHBOARD_FETCH_STATISTICS', updateParameters)
         socketIoInstance.on('BE_DASHBOARD_FETCH_CHART_DATA', updateChartData)
 
@@ -124,7 +126,7 @@ function Dashboard() {
             socketIoInstance.off('BE_DASHBOARD_FETCH_STATISTICS', updateParameters)
             socketIoInstance.off('BE_DASHBOARD_FETCH_CHART_DATA', updateChartData)
         }
-    }, [areaId])
+    }, [])
 
     const toggleTab = (e, value) => {
         document.querySelectorAll('.tab').forEach((tab) => {
