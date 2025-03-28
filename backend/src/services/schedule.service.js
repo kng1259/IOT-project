@@ -10,7 +10,6 @@ const createSchedule = async (areaId, scheduleData) => {
 }
 
 const getSchedules = async (areaId) => {
-
     return await scheduleRepo.getSchedules(areaId)
 }
 
