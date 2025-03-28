@@ -5,10 +5,10 @@ import { env } from './src/helpers/environment.js'
 const PORT = env.PORT || 8080
 
 const server = app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Listening on port ${PORT}`)
-  console.log('Document available at:', `http://localhost:${PORT}/api-docs`)
+    console.log(`Listening on port ${PORT}`)
+    console.log('Document available at:', `http://localhost:${PORT}/api-docs`)
 })
 
 process.on('SIGINT', () => {
-  server.close(() => console.log('Exit server'))
+    server.close(() => console.log('Exit server'))
 })

@@ -1,8 +1,8 @@
-import express from 'express';
-import asyncHandler from '../helpers/asyncHandler.js';
-import { recordController } from '../controllers/record.controller.js';
+import express from 'express'
+import asyncHandler from '../helpers/asyncHandler.js'
+import { recordController } from '../controllers/record.controller.js'
 
-const router = express.Router();
+const router = express.Router()
 
 /**
  * @swagger
@@ -50,7 +50,7 @@ const router = express.Router();
  *       500:
  *         description: Server error
  */
-router.get('/latest', asyncHandler(recordController.getLatestRecordByArea));
+router.get('/latest', asyncHandler(recordController.getLatestRecordByArea))
 
 /**
  * @swagger
@@ -91,6 +91,6 @@ router.get('/latest', asyncHandler(recordController.getLatestRecordByArea));
  *       500:
  *         description: Server error
  */
-router.get('/chart-data', asyncHandler(recordController.getChartData));
+router.get('/chart-data', asyncHandler(recordController.getChartData))
 
-export const recordRoute = router;
+export const recordRoute = router

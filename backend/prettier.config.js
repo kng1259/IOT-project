@@ -10,10 +10,10 @@ export default {
     proseWrap: 'preserve',
     quoteProps: 'as-needed',
     requirePragma: false,
-    semi: true,
+    semi: false,
     singleQuote: true,
     tabWidth: 4,
-    trailingComma: 'all',
+    trailingComma: 'none',
     useTabs: false,
-    vueIndentScriptAndStyle: false,
-};
+    vueIndentScriptAndStyle: false
+}

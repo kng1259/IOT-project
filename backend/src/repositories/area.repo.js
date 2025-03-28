@@ -1,11 +1,11 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@prisma/client'
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient()
 
 const findAreasByFarmId = async (farmId) => {
-  return await prisma.Area.findMany({ where: { farmId } });
-};
+    return await prisma.Area.findMany({ where: { farmId } })
+}
 
 export const areaRepo = {
-  findAreasByFarmId
-};
+    findAreasByFarmId
+}

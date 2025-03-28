@@ -1,5 +1,6 @@
-import fs from 'fs';
-import { v4 as uuidv4 } from 'uuid';
+/* eslint-disable no-console */
+import fs from 'fs'
+import { v4 as uuidv4 } from 'uuid'
 
 /**
  * Write an array of objects to a JSON file.
@@ -10,26 +11,26 @@ import { v4 as uuidv4 } from 'uuid';
 function writeDataToJsonFile(data, outputPath) {
     try {
         // Convert the data to a formatted JSON string
-        const jsonData = JSON.stringify(data, null, 2);
+        const jsonData = JSON.stringify(data, null, 2)
 
         // Write to file
-        fs.writeFileSync(outputPath, jsonData);
+        fs.writeFileSync(outputPath, jsonData)
 
-        console.log(`Data successfully written to ${outputPath}`);
+        console.log(`Data successfully written to ${outputPath}`)
     } catch (error) {
-        console.error('Error writing to JSON file:', error);
+        console.error('Error writing to JSON file:', error)
     }
 }
 
 function getRandomInRange() {
-    return 0.7 + Math.random() * 0.6;
+    return 0.7 + Math.random() * 0.6
 }
 
 function generateData(amount) {
-    let data = [];
-    const timestamp = new Date(Date.now() - amount * 60000 * 5);
+    let data = []
+    const timestamp = new Date(Date.now() - amount * 60000 * 5)
     for (var i = 1; i <= amount; i++) {
-        const recordTimestamp = new Date(timestamp.getTime() + i * 60000 * 5);
+        const recordTimestamp = new Date(timestamp.getTime() + i * 60000 * 5)
         data.push({
             id: uuidv4(),
             timestamp: recordTimestamp,
@@ -37,8 +38,8 @@ function generateData(amount) {
             temperature: getRandomInRange() * 25,
             humidity: getRandomInRange() * 60,
             soilMoisture: getRandomInRange() * 40,
-            areaId: 1,
-        });
+            areaId: 1
+        })
         data.push({
             id: uuidv4(),
             timestamp: recordTimestamp,
@@ -46,13 +47,13 @@ function generateData(amount) {
             temperature: getRandomInRange() * 25,
             humidity: getRandomInRange() * 60,
             soilMoisture: getRandomInRange() * 40,
-            areaId: 2,
-        });
+            areaId: 2
+        })
     }
-    return data;
+    return data
 }
 
 export function seedRecordData() {
-    writeDataToJsonFile(generateData(96), './data/Record.json');
-    console.log('Record data seeded');
+    writeDataToJsonFile(generateData(96), './prisma/data/Record.json')
+    console.log('Record data seeded')
 }
