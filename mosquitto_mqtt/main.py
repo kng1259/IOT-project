@@ -5,6 +5,8 @@ from os import environ
 import json
 from datetime import datetime
 
+areas = [1, 2]
+
 
 def provision_device(provisioning_host, id_scope, registration_id, device_symmetric_key):
     # --- Create the Provisioning Device Client ---
@@ -30,7 +32,7 @@ def provision_device(provisioning_host, id_scope, registration_id, device_symmet
 def on_connect(client, userdata, flags, rc):
     """Callback triggered when the MQTT client connects to the local server."""
     if rc == 0:
-        client.subscribe("sensor/data")
+        [client.subscribe(f"{i}/sensorData") for i in areas]
     else:
         print(f"Failed to connect to local MQTT server, return code {rc}")
 
@@ -62,13 +64,22 @@ def on_message(client, userdata, msg):
 def method_request_handler(method_request: MethodRequest):
     print(f"\nDirect method '{method_request.name}' received.")
     print(f"Payload: {method_request.payload}")
+    area_id = method_request.payload["areaId"]
+    payload = {}
+    status = 200
+    print(f"Called {method_request.name} method on area {area_id}")
 
-    if method_request.name == "waterPlants":
-        area_id = method_request.payload["areaId"]
-        print("Called waterPlants method on area", area_id)
-        mqtt_client.publish("V11", "1")
-        payload = {"result": "Watering plants"}
-        status = 200
+    match method_request.name:
+        case "startWatering":
+            mqtt_client.publish(f"{area_id}/watering", "1")
+        case "stopWatering":
+            mqtt_client.publish(f"{area_id}/watering", "0")
+        case "startLighting":
+            mqtt_client.publish(f"{area_id}/lighting", "1")
+        case "stopLighting":
+            mqtt_client.publish(f"{area_id}/lighting", "0")
+        case "fetchLatestData":
+            mqtt_client.publish(f"{area_id}/latestData", "1")
 
     method_response = MethodResponse.create_from_method_request(method_request, status, payload)
     device_client.send_method_response(method_response)
