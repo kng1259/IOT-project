@@ -39,7 +39,6 @@ export async function loadSchedules() {
     if (schedules.length === 0) return
 
     schedules.forEach((sch) => {
-        console.log(sch)
         const jobKey = sch.id
         // bring farmId out of nested area
         sch.farmId = sch.area.farmId
