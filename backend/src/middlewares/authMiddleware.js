@@ -12,10 +12,7 @@ const isAuthorized = async (req, res, next) => {
     }
 
     try {
-        const accessTokenDecoded = await JwtProvider.verifyToken(
-            clientAccessToken,
-            env.ACCESS_TOKEN_PRIVATE_KEY
-        )
+        const accessTokenDecoded = await JwtProvider.verifyToken(clientAccessToken, env.ACCESS_TOKEN_PRIVATE_KEY)
         req.jwtDecoded = accessTokenDecoded
         next()
     } catch (error) {

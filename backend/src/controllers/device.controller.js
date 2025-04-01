@@ -7,6 +7,23 @@ const syncDeviceLogs = async (req, res) => {
     res.status(StatusCodes.OK).json(logs)
 }
 
+const controlDevice = async (req, res) => {
+    const areaId = parseInt(req.body.areaId); 
+    const { action, deviceType } = req.body;
+
+    if (!areaId || isNaN(areaId) || !action || !deviceType) {
+        return res.status(StatusCodes.BAD_REQUEST).json({ message: 'Thiếu thông tin cần thiết!' })
+    }
+
+    try {
+        const result = await deviceService.controlDevice(areaId, action, deviceType)
+        return res.status(StatusCodes.OK).json(result)
+    } catch (error) {
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: error.message })
+    }
+}
+
 export const deviceController = {
-    syncDeviceLogs
+    syncDeviceLogs,
+    controlDevice
 }

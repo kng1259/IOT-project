@@ -17,7 +17,7 @@ const getChartData = async (req, res) => {
 
         const data = await recordService.getChartData(areaId)
         res.status(StatusCodes.OK).json(data)
-    // eslint-disable-next-line no-unused-vars
+        // eslint-disable-next-line no-unused-vars
     } catch (error) {
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Internal Server Error' })
     }

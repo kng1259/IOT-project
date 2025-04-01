@@ -21,7 +21,6 @@ function convertDayToNumber(day) {
 }
 
 export async function loadSchedules() {
-    //console.log(new Date())
     console.log('Đang tải lại lịch trình...')
     // join with area to get farmId
     const schedules = await prisma.schedule.findMany({
@@ -38,11 +37,27 @@ export async function loadSchedules() {
 
     if (schedules.length === 0) return
 
+    //nếu xóa lịch->hủy job
+    const currentJobKeys = new Set(schedules.map(sch => sch.id)) // Tạo set các key job hiện tại
+    const jobsToCancel = []
+
+    // Kiểm tra xem các job hiện tại có lịch trình nào không còn trong cơ sở dữ liệu
+    activeJobs.forEach((jobs, jobKey) => {
+        if (!currentJobKeys.has(jobKey)) {
+            jobs.forEach(job => job.cancel())
+            jobsToCancel.push(jobKey)
+        }
+    })
+    jobsToCancel.forEach(jobKey => activeJobs.delete(jobKey))
+
+    lastUpdatedAt = new Date()
     schedules.forEach((sch) => {
         const jobKey = sch.id
         // bring farmId out of nested area
         sch.farmId = sch.area.farmId
-        const days = sch.frequency.map((day) => convertDayToNumber(day))
+        const days = sch.frequency.length > 0 
+            ? sch.frequency.map((day) => convertDayToNumber(day)) 
+            : [0, 1, 2, 3, 4, 5, 6] // Mặc định tưới hàng ngày nếu frequency rỗng
         const [startHour, startMinute] = sch.startTime.split(':').map(Number)
         const [endHour, endMinute] = sch.endTime.split(':').map(Number)
 
@@ -57,7 +72,11 @@ export async function loadSchedules() {
         startRule.tz = 'Asia/Ho_Chi_Minh'
         const startJob = schedule.scheduleJob(startRule, async () => {
             console.log(`Bắt đầu ${sch.activity} tại khu vực ${sch.areaId}`)
-            await callDeviceMethod(`START_${sch.activity}`, sch.farmId, sch.areaId)
+            try {
+                await callDeviceMethod(`START_${sch.activity}`, sch.farmId, sch.areaId)
+            } catch (error) {
+                console.error(`Lỗi khi gọi phương thức START_${sch.activity} tại khu vực ${sch.areaId}:`, error)
+            }
             await saveLog(sch, 'START')
         })
 
@@ -68,7 +87,11 @@ export async function loadSchedules() {
         endRule.tz = 'Asia/Ho_Chi_Minh'
         const endJob = schedule.scheduleJob(endRule, async () => {
             console.log(`Kết thúc ${sch.activity} tại khu vực ${sch.areaId}`)
-            await callDeviceMethod(`STOP_${sch.activity}`, sch.farmId, sch.areaId)
+            try {
+                await callDeviceMethod(`STOP_${sch.activity}`, sch.farmId, sch.areaId)
+            } catch (error) {
+                console.error(`Lỗi khi gọi phương thức STOP_${sch.activity} tại khu vực ${sch.areaId}:`, error)
+            }
             await saveLog(sch, 'STOP')
         })
         activeJobs.set(jobKey, [startJob, endJob])
@@ -76,7 +99,6 @@ export async function loadSchedules() {
 
     console.log('Lịch trình tự động đã cập nhật!')
     //lastUpdatedAt = new Date(moment().tz("Asia/Ho_Chi_Minh").format('YYYY-MM-DD HH:mm:ss'));
-    lastUpdatedAt = new Date()
 }
 
 async function saveLog(schedule, action) {
