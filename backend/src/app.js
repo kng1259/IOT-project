@@ -72,24 +72,24 @@ app.all('*', (req, res, next) => {
 })
 app.use(errorHandlingMiddleware)
 
-let currentSocket1 = null
-let currentSocket2 = null
-let currentAreaId = null
+const socketAreaMap = new Map()
 
 const server = http.createServer(app)
 const io = new Server(server, { cors: corsOptions })
 io.on('connection', (socket) => {
 
     socket.on('FE_DASHBOARD_FETCH_STATISTICS', async (areaId) => {
-        currentSocket1 = socket
-        currentAreaId = parseInt(areaId)
-        fetchStatisticsSocket(socket, currentAreaId)
+        socketAreaMap.set(socket.id, { socket, areaId: parseInt(areaId) })
+        fetchStatisticsSocket(socket, parseInt(areaId))
     })
 
     socket.on('FE_DASHBOARD_FETCH_CHART_DATA', async (areaId) => {
-        currentSocket2 = socket
-        currentAreaId = parseInt(areaId)
-        fetchChartDataSocket(socket, currentAreaId)
+        socketAreaMap.set(socket.id, { socket, areaId: parseInt(areaId) })
+        fetchChartDataSocket(socket, parseInt(areaId))
+    })
+
+    socket.on('disconnect', () => {
+        socketAreaMap.delete(socket.id)
     })
 
 })
@@ -101,8 +101,10 @@ const listenForDatabaseChanges = async () => {
 
     client.on('notification', async () => {
         try {
-            fetchStatisticsSocket(currentSocket1, currentAreaId)
-            fetchChartDataSocket(currentSocket2, currentAreaId)
+            for (const { socket, areaId } of socketAreaMap.values()) {
+                fetchStatisticsSocket(socket, areaId)
+                fetchChartDataSocket(socket, areaId)
+            }
         } catch (error) {
             console.error('Lỗi xử lý dữ liệu:', error)
         }
