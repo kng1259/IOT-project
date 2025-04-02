@@ -19,9 +19,11 @@ const options = {
                 }
             }
         },
-        security: [{
-            bearerAuth: []
-        }]
+        security: [
+            {
+                bearerAuth: []
+            }
+        ]
     },
     apis: ['./src/routes/*.js', './src/routes/**/*.js'],
     requestInterceptor: function (request) {

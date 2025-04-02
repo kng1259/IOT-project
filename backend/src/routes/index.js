@@ -14,7 +14,7 @@ router.use('/user', userRoute)
 router.use('/farms', farmRoute)
 router.use('/areas', areaRoute)
 router.use('/records', recordRoute)
-router.use('/device-logs', deviceRoute)
+router.use('/device', deviceRoute)
 router.use('/schedule', scheduleRoute)
 
 export default router

@@ -103,7 +103,6 @@ router.route('/register').post(asyncHandler(userValidation.register), asyncHandl
  */
 router.route('/refresh-token').get(asyncHandler(userController.refreshToken))
 
-
 /**
  * @swagger
  * /api/v1/user/logout:

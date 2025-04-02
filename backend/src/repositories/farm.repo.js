@@ -10,7 +10,6 @@ const findFarmById = async (farmId) => {
     return await prisma.Farm.findUnique({ where: { id: farmId } })
 }
 
-
 export const farmRepo = {
     findFarmsByUserId,
     findFarmById

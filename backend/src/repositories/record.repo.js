@@ -25,7 +25,6 @@ const getAverageRecordsForLast8Hours = async (areaId) => {
     `
 }
 
-
 export const recordRepo = {
     findLatestRecordByAreaId,
     getAverageRecordsForLast8Hours

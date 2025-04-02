@@ -34,19 +34,19 @@ function generateData(amount) {
         data.push({
             id: uuidv4(),
             timestamp: recordTimestamp,
-            light: getRandomInRange() * 500,
-            temperature: getRandomInRange() * 25,
-            humidity: getRandomInRange() * 60,
-            soilMoisture: getRandomInRange() * 40,
+            light: getRandomInRange() * 45,
+            temperature: getRandomInRange() * 27,
+            humidity: getRandomInRange() * 40,
+            soilMoisture: getRandomInRange() * 10,
             areaId: 1
         })
         data.push({
             id: uuidv4(),
             timestamp: recordTimestamp,
-            light: getRandomInRange() * 500,
-            temperature: getRandomInRange() * 25,
-            humidity: getRandomInRange() * 60,
-            soilMoisture: getRandomInRange() * 40,
+            light: getRandomInRange() * 65,
+            temperature: getRandomInRange() * 24,
+            humidity: getRandomInRange() * 50,
+            soilMoisture: getRandomInRange() * 30,
             areaId: 2
         })
     }
@@ -54,6 +54,6 @@ function generateData(amount) {
 }
 
 export function seedRecordData() {
-    writeDataToJsonFile(generateData(96), './prisma/data/Record.json')
+    writeDataToJsonFile(generateData(60), './prisma/data/Record.json')
     console.log('Record data seeded')
 }

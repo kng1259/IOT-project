@@ -20,14 +20,14 @@ const main = async () => {
     }
 
     await prisma.$executeRawUnsafe(`
-      CREATE OR REPLACE FUNCTION notify_record_update()
-      RETURNS TRIGGER AS $$
-      BEGIN
-      PERFORM pg_notify('record_changed', row_to_json(NEW)::text);
-      RETURN NEW;
-      END;
-      $$ LANGUAGE plpgsql;
-      `)
+        CREATE OR REPLACE FUNCTION notify_record_update()
+        RETURNS TRIGGER AS $$
+        BEGIN
+        PERFORM pg_notify('record_changed', row_to_json(NEW)::text);
+        RETURN NEW;
+        END;
+        $$ LANGUAGE plpgsql;
+        `)
 
     await prisma.$executeRawUnsafe(`
         CREATE OR REPLACE TRIGGER record_update_trigger

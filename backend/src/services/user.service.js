@@ -6,7 +6,6 @@ import { JwtProvider } from '../providers/JwtProvider.js'
 import { filterFieldsUser } from '../helpers/formatters.js'
 import { env } from '../helpers/environment.js'
 
-
 const login = async (reqBody) => {
     const existUser = await userRepo.findOneByEmail(reqBody.email)
 
@@ -19,17 +18,9 @@ const login = async (reqBody) => {
         email: existUser.email
     }
 
-    const accessToken = await JwtProvider.generateToken(
-        userInfo,
-        env.ACCESS_TOKEN_PRIVATE_KEY,
-        '1h'
-    )
+    const accessToken = await JwtProvider.generateToken(userInfo, env.ACCESS_TOKEN_PRIVATE_KEY, '1h')
 
-    const refreshToken = await JwtProvider.generateToken(
-        userInfo,
-        env.REFRESH_TOKEN_PRIVATE_KEY,
-        '14 days'
-    )
+    const refreshToken = await JwtProvider.generateToken(userInfo, env.REFRESH_TOKEN_PRIVATE_KEY, '14 days')
 
     return { ...filterFieldsUser(existUser), accessToken, refreshToken }
 }
@@ -50,21 +41,14 @@ const register = async (reqBody) => {
 }
 
 const refreshToken = async (clientRefreshToken) => {
-    const refreshTokenDecoded = await JwtProvider.verifyToken(
-        clientRefreshToken,
-        env.REFRESH_TOKEN_PRIVATE_KEY
-    )
+    const refreshTokenDecoded = await JwtProvider.verifyToken(clientRefreshToken, env.REFRESH_TOKEN_PRIVATE_KEY)
 
     const userInfo = {
         id: refreshTokenDecoded.id,
         email: refreshTokenDecoded.email
     }
 
-    const accessToken = await JwtProvider.generateToken(
-        userInfo,
-        env.ACCESS_TOKEN_PRIVATE_KEY,
-        '1h'
-    )
+    const accessToken = await JwtProvider.generateToken(userInfo, env.ACCESS_TOKEN_PRIVATE_KEY, '1h')
 
     return { accessToken }
 }

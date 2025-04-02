@@ -39,7 +39,7 @@ const corsOptions = {
             return callback(null, true)
         }
         return callback(null, true)
-    // return callback(new ApiError(StatusCodes.FORBIDDEN, `${origin} not allowed by our CORS Policy.`))
+        // return callback(new ApiError(StatusCodes.FORBIDDEN, `${origin} not allowed by our CORS Policy.`))
     },
     optionsSuccessStatus: 200,
     credentials: true
@@ -77,7 +77,6 @@ const socketAreaMap = new Map()
 const server = http.createServer(app)
 const io = new Server(server, { cors: corsOptions })
 io.on('connection', (socket) => {
-
     socket.on('FE_DASHBOARD_FETCH_STATISTICS', async (areaId) => {
         socketAreaMap.set(socket.id, { socket, areaId: parseInt(areaId) })
         fetchStatisticsSocket(socket, parseInt(areaId))
@@ -91,7 +90,6 @@ io.on('connection', (socket) => {
     socket.on('disconnect', () => {
         socketAreaMap.delete(socket.id)
     })
-
 })
 
 const listenForDatabaseChanges = async () => {
