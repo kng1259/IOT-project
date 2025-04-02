@@ -5,7 +5,10 @@ import { deviceController } from '../controllers/device.controller.js'
 const router = express.Router()
 
 router.route('/sync').get(asyncHandler(deviceController.syncDeviceLogs))
-//http://localhost:8080/api/v1/device-logs/sync?areaId=
+//http://localhost:8080/api/v1/device/sync?areaId=
 
+router.route('/control').post(asyncHandler(deviceController.controlDevice))
+// POST http://localhost:8080/api/v1/device/control
+// Body: { "areaId": 1, "action": "START", "deviceType": "Máy bơm"}
 
 export const deviceRoute = router

@@ -1,10 +1,10 @@
 [
-  {
-    "id": "79e60700-8fa5-4180-8899-5806fe942bb6",
-    "startTime": "1:18",
-    "endTime": "1:19",
-    "frequency": ["Monday", "Wednesday", "Saturday"],
-    "activity": "Tưới nước",
-    "areaId": 1
-  }
+    {
+        "id": "79e60700-8fa5-4180-8899-5806fe942bb6",
+        "startTime": "01:19",
+        "endTime": "01:20",
+        "frequency": ["Monday", "Wednesday", "Saturday"],
+        "activity": "Tưới nước",
+        "areaId": 1
+    }
 ]

@@ -14,7 +14,22 @@ const getSchedules = async (areaId) => {
     })
 }
 
+const deleteSchedule = async (scheduleId) => {
+    return await prisma.Schedule.deleteMany({
+        where: { id: scheduleId }
+    })
+}
+
+const updateSchedule = async (scheduleId, scheduleData) => {
+    return await prisma.Schedule.update({
+        where: { id: scheduleId },
+        data: scheduleData
+    })
+}
+
 export const scheduleRepo = {
     createSchedule,
-    getSchedules
+    getSchedules,
+    deleteSchedule,
+    updateSchedule
 }

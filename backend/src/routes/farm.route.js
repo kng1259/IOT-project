@@ -7,5 +7,4 @@ const router = express.Router()
 // Lấy danh sách farm theo userId
 router.get('/', asyncHandler(farmController.getFarmsByUser))
 
-
 export const farmRoute = router
