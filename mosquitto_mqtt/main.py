@@ -56,7 +56,6 @@ def on_message(client, userdata, msg):
         # Convert the payload to a JSON string
         message_json = json.dumps(payload)
         device_client.send_message(message_json)
-        print(f"Sent message to IoT Hub from device {data[0]}")
     except Exception as e:
         print(f"Failed to send message to IoT Hub: {e}")
 
@@ -71,7 +70,7 @@ def method_request_handler(method_request: MethodRequest):
 
     match method_request.name:
         case "startWatering":
-            mqtt_client.publish(f"{area_id}/watering", "1")
+            mqtt_client.publish(f"{area_id}/watering", "100")
         case "stopWatering":
             mqtt_client.publish(f"{area_id}/watering", "0")
         case "startLighting":

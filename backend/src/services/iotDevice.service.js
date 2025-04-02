@@ -21,7 +21,7 @@ const methodNames = new Map([
  * @returns {Promise<object>} The result from the device method call
  * @throws {ApiError} When method name is invalid, device returns error, or connection fails
  */
-export const callDeviceMethod = async (method, farmId, areaId) => {
+export const callDeviceMethod = async (method, farmId, areaId, level = 0) => {
     const client = Client.fromConnectionString(env.IOT_HUB_CONNECTION_STRING)
     const methodName = methodNames.get(method)
     if (!methodName) {
@@ -34,6 +34,11 @@ export const callDeviceMethod = async (method, farmId, areaId) => {
         },
         timeoutInSeconds: 60
     }
+    switch (methodName) {
+        case 'startLighting':
+            methodParams.payload.level = level
+            break
+    }
     try {
         const res = await client.invokeDeviceMethod(farmId, methodParams)
         const result = res.result
@@ -44,6 +49,7 @@ export const callDeviceMethod = async (method, farmId, areaId) => {
         return result
     } catch (err) {
         console.error(err.message)
+        console.error(err.stack)
         throw new ApiError(INTERNAL_SERVER_ERROR, 'Failed to call device method', true)
     } finally {
         client.close()

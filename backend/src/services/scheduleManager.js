@@ -38,26 +38,25 @@ export async function loadSchedules() {
     if (schedules.length === 0) return
 
     //nếu xóa lịch->hủy job
-    const currentJobKeys = new Set(schedules.map(sch => sch.id)) // Tạo set các key job hiện tại
+    const currentJobKeys = new Set(schedules.map((sch) => sch.id)) // Tạo set các key job hiện tại
     const jobsToCancel = []
 
     // Kiểm tra xem các job hiện tại có lịch trình nào không còn trong cơ sở dữ liệu
     activeJobs.forEach((jobs, jobKey) => {
         if (!currentJobKeys.has(jobKey)) {
-            jobs.forEach(job => job.cancel())
+            jobs.forEach((job) => job.cancel())
             jobsToCancel.push(jobKey)
         }
     })
-    jobsToCancel.forEach(jobKey => activeJobs.delete(jobKey))
+    jobsToCancel.forEach((jobKey) => activeJobs.delete(jobKey))
 
     lastUpdatedAt = new Date()
     schedules.forEach((sch) => {
         const jobKey = sch.id
         // bring farmId out of nested area
         sch.farmId = sch.area.farmId
-        const days = sch.frequency.length > 0 
-            ? sch.frequency.map((day) => convertDayToNumber(day)) 
-            : [0, 1, 2, 3, 4, 5, 6] // Mặc định tưới hàng ngày nếu frequency rỗng
+        const days =
+            sch.frequency.length > 0 ? sch.frequency.map((day) => convertDayToNumber(day)) : [0, 1, 2, 3, 4, 5, 6] // Mặc định tưới hàng ngày nếu frequency rỗng
         const [startHour, startMinute] = sch.startTime.split(':').map(Number)
         const [endHour, endMinute] = sch.endTime.split(':').map(Number)
 
@@ -73,7 +72,7 @@ export async function loadSchedules() {
         const startJob = schedule.scheduleJob(startRule, async () => {
             console.log(`Bắt đầu ${sch.activity} tại khu vực ${sch.areaId}`)
             try {
-                await callDeviceMethod(`START_${sch.activity}`, sch.farmId, sch.areaId)
+                await callDeviceMethod(`START_${sch.activity}`, sch.farmId, sch.areaId, 100)
             } catch (error) {
                 console.error(`Lỗi khi gọi phương thức START_${sch.activity} tại khu vực ${sch.areaId}:`, error)
             }
