@@ -61,9 +61,11 @@ router.route('/sync').get(asyncHandler(deviceController.syncDeviceLogs))
  *               action:
  *                 type: string
  *                 description: Action to perform (e.g., START, STOP)
+ *                 example: START / STOP
  *               deviceType:
  *                 type: string
  *                 description: Type of device to control (e.g., Máy bơm)
+ *                 example: Máy bơm / Đèn
  *     responses:
  *       200:
  *         description: Device control operation successful

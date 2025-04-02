@@ -43,10 +43,10 @@ function generateData(amount) {
         data.push({
             id: uuidv4(),
             timestamp: recordTimestamp,
-            light: getRandomInRange() * 500,
-            temperature: getRandomInRange() * 25,
-            humidity: getRandomInRange() * 60,
-            soilMoisture: getRandomInRange() * 40,
+            light: getRandomInRange() * 65,
+            temperature: getRandomInRange() * 24,
+            humidity: getRandomInRange() * 50,
+            soilMoisture: getRandomInRange() * 30,
             areaId: 2
         })
     }
