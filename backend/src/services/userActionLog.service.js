@@ -18,6 +18,7 @@ const getUserActionLogsByAreaId = async (areaId) => {
     return await userActionLogRepo.getUserActionLogsByAreaId(areaId)
 }
 
+
 export const userActionLogService = {
     createUserActionLog,
     getUserActionLogsByUserId,

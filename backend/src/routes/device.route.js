@@ -11,7 +11,6 @@ const router = express.Router()
  *   description: API endpoints for managing devices
  */
 
-router.route('/create').post(asyncHandler(deviceController.createDeviceLogs));
 
 /**
  * @swagger

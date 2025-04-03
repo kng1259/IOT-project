@@ -34,9 +34,16 @@ const updateSchedule = async (scheduleId, scheduleData) => {
     })
 }
 
+const getScheduleById = async (scheduleId) => {
+    return await prisma.schedule.findUnique({
+        where: { id: scheduleId }
+    })
+}
+
 export const scheduleRepo = {
     createSchedule,
     getSchedules,
     deleteSchedule,
-    updateSchedule
+    updateSchedule,
+    getScheduleById
 }
