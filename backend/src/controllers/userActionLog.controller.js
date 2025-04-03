@@ -19,6 +19,12 @@ const getUserLogs = async (req, res) => {
   try {
     const { userId, areaId } = req.query
 
+    if (userId && areaId) {
+      const parsedAreaId = parseInt(areaId)
+      const logs = await userActionLogService.getUserActionLogs(userId, parsedAreaId)
+      return res.status(StatusCodes.OK).json(logs)
+    }
+    
     if (userId) {
       const logs = await userActionLogService.getUserActionLogsByUserId(userId)
       return res.status(StatusCodes.OK).json(logs)

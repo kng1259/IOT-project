@@ -21,8 +21,15 @@ const getUserActionLogsByAreaId = async (areaId) => {
   })
 }
 
+const getUserActionLogs = async (userId, areaId) => {
+  return await prisma.userActionLog.findMany({
+    where: { userId, areaId },
+    orderBy: { timestamp: 'desc' }
+  })
+}
 export const userActionLogRepo = {
     createUserActionLog,
     getUserActionLogsByUserId,
     getUserActionLogsByAreaId,
+    getUserActionLogs
 }
