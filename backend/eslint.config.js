@@ -1,7 +1,6 @@
 import globals from 'globals'
 import pluginJs from '@eslint/js'
 
-
 /** @type {import('eslint').Linter.Config[]} */
 export default [
     { languageOptions: { globals: globals.node } },
@@ -17,9 +16,9 @@ export default [
             'no-multiple-empty-lines': 1,
             'space-before-blocks': ['error', 'always'],
             'object-curly-spacing': [1, 'always'],
-            'indent': ['warn', 4],
-            'semi': [1, 'never'],
-            'quotes': ['error', 'single'],
+            indent: ['warn', 4],
+            semi: [1, 'never'],
+            quotes: ['error', 'single'],
             'array-bracket-spacing': 1,
             'linebreak-style': 0,
             'no-unexpected-multiline': 'warn',

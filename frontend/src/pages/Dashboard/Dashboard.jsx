@@ -20,11 +20,12 @@ import {
 import Header from '../../components/Header/Header'
 import { useEffect, useState } from 'react'
 
-import { fetchLatestRecordOfAreaPI, fetchChartData } from '~/apis'
+import { fetchChartData } from '~/apis'
 import { cloneDeep } from 'lodash'
 import { toast } from 'react-toastify'
 import { useSelector } from 'react-redux'
 import { selectActiveAreaId } from '~/redux/dashboard/dashboardSlice'
+import { socketIoInstance } from '~/socketClient'
 
 const initialParameters = [
     {
@@ -99,24 +100,33 @@ function Dashboard() {
         setAvgSoilMoisture(soilMoisture)
     }
 
-    const fetchLatestRecord = async (areaId) => {
-        fetchLatestRecordOfAreaPI(areaId).then((data) => {
-            if (!data) {
-                toast.error('Chưa có dữ liệu!')
-                return
-            }
-            const newParameters = cloneDeep(parameters)
-            newParameters[0].value = data.temperature.toFixed(2)
-            newParameters[1].value = data.light.toFixed(2)
-            newParameters[2].value = data.soilMoisture.toFixed(2)
-            newParameters[3].value = data.humidity.toFixed(2)
-            setParameters(newParameters)
+    const updateParameters = (data) => {
+        setParameters(prevParameters => {
+            const newParameters = cloneDeep(prevParameters)
+            newParameters[0].value = data?.temperature?.toFixed(2) || 0
+            newParameters[1].value = data?.light?.toFixed(2) || 0
+            newParameters[2].value = data?.soilMoisture?.toFixed(2) || 0
+            newParameters[3].value = data?.humidity?.toFixed(2) || 0
+            return newParameters
         })
     }
 
+    const updateChartData = (data) => handleClassifyData(data.slice(0, 10).reverse())
+
     useEffect(() => {
-        fetchLatestRecord(areaId)
+        socketIoInstance.emit('FE_DASHBOARD_FETCH_STATISTICS', areaId)
+        socketIoInstance.emit('FE_DASHBOARD_FETCH_CHART_DATA', areaId)
     }, [areaId])
+
+    useEffect(() => {
+        socketIoInstance.on('BE_DASHBOARD_FETCH_STATISTICS', updateParameters)
+        socketIoInstance.on('BE_DASHBOARD_FETCH_CHART_DATA', updateChartData)
+
+        return () => {
+            socketIoInstance.off('BE_DASHBOARD_FETCH_STATISTICS', updateParameters)
+            socketIoInstance.off('BE_DASHBOARD_FETCH_CHART_DATA', updateChartData)
+        }
+    }, [])
 
     const toggleTab = (e, value) => {
         document.querySelectorAll('.tab').forEach((tab) => {
@@ -133,10 +143,6 @@ function Dashboard() {
     const handleChangeChartDataType = (e) => {
         setTypeDateChart(e.target.value)
     }
-
-    useEffect(() => {
-        fetchChartData(areaId).then((data) => handleClassifyData(data.slice(0, 10).reverse()))
-    }, [areaId])
 
     return (
         <div className=''>
@@ -166,7 +172,7 @@ function Dashboard() {
                 <button
                     className='btn-primary'
                     onClick={() => {
-                        fetchLatestRecord(areaId)
+                        // fetchLatestRecord(areaId)
                         toast.success('Cập nhật thành công!')
                     }}
                 >
