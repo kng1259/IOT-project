@@ -17,7 +17,7 @@ const controlDevice = async (areaId, action, deviceType) => {
     let command = ''
 
     const area = await deviceRepo.getAreaById(areaId)
-    if (!area) throw new Error('Khu vực không tồn tại!')
+    if (!area) throw new ApiError(StatusCodes.NOT_FOUND, 'Khu vực không tồn tại!')
 
     const farmId = area.farm?.id;
     const userId = area.farm?.user?.id;
@@ -29,7 +29,7 @@ const controlDevice = async (areaId, action, deviceType) => {
     } else if (deviceType === 'Đèn') {
         command = action === 'START' ? 'START_Chiếu đèn' : 'STOP_Chiếu đèn'
     } else {
-        throw new Error('Loại thiết bị không hợp lệ!')
+        throw new ApiError(StatusCodes.BAD_REQUEST, 'Loại thiết bị không hợp lệ!')
     }
     console.log(`${actionText} ${deviceType} tại khu vực ${areaId}`)
 

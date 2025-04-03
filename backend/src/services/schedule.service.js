@@ -8,10 +8,11 @@ const createSchedule = async (areaId, scheduleData) => {
     if (!scheduleData) {
         throw new ApiError(StatusCodes.BAD_REQUEST, 'Dữ liệu lịch không hợp lệ')
     }
-    const schedule = await scheduleRepo.createSchedule(areaId, scheduleData);
+    const schedule = await scheduleRepo.createSchedule(areaId, scheduleData)
     const area = await deviceRepo.getAreaById(areaId)
-    if (!area) throw new Error('Khu vực không tồn tại!')
-
+    if (!area) {
+        throw new ApiError(StatusCodes.NOT_FOUND, 'Khu vực không tồn tại!')
+    }
     const userId = area.farm?.user?.id
 
     try {
@@ -32,7 +33,9 @@ const createSchedule = async (areaId, scheduleData) => {
 const getSchedules = async (areaId) => {
     const schedules = await scheduleRepo.getSchedules(areaId);
     const area = await deviceRepo.getAreaById(areaId)
-    if (!area) throw new Error('Khu vực không tồn tại!')
+    if (!area) {
+        throw new ApiError(StatusCodes.NOT_FOUND, 'Khu vực không tồn tại!')
+    }
 
     const userId = area.farm?.user?.id
     try {
@@ -52,14 +55,16 @@ const getSchedules = async (areaId) => {
 const deleteSchedule = async (scheduleId) => {
     const schedule = await scheduleRepo.getScheduleById(scheduleId);
     if (!schedule) {
-        throw new ApiError(StatusCodes.NOT_FOUND, 'Lịch không tồn tại');
+        throw new ApiError(StatusCodes.NOT_FOUND, 'Lịch không tồn tại')
     }
 
     const result = await scheduleRepo.deleteSchedule(scheduleId);
     const areaId = schedule.areaId
     
     const area = await deviceRepo.getAreaById(areaId)
-    if (!area) throw new Error('Khu vực không tồn tại!')
+    if (!area) {
+        throw new ApiError(StatusCodes.NOT_FOUND, 'Khu vực không tồn tại!')
+    }
     const userId = area.farm?.user?.id
 
     if (result.count === 0) {
@@ -82,18 +87,20 @@ const deleteSchedule = async (scheduleId) => {
 
 const updateSchedule = async (scheduleId, scheduleData) => {
     if (!scheduleId || !scheduleData) {
-        throw new ApiError(StatusCodes.BAD_REQUEST, 'Thiếu thông tin cập nhật');
+        throw new ApiError(StatusCodes.BAD_REQUEST, 'Thiếu thông tin cập nhật')
     }
     const schedule = await scheduleRepo.getScheduleById(scheduleId);
     if (!schedule) {
-        throw new ApiError(StatusCodes.NOT_FOUND, 'Lịch không tồn tại');
+        throw new ApiError(StatusCodes.NOT_FOUND, 'Lịch không tồn tại')
     }
     const areaId = schedule.areaId
     const area = await deviceRepo.getAreaById(areaId)
-    if (!area) throw new Error('Khu vực không tồn tại!')
+    if (!area) {
+        throw new ApiError(StatusCodes.NOT_FOUND, 'Khu vực không tồn tại!')
+    }
     const userId = area.farm?.user?.id
 
-    const updatedSchedule = await scheduleRepo.updateSchedule(scheduleId, scheduleData);
+    const updatedSchedule = await scheduleRepo.updateSchedule(scheduleId, scheduleData)
 
     try {
         await userActionLogRepo.createUserActionLog({
@@ -103,7 +110,7 @@ const updateSchedule = async (scheduleId, scheduleData) => {
             areaId,
         });
     } catch (error) {
-        console.error('Ghi log thất bại:', error);
+        console.error('Ghi log thất bại:', error)
     }
 
     return updatedSchedule;
