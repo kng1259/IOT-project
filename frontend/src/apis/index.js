@@ -35,3 +35,8 @@ export const fetchChartData = async (areaId) => {
     const response = await axiosInstance.get(`${env.API_ROOT}/api/v1/records/chart-data?areaId=${areaId}`)
     return response.data
 }
+
+export const toggleDeviceAPI = async (data) => {
+    const response = await axiosInstance.post(`${env.API_ROOT}/api/v1/device/control`, data)
+    return response.data
+}
