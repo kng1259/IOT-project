@@ -31,5 +31,6 @@ const router = express.Router()
  *                   example: Hello World
  */
 router.get('/', authMiddleware.isAuthorized, asyncHandler(helloworldCtrl.helloworld))
+router.get('/watering/:farmId/:areaId', asyncHandler(helloworldCtrl.testFunction))
 
 export default router

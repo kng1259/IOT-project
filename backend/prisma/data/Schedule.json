@@ -1,11 +1,10 @@
 [
     {
-      "id": "sched1",
-      "startTime": "2025-03-16T06:00:00.000Z",
-      "endTime": "2025-03-16T07:00:00.000Z",
-      "frequency": "Daily",
-      "activity": "Tưới nước",
-      "updatedAt": "2025-03-15T12:00:00.000Z",
-      "areaId": "area1"
+        "id": "79e60700-8fa5-4180-8899-5806fe942bb6",
+        "startTime": "01:19",
+        "endTime": "01:20",
+        "frequency": ["Monday", "Wednesday", "Saturday"],
+        "activity": "Tưới nước",
+        "areaId": 1
     }
 ]

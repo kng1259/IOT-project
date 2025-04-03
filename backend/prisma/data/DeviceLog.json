@@ -1,10 +1,18 @@
 [
     {
-      "id": "dev1",
-      "action": "Watering",
-      "timestamp": "2025-03-15T08:00:00.000Z",
-      "deviceType": "Sprinkler",
-      "note": "Tưới nước sáng sớm",
-      "areaId": "area1"
+        "id": "aadb9c56-5a39-4aeb-9365-c4f1978185c8",
+        "action": "START_Tưới nước",
+        "timestamp": "2025-03-15T08:00:00.000Z",
+        "deviceType": "Máy bơm",
+        "note": "Executed action: START",
+        "areaId": 1
+    }, 
+    {
+        "id": "aadb9c56-5a39-4aeb-9365-c4f1978185c9",
+        "action": "STOP_Tưới nước",
+        "timestamp": "2025-03-15T08:00:00.000Z",
+        "deviceType": "Máy bơm",
+        "note": "Executed action: STOP",
+        "areaId": 1
     }
 ]

@@ -1,74 +1,48 @@
-import { PrismaClient } from '@prisma/client';
-import { createRequire } from 'module';
-import { v4 as uuidv4 } from 'uuid';
-import { seedRecordData } from './records.js';
+/* eslint-disable no-console */
+import { PrismaClient } from '@prisma/client'
+import { createRequire } from 'module'
+import { seedRecordData } from './records.js'
 
-const require = createRequire(import.meta.url);
-const prisma = new PrismaClient();
+const require = createRequire(import.meta.url)
+const prisma = new PrismaClient()
 
 const main = async () => {
-    seedRecordData();
+    seedRecordData()
 
-    const tables = ['User', 'Farm', 'Area', 'Crop', 'PlantedCrop', 'DeviceLog', 'Record', 'Schedule'];
+    const tables = ['User', 'Farm', 'Area', 'Crop', 'PlantedCrop', 'DeviceLog', 'Record', 'Schedule']
     for (const table of tables.slice().reverse()) {
-        await prisma[table].deleteMany({});
+        await prisma[table].deleteMany({})
     }
 
-    for (const table of tables.slice().reverse()) {
-        await prisma[table].deleteMany({});
+    for (const table of tables) {
+        const data = require(`./data/${table}.json`)
+        await prisma[table].createMany({ data })
     }
 
-    const uuidMap = {};
+    await prisma.$executeRawUnsafe(`
+        CREATE OR REPLACE FUNCTION notify_record_update()
+        RETURNS TRIGGER AS $$
+        BEGIN
+        PERFORM pg_notify('record_changed', row_to_json(NEW)::text);
+        RETURN NEW;
+        END;
+        $$ LANGUAGE plpgsql;
+        `)
 
-    // Tạo UUID cho tất cả bảng *ngoại trừ* PlantedCrop
-    for (const table of tables.filter((t) => t !== 'PlantedCrop')) {
-        uuidMap[table] = {};
-        const data = require(`./data/${table}.json`);
+    await prisma.$executeRawUnsafe(`
+        CREATE OR REPLACE TRIGGER record_update_trigger
+        AFTER INSERT OR UPDATE OR DELETE ON "Record"
+        FOR EACH ROW
+        EXECUTE FUNCTION notify_record_update();
+        `)
 
-        for (const item of data) {
-            const newId = uuidv4();
-            uuidMap[table][item.id] = newId;
-            item.id = newId;
-        }
-    }
-
-    // Cập nhật ID trong dữ liệu (bỏ qua PlantedCrop)
-    for (const table of tables.filter((t) => t !== 'PlantedCrop')) {
-        const data = require(`./data/${table}.json`).map((item) => {
-            if (uuidMap[table][item.id]) item.id = uuidMap[table][item.id];
-
-            if (item.userId) item.userId = uuidMap['User'][item.userId];
-            if (item.farmId) item.farmId = uuidMap['Farm'][item.farmId];
-            if (item.areaId) item.areaId = uuidMap['Area'][item.areaId];
-            if (item.cropId) item.cropId = uuidMap['Crop'][item.cropId];
-
-            return item;
-        });
-        await prisma[table].createMany({ data });
-    }
-
-    // Xử lý riêng PlantedCrop
-    const plantedCropData = require('./data/PlantedCrop.json');
-    for (const item of plantedCropData) {
-        const newAreaId = uuidMap['Area'][item.areaId];
-        const newCropId = uuidMap['Crop'][item.cropId];
-
-        await prisma.plantedCrop.create({
-            data: {
-                areaId: newAreaId,
-                cropId: newCropId,
-                quantity: item.quantity,
-            },
-        });
-    }
-
-    console.log('Seed dữ liệu thành công!');
-};
+    console.log('Seed dữ liệu thành công!')
+}
 
 main()
     .catch((e) => {
-        throw e;
+        throw e
     })
     .finally(async () => {
-        await prisma.$disconnect();
-    });
+        await prisma.$disconnect()
+    })
