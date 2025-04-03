@@ -18,9 +18,15 @@ const getUserActionLogsByAreaId = async (areaId) => {
     return await userActionLogRepo.getUserActionLogsByAreaId(areaId)
 }
 
+const getUserActionLogs = async (userId, areaId) => {
+    if (!userId) throw new Error('userId is required')
+    if (!areaId) throw new Error('areaId is required')
+    return await userActionLogRepo.getUserActionLogs(userId, areaId)
+}
 
 export const userActionLogService = {
     createUserActionLog,
     getUserActionLogsByUserId,
-    getUserActionLogsByAreaId
+    getUserActionLogsByAreaId,
+    getUserActionLogs
 }
