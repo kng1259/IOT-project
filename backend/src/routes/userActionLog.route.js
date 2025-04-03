@@ -5,21 +5,7 @@ import { userActionLogController } from '../controllers/userActionLog.controller
 const router = express.Router()
 
 // Unified GET route: ?userId= or ?areaId=
-router.route('/get').get(
-  asyncHandler(async (req, res) => {
-    const { userId, areaId } = req.query
-
-    if (userId) {
-      return await userActionLogController.getUserLogsByUserId(req, res)
-    }
-
-    if (areaId) {
-      return await userActionLogController.getUserLogsByAreaId(req, res)
-    }
-
-    res.status(400).json({ error: 'Missing userId or areaId in query' })
-  })
-)
+router.route('/get').get(asyncHandler(userActionLogController.getUserLogs))
 
 // POST to create a log
 router.route('/create').post(

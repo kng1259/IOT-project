@@ -15,29 +15,29 @@ const createUserActionLog = async (req, res) => {
     }
 }
   
-const getUserLogsByUserId = async (req, res) => {
-    try {
-      const { userId } = req.query
+const getUserLogs = async (req, res) => {
+  try {
+    const { userId, areaId } = req.query
+
+    if (userId) {
       const logs = await userActionLogService.getUserActionLogsByUserId(userId)
-      res.status(StatusCodes.OK).json(logs)
-    } catch (err) {
-      res.status(400).json({ error: err.message })
+      return res.status(StatusCodes.OK).json(logs)
     }
-}
-  
-const getUserLogsByAreaId = async (req, res) => {
-    try {
-      let { areaId } = req.query
-      areaId = parseInt(areaId)
-      const logs = await userActionLogService.getUserActionLogsByAreaId(areaId)
-      res.status(200).json(logs)
-    } catch (err) {
-      res.status(400).json({ error: err.message })
+
+    if (areaId) {
+      const parsedAreaId = parseInt(areaId)
+      const logs = await userActionLogService.getUserActionLogsByAreaId(parsedAreaId)
+      return res.status(StatusCodes.OK).json(logs)
     }
+
+    return res.status(StatusCodes.BAD_REQUEST).json({ error: 'Missing userId or areaId in query' })
+  } catch (err) {
+    return res.status(StatusCodes.BAD_REQUEST).json({ error: err.message })
+  }
 }
+
 
 export const userActionLogController = {
     createUserActionLog,
-    getUserLogsByUserId,
-    getUserLogsByAreaId
+    getUserLogs
 }
