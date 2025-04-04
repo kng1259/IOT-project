@@ -186,7 +186,7 @@ router.route('/delete/:id').delete(asyncHandler(scheduleController.deleteSchedul
  *                 items:
  *                   type: string
  *                 description: List of days of the week when the schedule applies
- *                 example: ["Monday", "Wednesday", "Friday"] / [] if everyday
+ *                 example: ["Monday", "Wednesday", "Friday"]
  *               activity:
  *                 type: string
  *                 description: The activity associated with this schedule

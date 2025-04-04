@@ -3,7 +3,7 @@ from azure.iot.device import ProvisioningDeviceClient, IoTHubDeviceClient, Messa
 from dotenv import load_dotenv, set_key
 from os import environ
 import json
-from datetime import datetime
+from datetime import datetime, timezone
 
 areas = [1, 2]
 
@@ -40,18 +40,20 @@ def on_connect(client, userdata, flags, rc):
 def on_message(client, userdata, msg):
     """Callback triggered when a message is received from the local MQTT server."""
     data = msg.payload.decode("utf-8").split()
-    for i in range(1, 5):
+    # Extract areaid from topic string (format: "{areaid}/sensorData")
+    area_id = msg.topic.split('/')[0]  # Get the first part of the topic
+    for i in range(4):
         data[i] = float(data[i])
     try:
         # Send the message to Azure IoT Hub
         payload = {
-            "areaId": data[0],
+            "areaId": area_id,
             "farmId": farm_id,
-            "timestamp": datetime.now().isoformat(),
-            "temperature": data[1],
-            "humidity": data[2],
-            "light": data[3],
-            "soilMoisture": data[4]
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "temperature": data[0],
+            "humidity": data[1],
+            "light": data[2],
+            "soilMoisture": data[3]
         }
         # Convert the payload to a JSON string
         message_json = json.dumps(payload)

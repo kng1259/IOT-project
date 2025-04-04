@@ -37,7 +37,7 @@ function generateData(amount) {
             light: getRandomInRange() * 45,
             temperature: getRandomInRange() * 27,
             humidity: getRandomInRange() * 40,
-            soilMoisture: getRandomInRange() * 10,
+            soilMoisture: getRandomInRange() * 0,
             areaId: 1
         })
         data.push({
@@ -46,7 +46,7 @@ function generateData(amount) {
             light: getRandomInRange() * 65,
             temperature: getRandomInRange() * 24,
             humidity: getRandomInRange() * 50,
-            soilMoisture: getRandomInRange() * 30,
+            soilMoisture: getRandomInRange() * 0,
             areaId: 2
         })
     }
