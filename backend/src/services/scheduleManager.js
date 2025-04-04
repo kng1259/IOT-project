@@ -2,6 +2,7 @@ import schedule from 'node-schedule'
 import { PrismaClient } from '@prisma/client'
 import moment from 'moment-timezone'
 import { callDeviceMethod } from './iotDevice.service.js'
+import ApiError from '../helpers/ApiError.js'
 
 const prisma = new PrismaClient()
 let activeJobs = new Map()
@@ -75,6 +76,7 @@ export async function loadSchedules() {
                 await callDeviceMethod(`START_${sch.activity}`, sch.farmId, sch.areaId, 100)
             } catch (error) {
                 console.error(`Lỗi khi gọi phương thức START_${sch.activity} tại khu vực ${sch.areaId}:`, error)
+                throw new ApiError(error.statusCode, error.message)
             }
             await saveLog(sch, 'START')
         })
