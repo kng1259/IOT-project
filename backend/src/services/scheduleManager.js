@@ -44,7 +44,7 @@ export async function loadSchedules() {
     // Kiểm tra xem các job hiện tại có lịch trình nào không còn trong cơ sở dữ liệu
     activeJobs.forEach((jobs, jobKey) => {
         if (!currentJobKeys.has(jobKey)) {
-            jobs.forEach((job) => job.cancel())
+            jobs.forEach((job) => job?.cancel())
             jobsToCancel.push(jobKey)
         }
     })
@@ -61,7 +61,7 @@ export async function loadSchedules() {
         const [endHour, endMinute] = sch.endTime.split(':').map(Number)
 
         if (activeJobs.has(jobKey)) {
-            activeJobs.get(jobKey).forEach((job) => job.cancel())
+            activeJobs.get(jobKey).forEach((job) => job?.cancel())
         }
 
         const startRule = new schedule.RecurrenceRule()

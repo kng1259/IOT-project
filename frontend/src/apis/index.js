@@ -40,3 +40,18 @@ export const toggleDeviceAPI = async (data) => {
     const response = await axiosInstance.post(`${env.API_ROOT}/api/v1/device/control`, data)
     return response.data
 }
+
+export const fetchSchedulesAPI = async (areaId) => {
+    const response = await axiosInstance.get(`${env.API_ROOT}/api/v1/schedule/get?areaId=${areaId}`)
+    return response.data
+}
+
+export const createScheduleAPI = async (data) => {
+    const response = await axiosInstance.post(`${env.API_ROOT}/api/v1/schedule/create`, data)
+    return response.data
+}
+
+export const deleteScheduleAPI = async (scheduleId) => {
+    const response = await axiosInstance.delete(`${env.API_ROOT}/api/v1/schedule/delete/${scheduleId}`)
+    return response.data
+}
