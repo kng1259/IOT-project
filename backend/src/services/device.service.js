@@ -36,6 +36,7 @@ const controlDevice = async (areaId, action, deviceType) => {
         await callDeviceMethod(command, farmId, areaId, level)
     } catch (error) {
         console.error(`Lỗi khi gọi phương thức ${command} tại khu vực ${areaId}:`, error)
+        throw new ApiError(error.statusCode, error.message)
     }
 
     try {

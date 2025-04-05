@@ -20,7 +20,7 @@ import {
 import Header from '../../components/Header/Header'
 import { useEffect, useState } from 'react'
 
-import { fetchChartData } from '~/apis'
+import { fetchChartData, toggleDeviceAPI } from '~/apis'
 import { cloneDeep } from 'lodash'
 import { toast } from 'react-toastify'
 import { useSelector } from 'react-redux'
@@ -40,7 +40,7 @@ const initialParameters = [
         size: 'text-3xl',
         name: 'Ánh sáng',
         value: 0,
-        unit: 'lx',
+        unit: '%',
     },
     {
         icon: BsMoisture,
@@ -81,6 +81,21 @@ function Dashboard() {
         return `${hours}:${minutes}`
     }
 
+    const toggleDevice = async (deviceType, action) => {
+        const data = {
+            areaId: areaId,
+            action: action,
+            deviceType: deviceType,
+        }
+        try {
+            await toggleDeviceAPI(data)
+            toast.success(`${action} ${deviceType} thành công!`)
+        } catch (error) {
+            console.error('Error toggling device:', error)
+            toast.error('Cập nhật thất bại!')
+        }
+    }
+
     const handleClassifyData = (data) => {
         const avgLight = []
         const avgTemp = []
@@ -101,7 +116,7 @@ function Dashboard() {
     }
 
     const updateParameters = (data) => {
-        setParameters(prevParameters => {
+        setParameters((prevParameters) => {
             const newParameters = cloneDeep(prevParameters)
             newParameters[0].value = data?.temperature?.toFixed(2) || 0
             newParameters[1].value = data?.light?.toFixed(2) || 0
@@ -178,16 +193,41 @@ function Dashboard() {
                 >
                     Cập nhật
                 </button>
-                <button className='btn-primary'>
+                {/* pump */}
+                <button
+                    onClick={() => {
+                        toggleDevice('Máy bơm', 'START')
+                    }}
+                    className='btn-primary'
+                >
                     <span>Bật </span>
-                    <span> / </span>
-                    <span className='text-[#5CB338]'>Tắt </span>
+                    <span>máy bơm</span>
+                </button>
+                <button
+                    onClick={() => {
+                        toggleDevice('Máy bơm', 'STOP')
+                    }}
+                    className='btn-primary'
+                >
+                    <span>Tắt </span>
                     <span>máy bơm</span>
                 </button>
                 {/* light */}
-                <button className='btn-primary'>
-                    <span className='text-[#5CB338]'>Bật </span>
-                    <span> / </span>
+                <button
+                    onClick={() => {
+                        toggleDevice('Đèn', 'START')
+                    }}
+                    className='btn-primary'
+                >
+                    <span>Bật </span>
+                    <span>bóng đèn</span>
+                </button>
+                <button
+                    onClick={() => {
+                        toggleDevice('Đèn', 'STOP')
+                    }}
+                    className='btn-primary'
+                >
                     <span>Tắt </span>
                     <span>bóng đèn</span>
                 </button>

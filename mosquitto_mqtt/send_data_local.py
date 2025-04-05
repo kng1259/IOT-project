@@ -6,7 +6,7 @@ from datetime import datetime
 # MQTT broker settings
 BROKER = "localhost"
 PORT = 1883
-TOPIC = "sensor/data"
+TOPIC = "1/sensorData"
 KEEPALIVE = 60
 
 # Sample JSON payload
