@@ -40,7 +40,7 @@ const initialParameters = [
         size: 'text-3xl',
         name: 'Ánh sáng',
         value: 0,
-        unit: 'lx',
+        unit: '%',
     },
     {
         icon: BsMoisture,
