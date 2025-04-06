@@ -10,7 +10,7 @@ TOPIC = "1/sensorData"
 KEEPALIVE = 60
 
 # Sample JSON payload
-sample_payload = "1 25.0 50.0 60 10.0"
+sample_payload = "25.0 50.0 60 0.0"
 # Callback functions for MQTT client
 
 
