@@ -2,7 +2,7 @@
 import { Client } from 'azure-iothub'
 import { env } from '../helpers/environment.js'
 import ApiError from '../helpers/ApiError.js'
-import { INTERNAL_SERVER_ERROR } from 'http-status-codes'
+import { StatusCodes } from 'http-status-codes'
 
 const methodNames = new Map([
     ['START_Chiếu đèn', 'startLighting'],
@@ -25,7 +25,7 @@ export const callDeviceMethod = async (method, farmId, areaId, level = 0) => {
     const client = Client.fromConnectionString(env.IOT_HUB_CONNECTION_STRING)
     const methodName = methodNames.get(method)
     if (!methodName) {
-        throw new ApiError(INTERNAL_SERVER_ERROR, 'Invalid method name', true)
+        throw new ApiError(StatusCodes.INTERNAL_SERVER_ERROR, 'Invalid method name', true)
     }
     const methodParams = {
         methodName,
@@ -50,7 +50,7 @@ export const callDeviceMethod = async (method, farmId, areaId, level = 0) => {
     } catch (err) {
         console.error(err.message)
         console.error(err.stack)
-        throw new ApiError(INTERNAL_SERVER_ERROR, 'Failed to call device method', true)
+        throw new ApiError(err.statusCode || StatusCodes.NOT_FOUND, 'Failed to call device method', true)
     } finally {
         client.close()
     }
