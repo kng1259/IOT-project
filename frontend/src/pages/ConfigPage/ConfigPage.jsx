@@ -83,7 +83,7 @@ function ConfigPage() {
                 key: schedule.id,
                 startTime: schedule.startTime,
                 endTime: schedule.endTime,
-                frequency: schedule.frequency,
+                frequency: schedule.frequency.join(', '),
                 button: (
                     <button
                         onClick={() => handleDeleteSchedule(schedule.id)}
