@@ -2,6 +2,7 @@ import schedule from 'node-schedule'
 import { PrismaClient } from '@prisma/client'
 import moment from 'moment-timezone'
 import { callDeviceMethod } from './iotDevice.service.js'
+import ApiError from '../helpers/ApiError.js'
 
 const prisma = new PrismaClient()
 let activeJobs = new Map()
@@ -44,7 +45,7 @@ export async function loadSchedules() {
     // Kiểm tra xem các job hiện tại có lịch trình nào không còn trong cơ sở dữ liệu
     activeJobs.forEach((jobs, jobKey) => {
         if (!currentJobKeys.has(jobKey)) {
-            jobs.forEach((job) => job.cancel())
+            jobs.forEach((job) => job?.cancel())
             jobsToCancel.push(jobKey)
         }
     })
@@ -61,7 +62,7 @@ export async function loadSchedules() {
         const [endHour, endMinute] = sch.endTime.split(':').map(Number)
 
         if (activeJobs.has(jobKey)) {
-            activeJobs.get(jobKey).forEach((job) => job.cancel())
+            activeJobs.get(jobKey).forEach((job) => job?.cancel())
         }
 
         const startRule = new schedule.RecurrenceRule()
@@ -75,6 +76,7 @@ export async function loadSchedules() {
                 await callDeviceMethod(`START_${sch.activity}`, sch.farmId, sch.areaId, 100)
             } catch (error) {
                 console.error(`Lỗi khi gọi phương thức START_${sch.activity} tại khu vực ${sch.areaId}:`, error)
+                throw new ApiError(error.statusCode, error.message)
             }
             await saveLog(sch, 'START')
         })
