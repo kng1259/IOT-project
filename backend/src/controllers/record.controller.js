@@ -1,5 +1,6 @@
-import { StatusCodes } from 'http-status-codes'
-import { recordService } from '../services/record.service.js'
+import { StatusCodes } from 'http-status-codes';
+import { recordService } from '../services/record.service.js';
+import ApiError from '../helpers/ApiError.js';
 
 const getLatestRecordByArea = async (req, res) => {
     const areaId = parseInt(req.query.areaId)
@@ -23,7 +24,38 @@ const getChartData = async (req, res) => {
     }
 }
 
+const createRecord = async (req, res) => {
+  try {
+    const { sensorData, areaId, note } = req.body;
+
+    
+    if (
+      isNaN(areaId) ||
+      !sensorData ||
+      sensorData.light === undefined ||
+      sensorData.temperature === undefined ||
+      sensorData.humidity === undefined ||
+      sensorData.soilMoisture === undefined
+    ) {
+      throw new ApiError(StatusCodes.BAD_REQUEST, 'Thiếu dữ liệu Sensor hoặc areaId không hợp lệ');
+    }
+
+    const record = await recordService.createSensorRecord({ 
+      sensorData, 
+      areaId, 
+      note 
+    });
+
+    res.status(StatusCodes.CREATED).json({ success: true, record });
+  } catch (error) {
+    throw new ApiError(StatusCodes.INTERNAL_SERVER_ERROR, 'Failed to create sensor record')
+
+  }
+};
+
+
 export const recordController = {
     getLatestRecordByArea,
-    getChartData
-}
+    getChartData,
+    createRecord
+};

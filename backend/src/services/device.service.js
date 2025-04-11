@@ -1,4 +1,5 @@
 import { deviceRepo } from '../repositories/device.repo.js'
+import { userActionLogRepo } from '../repositories/userActionLog.repo.js'
 import { callDeviceMethod } from './iotDevice.service.js'
 import ApiError from '../helpers/ApiError.js'
 import { StatusCodes } from 'http-status-codes'
@@ -16,9 +17,10 @@ const controlDevice = async (areaId, action, deviceType) => {
     let command = ''
 
     const area = await deviceRepo.getAreaById(areaId)
-    if (!area) throw new Error('Khu vực không tồn tại!')
+    if (!area) throw new ApiError(StatusCodes.NOT_FOUND, 'Khu vực không tồn tại!')
 
-    const farmId = area.farmId
+    const farmId = area.farm?.id;
+    const userId = area.farm?.user?.id;
     let level = 0
 
     if (deviceType === 'Máy bơm') {
@@ -27,7 +29,7 @@ const controlDevice = async (areaId, action, deviceType) => {
     } else if (deviceType === 'Đèn') {
         command = action === 'START' ? 'START_Chiếu đèn' : 'STOP_Chiếu đèn'
     } else {
-        throw new Error('Loại thiết bị không hợp lệ!')
+        throw new ApiError(StatusCodes.BAD_REQUEST, 'Loại thiết bị không hợp lệ!')
     }
     console.log(`${actionText} ${deviceType} tại khu vực ${areaId}`)
 
@@ -41,6 +43,12 @@ const controlDevice = async (areaId, action, deviceType) => {
 
     try {
         await deviceRepo.logDeviceAction(areaId, command, deviceType, action)
+        await userActionLogRepo.createUserActionLog({ 
+            userId,
+            action: command,
+            description: `Người dùng đã ${command} trong khu vực ${areaId}`,
+            areaId
+        })
     } catch (error) {
         console.error(`Lỗi khi lưu log: `, error)
     }

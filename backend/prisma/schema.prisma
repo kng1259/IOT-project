@@ -31,7 +31,20 @@ model User {
   email           String  @unique
   phone_number    String?
   farms           Farm[]
+  actionLogs      UserActionLog[]
 }
+
+model UserActionLog {
+  id          String  @id @default(uuid())
+  userId      String                    
+  user        User     @relation(fields: [userId], references: [id]) 
+  action      String                   
+  description String?                  
+  areaId      Int
+  area        Area     @relation(fields: [areaId], references: [id])
+  timestamp   DateTime @default(now()) 
+}
+
 
 model Farm {
   id            String   @id @default(uuid())
@@ -55,6 +68,7 @@ model Area {
   devices      DeviceLog[]
   schedules    Schedule[]
   plantedCrops PlantedCrop[]
+  actionLogs   UserActionLog[]
 }
 
 model Crop {

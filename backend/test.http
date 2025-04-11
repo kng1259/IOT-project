@@ -1,0 +1,66 @@
+### Using Rest Client to test
+### Create Device Log
+POST http://localhost:8080/api/v1/device/create
+Content-Type: application/json
+
+{
+  "action": "watering",
+  "deviceType": "pump",
+  "areaId": 1,
+  "note": "Testing device log creation"
+}
+
+###
+
+### Create Sensor Record
+POST http://localhost:8080/api/v1/records/create
+Content-Type: application/json
+
+{
+  "sensorData": {
+    "light": 450.2,
+    "temperature": 27.5,
+    "humidity": 60,
+    "soilMoisture": 35
+  },
+  "areaId": 1,
+  "note": "Testing record from HTTP test"
+}
+
+###
+
+### Create Schedule
+
+POST http://localhost:8080/api/v1/schedule/create?areaId=1
+Content-Type: application/json
+
+{
+  "areaId": "1",
+  "startTime": "08:00",
+  "endTime": "08:30",
+  "frequency": ["Monday", "Wednesday", "Friday"],
+  "activity": "Auto water plants at morning"
+}
+
+### Create a user action log
+POST http://localhost:8080/api/v1/action-logs/create
+Content-Type: application/json
+
+{
+  "userId": "55b32078-551a-469d-9a34-94999e1f12a0",
+  "areaId": 1,
+  "action": "WATERING",
+  "description": "Watered crops in test area"
+}
+
+
+### Get logs by userId
+GET http://localhost:8080/api/v1/action-logs/get?userId=55b32078-551a-469d-9a34-94999e1f12a0
+
+###
+
+### Get logs by areaId and userId
+GET http://localhost:8080/api/v1/action-logs/get?userId=55b32078-551a-469d-9a34-94999e1f12a0&areaId=1
+
+### Get logs by areaId
+GET http://localhost:8080/api/v1/action-logs/get?areaId=1

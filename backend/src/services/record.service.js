@@ -12,7 +12,15 @@ const getChartData = async (areaId) => {
     return await recordRepo.getAverageRecordsForLast8Hours(areaId)
 }
 
+const createSensorRecord = async ({ sensorData, areaId, note }) => {
+
+  return await recordRepo.createSensorRecord({ sensorData, areaId, note });
+
+};
+
+
 export const recordService = {
-    getLatestRecordByArea,
-    getChartData
-}
+  getLatestRecordByArea,
+  getChartData,
+  createSensorRecord
+};

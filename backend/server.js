@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
-import app from './src/app.js'
-import { env } from './src/helpers/environment.js'
+import app from './src/app.js';
+import { env } from './src/helpers/environment.js';
 
 import { loadSchedules } from './src/services/scheduleManager.js'
 

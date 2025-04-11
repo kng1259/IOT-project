@@ -21,11 +21,23 @@ const logDeviceAction = async (areaId, action, deviceType, originalAction) => {
 }
 
 const getAreaById = async (areaId) => {
-    return await prisma.Area.findUnique({
+    return await prisma.area.findUnique({
         where: { id: areaId },
-        select: { farmId: true }
+        include: {
+            farm: {
+                select: {
+                    id: true, // Lấy farmId
+                    user: {
+                        select: {
+                            id: true, // Lấy userId từ farm
+                        },
+                    },
+                },
+            },
+        },
     })
 }
+
 
 export const deviceRepo = {
     getDeviceLogs,

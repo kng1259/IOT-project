@@ -3,13 +3,20 @@ import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
 const createSchedule = async (areaId, scheduleData) => {
-    return await prisma.Schedule.create({
+    const area = await prisma.area.findUnique({
+        where: { id: areaId },
+      });
+    
+    if (!area) {
+        throw new Error(`Không có khu vực area với id ${areaId}`);
+    }
+    return await prisma.schedule.create({
         data: { ...scheduleData, areaId }
     })
 }
 
 const getSchedules = async (areaId) => {
-    return await prisma.Schedule.findMany({
+    return await prisma.schedule.findMany({
         where: { areaId }
     })
 }
@@ -27,9 +34,16 @@ const updateSchedule = async (scheduleId, scheduleData) => {
     })
 }
 
+const getScheduleById = async (scheduleId) => {
+    return await prisma.schedule.findUnique({
+        where: { id: scheduleId }
+    })
+}
+
 export const scheduleRepo = {
     createSchedule,
     getSchedules,
     deleteSchedule,
-    updateSchedule
+    updateSchedule,
+    getScheduleById
 }

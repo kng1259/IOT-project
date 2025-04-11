@@ -91,6 +91,7 @@ router.get('/latest', asyncHandler(recordController.getLatestRecordByArea))
  *       500:
  *         description: Server error
  */
-router.get('/chart-data', asyncHandler(recordController.getChartData))
+router.get('/chart-data', asyncHandler(recordController.getChartData));
+router.post('/create', asyncHandler(recordController.createRecord));
 
 export const recordRoute = router

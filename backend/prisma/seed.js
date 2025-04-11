@@ -9,7 +9,7 @@ const prisma = new PrismaClient()
 const main = async () => {
     seedRecordData()
 
-    const tables = ['User', 'Farm', 'Area', 'Crop', 'PlantedCrop', 'DeviceLog', 'Record', 'Schedule']
+    const tables = ['User', 'Farm', 'Area', 'Crop', 'PlantedCrop', 'DeviceLog', 'Record', 'Schedule', 'UserActionLog'];
     for (const table of tables.slice().reverse()) {
         await prisma[table].deleteMany({})
     }

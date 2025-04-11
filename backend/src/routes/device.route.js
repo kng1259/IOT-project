@@ -11,6 +11,7 @@ const router = express.Router()
  *   description: API endpoints for managing devices
  */
 
+
 /**
  * @swagger
  * /api/v1/device/sync:

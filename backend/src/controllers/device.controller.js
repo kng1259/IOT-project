@@ -1,5 +1,6 @@
-import { StatusCodes } from 'http-status-codes'
-import { deviceService } from '../services/device.service.js'
+import { StatusCodes } from 'http-status-codes';
+import { deviceService } from '../services/device.service.js';
+import ApiError from '../helpers/ApiError.js';
 
 const syncDeviceLogs = async (req, res) => {
     const areaId = parseInt(req.query.areaId)
@@ -22,6 +23,7 @@ const controlDevice = async (req, res) => {
         return res.status(error.statusCode).json({ message: error.message })
     }
 }
+
 
 export const deviceController = {
     syncDeviceLogs,
