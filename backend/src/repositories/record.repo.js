@@ -10,7 +10,7 @@ const findLatestRecordByAreaId = async (areaId) => {
 }
 
 const getAverageRecordsForLast8Hours = async (areaId) => {
-  return await prisma.$queryRaw`
+    return await prisma.$queryRaw`
     SELECT 
       DATE_TRUNC('hour', timestamp) + INTERVAL '30 minutes' * (EXTRACT(MINUTE FROM timestamp)::int / 30) AS time_slot,
       AVG(light) AS avg_light,
@@ -22,47 +22,45 @@ const getAverageRecordsForLast8Hours = async (areaId) => {
       AND timestamp >= NOW() - INTERVAL '8 hours'
     GROUP BY time_slot
     ORDER BY time_slot DESC;
-  `;
-};
+  `
+}
 
 const createSensorRecord = async ({ sensorData, areaId, note }) => {
-  const area = await prisma.area.findUnique({
-    where: { id: areaId },
-  });
+    const area = await prisma.area.findUnique({
+        where: { id: areaId }
+    })
 
-  if (!area) {
-    throw new Error(`Khu vực area với id ${areaId} không tồn tại`);
-  }
+    if (!area) {
+        throw new Error(`Khu vực area với id ${areaId} không tồn tại`)
+    }
 
-  const { temperature, humidity, light, soilMoisture } = sensorData;
+    console.log(sensorData)
 
-  const record = await prisma.record.create({
-    data: {
-      ...sensorData,
-      areaId,
-      timestamp: new Date(),
-    },
-  });
+    const record = await prisma.record.create({
+        data: {
+            ...sensorData,
+            areaId
+        }
+    })
 
-  // Có cần log hoạt động sensor không nhỉ?
-  await prisma.deviceLog.create({
-    data: {
-      action: 'collect_sensor',
-      deviceType: 'sensor',
-      areaId,
-      timestamp: new Date(),
-      note:
-        note ||
-        `Sensor values: Temp ${temperature}°C, Humid ${humidity}%, Light ${light}lux, Soil ${soilMoisture}%`,
-    },
-  });
+    // Có cần log hoạt động sensor không nhỉ?
+    // await prisma.deviceLog.create({
+    //     data: {
+    //         action: 'collect_sensor',
+    //         deviceType: 'sensor',
+    //         areaId,
+    //         timestamp: new Date(),
+    //         note:
+    //             note ||
+    //             `Sensor values: Temp ${temperature}°C, Humid ${humidity}%, Light ${light}lux, Soil ${soilMoisture}%`
+    //     }
+    // })
 
-  return record;
-};
-
+    return record
+}
 
 export const recordRepo = {
-  findLatestRecordByAreaId,
-  getAverageRecordsForLast8Hours,
-  createSensorRecord
-};
+    findLatestRecordByAreaId,
+    getAverageRecordsForLast8Hours,
+    createSensorRecord
+}

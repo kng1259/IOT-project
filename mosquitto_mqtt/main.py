@@ -55,9 +55,10 @@ def on_message(client, userdata, msg):
             "light": data[2],
             "soilMoisture": data[3]
         }
-        # Convert the payload to a JSON string
         message_json = json.dumps(payload)
-        device_client.send_message(message_json)
+        message = Message(message_json)
+        message.custom_properties["type"] = f"telemetry"
+        device_client.send_message(message)
     except Exception as e:
         print(f"Failed to send message to IoT Hub: {e}")
 

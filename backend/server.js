@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
-import app from './src/app.js';
-import { env } from './src/helpers/environment.js';
+import app from './src/app.js'
+import { env } from './src/helpers/environment.js'
+import { stopEventHub } from './src/helpers/eventhub.js'
 
 import { loadSchedules } from './src/services/scheduleManager.js'
 
@@ -15,4 +16,5 @@ const server = app.listen(PORT, '0.0.0.0', () => {
 
 process.on('SIGINT', () => {
     server.close(() => console.log('Exit server'))
+    stopEventHub()
 })
