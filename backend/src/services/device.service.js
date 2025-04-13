@@ -49,6 +49,7 @@ const controlDevice = async (areaId, action, deviceType) => {
             description: `Người dùng đã ${command} trong khu vực ${areaId}`,
             areaId
         })
+        return {success: true}
     } catch (error) {
         console.error(`Lỗi khi lưu log: `, error)
     }

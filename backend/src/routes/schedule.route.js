@@ -58,13 +58,6 @@ router.route('/get').get(asyncHandler(scheduleController.getSchedules))
  *   post:
  *     summary: Create a new schedule for a specific area
  *     tags: [Schedules]
- *     parameters:
- *       - in: query
- *         name: areaId
- *         schema:
- *           type: integer
- *         required: true
- *         description: ID of the area to create a schedule for
  *     requestBody:
  *       required: true
  *       content:
@@ -72,6 +65,8 @@ router.route('/get').get(asyncHandler(scheduleController.getSchedules))
  *           schema:
  *             type: object
  *             properties:
+ *               areaId:
+ *                 type: integer
  *               startTime:
  *                 type: string
  *                 format: time
