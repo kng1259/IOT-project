@@ -1,14 +1,5 @@
 ### Using Rest Client to test
 ### Create Device Log
-POST http://localhost:8080/api/v1/device/create
-Content-Type: application/json
-
-{
-  "action": "watering",
-  "deviceType": "pump",
-  "areaId": 1,
-  "note": "Testing device log creation"
-}
 
 ###
 
@@ -63,4 +54,4 @@ GET http://localhost:8080/api/v1/action-logs/get?userId=55b32078-551a-469d-9a34-
 GET http://localhost:8080/api/v1/action-logs/get?userId=55b32078-551a-469d-9a34-94999e1f12a0&areaId=1
 
 ### Get logs by areaId
-GET http://localhost:8080/api/v1/action-logs/get?areaId=1
+GET http://localhost:8080/api/v1/action-logs/get?areaId=4

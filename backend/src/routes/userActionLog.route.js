@@ -11,26 +11,32 @@ const router = express.Router()
  *   description: API endpoints for managing user action logs
  */
 
+
 /**
  * @swagger
  * /api/v1/action-logs/get:
  *   get:
- *     summary: Get user action logs by userId or areaId
+ *     summary: Retrieve user action logs by userId, areaId, or both
+ *     description: Returns logs filtered by userId, areaId, or a combination of both. At least one parameter is required.
  *     tags: [UserActionLogs]
  *     parameters:
  *       - in: query
  *         name: userId
  *         schema:
  *           type: string
- *         description: User ID to filter logs by
+ *           example: "user_123"
+ *         required: false
+ *         description: ID of the user whose logs are to be retrieved
  *       - in: query
  *         name: areaId
  *         schema:
  *           type: string
- *         description: Area ID to filter logs by
+ *           example: "1"
+ *         required: false
+ *         description: ID of the area whose logs are to be retrieved
  *     responses:
  *       200:
- *         description: Returns user action logs
+ *         description: Successfully retrieved user action logs
  *         content:
  *           application/json:
  *             schema:
@@ -40,69 +46,136 @@ const router = express.Router()
  *                 properties:
  *                   id:
  *                     type: string
+ *                     format: uuid
+ *                     example: "log_123"
  *                   userId:
  *                     type: string
- *                   areaId:
- *                     type: string
+ *                     example: "user_1"
  *                   action:
  *                     type: string
+ *                     example: "WATERING"
+ *                   description:
+ *                     type: string
+ *                     nullable: true
+ *                     example: "Watered crops in area 1"
+ *                   areaId:
+ *                     type: integer
+ *                      example: 1
  *                   timestamp:
  *                     type: string
  *                     format: date-time
+ *                     example: "2025-04-15T09:45:30Z"
  *       400:
- *         description: Missing required query parameters
+ *         description: Bad request - Missing required fields
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "error message"
  *       500:
  *         description: Server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "error message"
  */
+
 router.route('/get').get(asyncHandler(userActionLogController.getUserLogs))
 
-// /**
-//  * @swagger
-//  * /api/v1/action-logs/create:
-//  *   post:
-//  *     summary: Create a new user action log
-//  *     tags: [UserActionLogs]
-//  *     requestBody:
-//  *       required: true
-//  *       content:
-//  *         application/json:
-//  *           schema:
-//  *             type: object
-//  *             required:
-//  *               - userId
-//  *               - areaId
-//  *               - action
-//  *             properties:
-//  *               userId:
-//  *                 type: string
-//  *               areaId:
-//  *                 type: string
-//  *               action:
-//  *                 type: string
-//  *     responses:
-//  *       201:
-//  *         description: Log created successfully
-//  *         content:
-//  *           application/json:
-//  *             schema:
-//  *               type: object
-//  *               properties:
-//  *                 id:
-//  *                   type: string
-//  *                 userId:
-//  *                   type: string
-//  *                 areaId:
-//  *                   type: string
-//  *                 action:
-//  *                   type: string
-//  *                 timestamp:
-//  *                   type: string
-//  *                   format: date-time
-//  *       400:
-//  *         description: Bad request - Missing required fields
-//  *       500:
-//  *         description: Server error
-//  */
+/**
+ * @swagger
+ * /api/v1/action-logs/create:
+ *   post:
+ *     summary: Create a new user action log
+ *     tags: [UserActionLogs]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - userId
+ *               - action
+ *               - areaId
+ *             properties:
+ *               userId:
+ *                 type: string
+ *                 example: "user_1"
+ *               action:
+ *                 type: string
+ *                 example: "WATERING"
+ *               description:
+ *                 type: string
+ *                 nullable: true
+ *                 example: "Watered crops in area 1"
+ *               areaId:
+ *                 type: integer
+ *                 example: 1
+ *     responses:
+ *       201:
+ *         description: Successfully created user action log
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: string
+ *                       format: uuid
+ *                       example: "log_123"
+ *                     userId:
+ *                       type: string
+ *                       example: "user_1"
+ *                     action:
+ *                       type: string
+ *                       example: "WATERING"
+ *                     description:
+ *                       type: string
+ *                       nullable: true
+ *                       example: "Watered crops in area 1"
+ *                     areaId:
+ *                       type: integer
+ *                       example: 1
+ *                     timestamp:
+ *                       type: string
+ *                       format: date-time
+ *                       example: "2025-04-15T09:45:30Z"
+ *       400:
+ *         description: Bad Request – Missing or invalid fields
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "error message"
+ *       500:
+ *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "error message"
+ */
+
 router.route('/create').post(asyncHandler(userActionLogController.createUserActionLog))
 
 export const userActionLogRoute = router
