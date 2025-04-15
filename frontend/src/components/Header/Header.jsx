@@ -10,6 +10,7 @@ import { Confirm } from '~/utils/sweet'
 import { fetchListAreasAPI, fetchListFarmsAPI } from '~/apis'
 import { useEffect, useState } from 'react'
 import { selectActiveAreaId, selectActiveFarmId, setDashboardAreaId, setDashboardFarmId } from '~/redux/dashboard/dashboardSlice'
+import { socketIoInstance } from '~/socketClient'
 
 function Header() {
     const dispatch = useDispatch()
@@ -17,9 +18,8 @@ function Header() {
     const activeAreaId = useSelector(selectActiveAreaId)
 
     const [farms, setFarms] = useState([])
-
     const [areas, setAreas] = useState([])
-
+    const [isNotified, setIsNotified] = useState(JSON.parse(localStorage.getItem('isNotified')))
     const currentUser = useSelector(selectCurrentUser)
 
     useEffect(() => {
@@ -30,6 +30,24 @@ function Header() {
             }
         })
     }, [currentUser.user_id, dispatch])
+
+    const onNotification = (data) => {
+        localStorage.setItem('isNotified', JSON.stringify(true))
+        setIsNotified(true)
+    }
+
+    const offNotification = () => {
+        localStorage.setItem('isNotified', JSON.stringify(false))
+        setIsNotified(false)
+    }
+
+    useEffect(() => {
+        socketIoInstance.on('BE_ALERT_NOTIFICATION', onNotification)
+
+        return () => {
+            socketIoInstance.off('BE_ALERT_NOTIFICATION', onNotification)
+        }
+    }, [])
 
     useEffect(() => {
         if (activeFarmId) {
@@ -96,7 +114,10 @@ function Header() {
 
             {/* avatar */}
             <div className="flex items-center gap-6">
-                <IoNotificationsOutline className="rounded-full p-2 text-[40px] hover:cursor-pointer hover:shadow-inner hover:shadow-black" />
+                <div className='relative'>
+                    <IoNotificationsOutline className="rounded-full p-2 text-[40px] hover:cursor-pointer hover:shadow-inner hover:shadow-black" onClick={offNotification}/>
+                    {<div className='size-2 bg-orange-500 rounded-full absolute top-1 right-1'></div>}
+                </div>
 
                 <Dropdown menu={{ items }} trigger={['click']}>
                     <div

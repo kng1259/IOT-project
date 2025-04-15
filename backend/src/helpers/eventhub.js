@@ -1,7 +1,12 @@
 import { EventHubConsumerClient } from '@azure/event-hubs'
 import { recordRepo } from '../repositories/record.repo.js'
+import { sendMail } from './sendMail.js'
 
 let consumerClient
+let io = null
+let req = null
+export const initSocket = mainSocket => io = mainSocket
+export const initReq = mainReq => req = mainReq
 
 const initClient = async () => {
     consumerClient = new EventHubConsumerClient('$Default', process.env.EVENT_HUB_CONNECTION_STRING)
@@ -45,6 +50,15 @@ const eventProcessor = async (events, context) => {
             })
         } else if (event.properties.type === 'alert') {
             // Handle warning event
+            io.emit('BE_ALERT_NOTIFICATION', event.data)
+            const customSubject = 'IOT Smart Farm: Cảnh báo vượt ngưỡng!'
+            const htmlContent = `
+                <h3>Please click the following link to verify your account:</h3>
+                
+                <h3>Sincerely, <br /> - Levionthemic - </h3>
+            `
+            sendMail(req.jwtDecoded.email, customSubject, htmlContent)
+
             console.log('Alert event:', event.data)
         }
     }
