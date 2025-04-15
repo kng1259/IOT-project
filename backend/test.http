@@ -14,7 +14,7 @@ Content-Type: application/json
     "humidity": 60,
     "soilMoisture": 35
   },
-  "areaId": 1,
+  "areaId": 11,
   "note": "Testing record from HTTP test"
 }
 
@@ -26,7 +26,7 @@ POST http://localhost:8080/api/v1/schedule/create?areaId=1
 Content-Type: application/json
 
 {
-  "areaId": "1",
+  "areaId": "3",
   "startTime": "08:00",
   "endTime": "08:30",
   "frequency": ["Monday", "Wednesday", "Friday"],
@@ -39,7 +39,7 @@ Content-Type: application/json
 
 {
   "userId": "55b32078-551a-469d-9a34-94999e1f12a0",
-  "areaId": 1,
+  "areaId": 10,
   "action": "WATERING",
   "description": "Watered crops in test area"
 }
@@ -54,4 +54,4 @@ GET http://localhost:8080/api/v1/action-logs/get?userId=55b32078-551a-469d-9a34-
 GET http://localhost:8080/api/v1/action-logs/get?userId=55b32078-551a-469d-9a34-94999e1f12a0&areaId=1
 
 ### Get logs by areaId
-GET http://localhost:8080/api/v1/action-logs/get?areaId=1
+GET http://localhost:8080/api/v1/action-logs/get?areaId=4
