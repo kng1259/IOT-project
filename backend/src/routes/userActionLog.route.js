@@ -60,7 +60,7 @@ const router = express.Router()
  *                     example: "Watered crops in area 1"
  *                   areaId:
  *                     type: integer
- *                     example: "1"
+ *                      example: 1
  *                   timestamp:
  *                     type: string
  *                     format: date-time
