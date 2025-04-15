@@ -61,3 +61,18 @@ variable "key_vault_id" {
   description = "The ID of the key vault."
   type        = string
 }
+
+variable "event_hub_name" {
+  description = "The name of the event hub."
+  type = string
+}
+
+variable "iothub_constring_secret_id" {
+  description = "The ID of the IoT Hub connection string secret."
+  type        = string
+}
+
+variable "eventhub_constring_secret_id" {
+  description = "The ID of the Event Hub connection string secret."
+  type        = string
+}

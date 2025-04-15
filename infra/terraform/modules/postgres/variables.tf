@@ -53,7 +53,3 @@ variable "key_vault_id" {
 variable "key_vault_name" {
   description = "The name of the Key Vault in which to store the PostgreSQL Server connection string."
 }
-
-variable "iothub_eventhub_connection_string_secret_name" {
-  description = "The name of the Key Vault secret containing the IoT Hub Event Hub connection string."
-}
