@@ -67,8 +67,24 @@ const router = express.Router()
  *                     example: "2025-04-15T09:45:30Z"
  *       400:
  *         description: Bad request - Missing required fields
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "error message"
  *       500:
  *         description: Server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "error message"
  */
 
 router.route('/get').get(asyncHandler(userActionLogController.getUserLogs))
@@ -140,6 +156,14 @@ router.route('/get').get(asyncHandler(userActionLogController.getUserLogs))
  *                       example: "2025-04-15T09:45:30Z"
  *       400:
  *         description: Bad Request – Missing or invalid fields
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "error message"
  *       500:
  *         description: Internal Server Error
  *         content:
@@ -149,7 +173,7 @@ router.route('/get').get(asyncHandler(userActionLogController.getUserLogs))
  *               properties:
  *                 error:
  *                   type: string
- *                   example: "Something went wrong: [error message]"
+ *                   example: "error message"
  */
 
 router.route('/create').post(asyncHandler(userActionLogController.createUserActionLog))
