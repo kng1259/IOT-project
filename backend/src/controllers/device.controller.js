@@ -20,7 +20,8 @@ const controlDevice = async (req, res) => {
         const result = await deviceService.controlDevice(areaId, action, deviceType)
         return res.status(StatusCodes.OK).json(result)
     } catch (error) {
-        return res.status(error.statusCode).json({ message: error.message })
+        const statusCode = error.statusCode || StatusCodes.INTERNAL_SERVER_ERROR;
+        return res.status(statusCode).json({ message: error.message })
     }
 }
 
