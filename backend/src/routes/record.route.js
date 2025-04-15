@@ -92,6 +92,66 @@ router.get('/latest', asyncHandler(recordController.getLatestRecordByArea))
  *         description: Server error
  */
 router.get('/chart-data', asyncHandler(recordController.getChartData));
+
+
+/**
+ * @swagger
+ * /api/v1/records/create:
+ *   post:
+ *     summary: Create a new sensor record
+ *     tags: [Records]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               sensorData:
+ *                 type: object
+ *                 required:
+ *                   - light
+ *                   - temperature
+ *                   - humidity
+ *                   - soilMoisture
+ *                 properties:
+ *                   light:
+ *                     type: number
+ *                     example: 450.2
+ *                   temperature:
+ *                     type: number
+ *                     example: 27.5
+ *                   humidity:
+ *                     type: number
+ *                     example: 60
+ *                   soilMoisture:
+ *                     type: number
+ *                     example: 35
+ *               areaId:
+ *                 type: integer
+ *                 example: 1
+ *               note:
+ *                 type: string
+ *                 example: "Testing"
+ *     responses:
+ *       201:
+ *         description: Sensor record created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 record:
+ *                   type: object
+ *                   description: The created sensor record object
+ *       400:
+ *         description: Missing or invalid sensor data or areaId
+ *       500:
+ *         description: Internal server error while creating sensor record
+ */
 router.post('/create', asyncHandler(recordController.createRecord));
 
 export const recordRoute = router
