@@ -1,6 +1,8 @@
 /* eslint-disable no-console */
 import fs from 'fs'
 import { v4 as uuidv4 } from 'uuid'
+import { fileURLToPath } from 'url'
+import { dirname, join } from 'path'
 
 /**
  * Write an array of objects to a JSON file.
@@ -54,6 +56,10 @@ function generateData(amount) {
 }
 
 export function seedRecordData() {
-    writeDataToJsonFile(generateData(60), './prisma/data/Record.json')
+    const __filename = fileURLToPath(import.meta.url)
+    const __dirname = dirname(__filename)
+
+    // Use join to create a path relative to the current file
+    writeDataToJsonFile(generateData(60), join(__dirname, 'data/Record.json'))
     console.log('Record data seeded')
 }
