@@ -2,9 +2,7 @@ pipeline{
     agent{
         label "physical"
     }
-    environment{
-        // API_ROOT set on build
-    }
+    // API_ROOT set on build
     stages{
         stage('Checkout'){
             steps{
