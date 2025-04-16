@@ -120,6 +120,18 @@ resource "azurerm_container_app" "backend" {
         name        = "REFRESH_TOKEN_PRIVATE_KEY"
         secret_name = "jwt-refresh-token"
       }
+      env {
+        name = "IOT_HUB_CONNECTION_STRING"
+        secret_name = "iothub-connection-string"
+      }
+      env {
+        name = "EVENT_HUB_CONNECTION_STRING"
+        secret_name = "eventhub-connection-string"
+      }
+      env {
+        name = "EVENT_HUB_NAME"
+        value = var.event_hub_name
+      }
     }
   }
 
@@ -149,6 +161,18 @@ resource "azurerm_container_app" "backend" {
     name                = "jwt-refresh-token"
     identity            = "System"
     key_vault_secret_id = azurerm_key_vault_secret.jwt_refresh_token.id
+  }
+
+  secret {
+    name = "iothub-connection-string"   
+    identity = "System"
+    key_vault_secret_id = var.iothub_constring_secret_id
+  }
+
+  secret {
+    name = "eventhub-connection-string"   
+    identity = "System"
+    key_vault_secret_id = var.eventhub_constring_secret_id
   }
 
   identity {

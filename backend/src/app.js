@@ -16,6 +16,8 @@ import { Server } from 'socket.io'
 import http from 'http'
 import { fetchChartDataSocket, fetchStatisticsSocket } from './sockets/index.js'
 import pg from 'pg'
+import { startEventHub } from './helpers/eventhub.js'
+
 const { Pool } = pg
 
 const pool = new Pool({
@@ -64,8 +66,8 @@ app.use(
 )
 
 swagger(app)
+startEventHub()
 app.use('/api/v1', router)
-
 
 app.all('*', (req, res, next) => {
     // disable stack trace for stupid error

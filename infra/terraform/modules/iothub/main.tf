@@ -30,6 +30,12 @@ resource "azurerm_iothub_shared_access_policy" "device_access" {
   device_connect = true
 }
 
+resource "azurerm_key_vault_secret" "iothub_connection_string" {
+  key_vault_id = var.key_vault_id
+  name         = "iothub-connection-string"
+  value        = "HostName=${azurerm_iothub.main.name}.azure-devices.net;SharedAccessKeyName=${azurerm_iothub_shared_access_policy.service_access.name};SharedAccessKey=${azurerm_iothub_shared_access_policy.service_access.primary_key}"
+}
+
 resource "azurerm_key_vault_secret" "iothub_eventhub_connection_string" {
   key_vault_id = var.key_vault_id
   name         = "iothub-eventhub-connection-string"

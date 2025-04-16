@@ -10,7 +10,7 @@ ENTRYPOINT ["sh", "-c", \
     --from-empty \
     --to-schema-datamodel schema.prisma \
     --script > migrations/0_init/migration.sql \
-    && npx prisma migrate reset --force --skip-generator --skip-seed \
+    && npx prisma migrate reset --force --skip-generate --skip-seed \
     && npx prisma migrate deploy \
     && npx prisma generate --generator client \
     && node seed.js"]

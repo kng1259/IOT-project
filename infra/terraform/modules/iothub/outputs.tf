@@ -20,6 +20,10 @@ output "group_sym_key" {
   value = local.group_sym_key
 }
 
-output "iothub_eventhub_connection_string_secret_name" {
-  value = azurerm_key_vault_secret.iothub_eventhub_connection_string.name
+output "iothub_connection_string_secret_id" {
+  value = azurerm_key_vault_secret.iothub_connection_string.id
+}
+
+output "iothub_eventhub_connection_string_secret_id" {
+  value = azurerm_key_vault_secret.iothub_eventhub_connection_string.id
 }
