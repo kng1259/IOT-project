@@ -15,7 +15,7 @@ pipeline{
                 dir('frontend'){
                     script{
                         sh 'npm install'
-                        sh 'echo "VITE_API_ROOT=${API_ROOT} > .env.production'
+                        sh 'echo "VITE_API_ROOT=${API_ROOT}" > .env.production'
                         sh 'npx vite build'
                     }
                 }
