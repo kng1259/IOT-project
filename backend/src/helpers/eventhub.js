@@ -53,9 +53,90 @@ const eventProcessor = async (events, context) => {
             io.emit('BE_ALERT_NOTIFICATION', event.data)
             const customSubject = 'IOT Smart Farm: Cảnh báo vượt ngưỡng!'
             const htmlContent = `
-                <h3>Please click the following link to verify your account:</h3>
-                
-                <h3>Sincerely, <br /> - Levionthemic - </h3>
+                <!DOCTYPE html>
+                <html lang="vi">
+                <head>
+                    <meta charset="UTF-8" />
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+                    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+                    <title>Cảnh báo hệ thống IOT Smart Farm</title>
+                    <style>
+                        body {
+                            margin: 0;
+                            padding: 0;
+                            background-color: #f9f9f9;
+                            font-family: Arial, sans-serif;
+                        }
+                        .container {
+                            max-width: 600px;
+                            margin: 0 auto;
+                            background-color: #ffffff;
+                            border-radius: 8px;
+                            overflow: hidden;
+                            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+                        }
+                        .header {
+                            background-color: #d32f2f;
+                            padding: 20px;
+                            color: #ffffff;
+                            text-align: center;
+                        }
+                        .header h1 {
+                            margin: 0;
+                            font-size: 24px;
+                        }
+                        .content {
+                            padding: 20px;
+                            color: #333333;
+                        }
+                        .content p {
+                            margin-bottom: 12px;
+                            font-size: 16px;
+                            line-height: 1.5;
+                        }
+                        .alert-box {
+                            background-color: #fdecea;
+                            border-left: 5px solid #d32f2f;
+                            padding: 15px;
+                            margin: 20px 0;
+                            color: #b71c1c;
+                            font-weight: bold;
+                        }
+                        .footer {
+                            background-color: #eeeeee;
+                            text-align: center;
+                            font-size: 12px;
+                            color: #777777;
+                            padding: 10px 20px;
+                        }
+                    </style>
+                </head>
+                <body>
+                <div class="container">
+                    <div class="header">
+                        <h1>CẢNH BÁO VƯỢT NGƯỠNG</h1>
+                        <p>Hệ thống IOT Smart Farm</p>
+                    </div>
+                    <div class="content">
+                        <p>Xin chào,</p>
+                        <p>Hệ thống vừa ghi nhận một giá trị vượt ngưỡng cho phép.</p>
+                        <div class="alert-box">
+                            <!-- Bạn thay các giá trị dưới bằng dữ liệu thực -->
+                            Cảm biến: <strong>[Tên cảm biến]</strong><br/>
+                            Giá trị đo: <strong>[Giá trị hiện tại]</strong><br/>
+                            Ngưỡng cho phép: <strong>[Ngưỡng cảnh báo]</strong><br/>
+                            Thời gian: <strong>[Thời gian đo]</strong>
+                        </div>
+                        <p>Vui lòng kiểm tra hệ thống sớm nhất có thể để đảm bảo hoạt động ổn định.</p>
+                        <p>Trân trọng,<br>Hệ thống IOT Smart Farm</p>
+                    </div>
+                    <div class="footer">
+                        <p>Đây là email tự động. Vui lòng không trả lời email này.</p>
+                    </div>
+                </div>
+                </body>
+                </html>
+
             `
             sendMail(req.jwtDecoded.email, customSubject, htmlContent)
 
