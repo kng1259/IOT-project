@@ -50,7 +50,7 @@ const eventProcessor = async (events, context) => {
             })
         } else if (event.properties.type === 'alert') {
             // Handle warning event
-            io.emit('BE_ALERT_NOTIFICATION', event.data)
+            io.emit('BE_ALERT_NOTIFICATION')
             const customSubject = 'IOT Smart Farm: Cảnh báo vượt ngưỡng!'
             const htmlContent = `
                 <!DOCTYPE html>
@@ -121,7 +121,6 @@ const eventProcessor = async (events, context) => {
                         <p>Xin chào,</p>
                         <p>Hệ thống vừa ghi nhận một giá trị vượt ngưỡng cho phép.</p>
                         <div class="alert-box">
-                            <!-- Bạn thay các giá trị dưới bằng dữ liệu thực -->
                             Cảm biến: <strong>[Tên cảm biến]</strong><br/>
                             Giá trị đo: <strong>[Giá trị hiện tại]</strong><br/>
                             Ngưỡng cho phép: <strong>[Ngưỡng cảnh báo]</strong><br/>

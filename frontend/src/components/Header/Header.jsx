@@ -1,6 +1,6 @@
 import { IoFilter } from 'react-icons/io5'
 import { IoNotificationsOutline } from 'react-icons/io5'
-import { Dropdown } from 'antd'
+import { Alert, Dropdown } from 'antd'
 
 import bg from '../../assets/images/bgFarm.png'
 import { toast } from 'react-toastify'
@@ -31,7 +31,7 @@ function Header() {
         })
     }, [currentUser.user_id, dispatch])
 
-    const onNotification = (data) => {
+    const onNotification = () => {
         localStorage.setItem('isNotified', JSON.stringify(true))
         setIsNotified(true)
     }
@@ -100,39 +100,46 @@ function Header() {
     ]
 
     return (
-        <header className="flex items-center justify-between">
-            <div className="flex gap-4">
-                <IoFilter className="text-3xl" />
-                <select className="cursor-pointer rounded-lg px-4 py-1 shadow outline-none" onChange={handleChangeFarmId} value={activeFarmId}>
-                    <option value=""> -- Chọn nông trại -- </option>
-                    {farms.map(farm => <option key={farm.id} value={farm.id}>{farm.name}</option>)}
-                </select>
-                <select className="cursor-pointer rounded-lg px-4 py-1 shadow outline-none" onChange={handleChangeAreaId} value={activeAreaId}>
-                    {areas.map(area => <option key={area.id} value={area.id}>{area.name}</option>)}
-                </select>
-            </div>
-
-            {/* avatar */}
-            <div className="flex items-center gap-6">
-                <div className='relative'>
-                    <IoNotificationsOutline className="rounded-full p-2 text-[40px] hover:cursor-pointer hover:shadow-inner hover:shadow-black" onClick={offNotification}/>
-                    {<div className='size-2 bg-orange-500 rounded-full absolute top-1 right-1'></div>}
+        <>
+            {isNotified && <Alert
+                type='error'
+                message=<div><b>Cảnh báo vượt ngưỡng!</b> Vui lòng kiểm tra email để biết thêm chi tiết.</div>
+                banner
+                closable
+                className='mb-2'
+                afterClose={offNotification}
+            />}
+            <header className="flex items-center justify-between">
+                <div className="flex gap-4">
+                    <IoFilter className="text-3xl" />
+                    <select className="cursor-pointer rounded-lg px-4 py-1 shadow outline-none" onChange={handleChangeFarmId} value={activeFarmId}>
+                        <option value=""> -- Chọn nông trại -- </option>
+                        {farms.map(farm => <option key={farm.id} value={farm.id}>{farm.name}</option>)}
+                    </select>
+                    <select className="cursor-pointer rounded-lg px-4 py-1 shadow outline-none" onChange={handleChangeAreaId} value={activeAreaId}>
+                        {areas.map(area => <option key={area.id} value={area.id}>{area.name}</option>)}
+                    </select>
                 </div>
 
-                <Dropdown menu={{ items }} trigger={['click']}>
-                    <div
-                        className="size-9 rounded-full border shadow-sm shadow-slate-500 cursor-pointer"
-                        style={{
-                            backgroundImage: `url(${bg})`,
-                            backgroundSize: 'cover',
-                            backgroundPosition: 'center',
-                            backgroundRepeat: 'no-repeat'
-                        }}
-                    >
-                    </div>
-                </Dropdown>
-            </div>
-        </header>
+                {/* avatar */}
+                <div className="flex items-center gap-6">
+                    <IoNotificationsOutline className="rounded-full p-2 text-[40px] hover:cursor-pointer hover:shadow-inner hover:shadow-black"/>
+
+                    <Dropdown menu={{ items }} trigger={['click']}>
+                        <div
+                            className="size-9 rounded-full border shadow-sm shadow-slate-500 cursor-pointer"
+                            style={{
+                                backgroundImage: `url(${bg})`,
+                                backgroundSize: 'cover',
+                                backgroundPosition: 'center',
+                                backgroundRepeat: 'no-repeat'
+                            }}
+                        >
+                        </div>
+                    </Dropdown>
+                </div>
+            </header>
+        </>
     )
 }
 
