@@ -34,8 +34,6 @@ const createSensorRecord = async ({ sensorData, areaId, note }) => {
         throw new Error(`Khu vực area với id ${areaId} không tồn tại`)
     }
 
-    console.log(sensorData)
-
     const record = await prisma.record.create({
         data: {
             ...sensorData,
