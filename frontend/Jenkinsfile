@@ -3,7 +3,7 @@ pipeline{
         label "physical"
     }
     environment{
-        API_ROOT
+        // API_ROOT set on build
     }
     stages{
         stage('Checkout'){
