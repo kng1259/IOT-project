@@ -1,12 +1,13 @@
 import { EventHubConsumerClient } from '@azure/event-hubs'
 import { recordRepo } from '../repositories/record.repo.js'
 import { sendMail } from './sendMail.js'
+import { areaRepo } from '../repositories/area.repo.js'
+import { farmRepo } from '../repositories/farm.repo.js'
+import { userRepo } from '../repositories/user.repo.js'
 
 let consumerClient
 let io = null
-let req = null
-export const initSocket = mainSocket => io = mainSocket
-export const initReq = mainReq => req = mainReq
+export const initSocket = (mainSocket) => (io = mainSocket)
 
 const initClient = async () => {
     consumerClient = new EventHubConsumerClient('$Default', process.env.EVENT_HUB_CONNECTION_STRING)
@@ -51,6 +52,17 @@ const eventProcessor = async (events, context) => {
         } else if (event.properties.type === 'alert') {
             // Handle warning event
             io.emit('BE_ALERT_NOTIFICATION')
+
+            const areaId = parseInt(event.body.areaId)
+            const area = await areaRepo.findAreaById(areaId)
+            const farm = await farmRepo.findFarmById(area.farmId)
+            const user = await userRepo.findUserById(farm.userId)
+
+            const sensorName = ''
+            const measuredValue = ''
+            const limitedValue = ''
+            const measuredTime = ''
+
             const customSubject = 'IOT Smart Farm: Cảnh báo vượt ngưỡng!'
             const htmlContent = `
                 <!DOCTYPE html>
@@ -121,10 +133,10 @@ const eventProcessor = async (events, context) => {
                         <p>Xin chào,</p>
                         <p>Hệ thống vừa ghi nhận một giá trị vượt ngưỡng cho phép.</p>
                         <div class="alert-box">
-                            Cảm biến: <strong>[Tên cảm biến]</strong><br/>
-                            Giá trị đo: <strong>[Giá trị hiện tại]</strong><br/>
-                            Ngưỡng cho phép: <strong>[Ngưỡng cảnh báo]</strong><br/>
-                            Thời gian: <strong>[Thời gian đo]</strong>
+                            Cảm biến: <strong>${sensorName}</strong><br/>
+                            Giá trị đo: <strong>${measuredValue}</strong><br/>
+                            Ngưỡng cho phép: <strong>${limitedValue}</strong><br/>
+                            Thời gian: <strong>${measuredTime}</strong>
                         </div>
                         <p>Vui lòng kiểm tra hệ thống sớm nhất có thể để đảm bảo hoạt động ổn định.</p>
                         <p>Trân trọng,<br>Hệ thống IOT Smart Farm</p>
@@ -137,7 +149,7 @@ const eventProcessor = async (events, context) => {
                 </html>
 
             `
-            sendMail(req.jwtDecoded.email, customSubject, htmlContent)
+            sendMail(user.email, customSubject, htmlContent)
 
             console.log('Alert event:', event.data)
         }

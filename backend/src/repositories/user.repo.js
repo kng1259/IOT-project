@@ -7,6 +7,10 @@ const findOneByEmail = async (email) => {
     return user
 }
 
+const findUserById = async (userId) => {
+    return await prisma.User.findUnique({ where: { id: userId } })
+}
+
 const createNewUser = async (userData) => {
     const createUser = await prisma.User.create({ data: userData })
     return createUser
@@ -14,5 +18,6 @@ const createNewUser = async (userData) => {
 
 export const userRepo = {
     findOneByEmail,
-    createNewUser
+    createNewUser,
+    findUserById
 }
