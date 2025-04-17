@@ -11,7 +11,6 @@ const router = express.Router()
  *   description: API endpoints for managing user action logs
  */
 
-
 /**
  * @swagger
  * /api/v1/action-logs/get:
@@ -60,7 +59,6 @@ const router = express.Router()
  *                     example: "Watered crops in area 1"
  *                   areaId:
  *                     type: integer
- *                      example: 1
  *                   timestamp:
  *                     type: string
  *                     format: date-time
@@ -118,7 +116,6 @@ router.route('/get').get(asyncHandler(userActionLogController.getUserLogs))
  *                 example: "Watered crops in area 1"
  *               areaId:
  *                 type: integer
- *                 example: 1
  *     responses:
  *       201:
  *         description: Successfully created user action log
@@ -149,7 +146,6 @@ router.route('/get').get(asyncHandler(userActionLogController.getUserLogs))
  *                       example: "Watered crops in area 1"
  *                     areaId:
  *                       type: integer
- *                       example: 1
  *                     timestamp:
  *                       type: string
  *                       format: date-time
