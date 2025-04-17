@@ -55,3 +55,13 @@ export const deleteScheduleAPI = async (scheduleId) => {
     const response = await axiosInstance.delete(`${env.API_ROOT}/api/v1/schedule/delete/${scheduleId}`)
     return response.data
 }
+
+export const getUserLogsAPI = async (areaId) => {
+    const response = await axiosInstance.get(`${env.API_ROOT}/api/v1/action-logs/get?areaId=${areaId}`)
+    return response.data
+}
+
+export const getDeviceLogsAPI = async (areaId) => {
+    const response = await axiosInstance.get(`${env.API_ROOT}/api/v1/device/sync?areaId=${areaId}`)
+    return response.data
+}
