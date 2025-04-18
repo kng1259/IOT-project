@@ -4,7 +4,8 @@ const prisma = new PrismaClient()
 
 const getDeviceLogs = async (areaId) => {
     return await prisma.DeviceLog.findMany({
-        where: { areaId }
+        where: { areaId },
+        orderBy: { timestamp: 'desc' }
     })
 }
 
@@ -29,15 +30,14 @@ const getAreaById = async (areaId) => {
                     id: true, // Lấy farmId
                     user: {
                         select: {
-                            id: true, // Lấy userId từ farm
-                        },
-                    },
-                },
-            },
-        },
+                            id: true // Lấy userId từ farm
+                        }
+                    }
+                }
+            }
+        }
     })
 }
-
 
 export const deviceRepo = {
     getDeviceLogs,
