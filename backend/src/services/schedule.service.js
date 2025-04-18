@@ -19,7 +19,7 @@ const createSchedule = async (areaId, scheduleData) => {
         await userActionLogRepo.createUserActionLog({
             userId,
             action: 'CREATE_SCHEDULE',
-            description: `Người dùng đã tạo lịch trong khu vực ${areaId}`,
+            description: `Người dùng đã tạo lịch có ID ${schedule.id}`,
             areaId
         })
     } catch (error) {
