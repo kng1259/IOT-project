@@ -1,52 +1,46 @@
-import { BarChart, Bar, Rectangle, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 import { Table } from 'antd'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import Header from '../../components/Header/Header'
+import { getUserLogsAPI, getDeviceLogsAPI } from '~/apis'
+import { useSelector } from 'react-redux'
+import { selectActiveAreaId } from '~/redux/dashboard/dashboardSlice'
 
 function ReportPage() {
-    const [tab, setTab] = useState('chart')
-
-    const dataSource = [
-        {
-            key: '1',
-            name: 'Mike',
-            age: 32,
-            address: '10 Downing Street',
-        },
-        {
-            key: '2',
-            name: 'John',
-            age: 42,
-            address: '10 Downing Street',
-        },
-    ]
+    const [tab, setTab] = useState('userLog')
+    const [userLogs, setUserLogs] = useState([])
+    const [deviceLogs, setDeviceLogs] = useState([])
+    const areaId = useSelector(selectActiveAreaId)
 
     const columns = [
         {
             title: 'Công việc',
-            dataIndex: 'name',
-            key: 'name',
+            dataIndex: 'action',
+            key: 'action',
         },
         {
-            title: 'Thời gian bắt đầu',
-            dataIndex: 'age',
-            key: 'age',
+            title: 'Mô tả',
+            dataIndex: 'description',
+            key: 'description',
         },
         {
-            title: 'Thời gian kết thúc',
-            dataIndex: 'address',
-            key: 'address',
+            title: 'Thời gian',
+            dataIndex: 'timestamp',
+            key: 'timestamp',
         },
     ]
 
-    const data = Array.from({ length: 8 }, (_, i) => {
-        return {
-            name: ` ${i + 1}`,
-            uv: Math.floor(Math.random() * 400),
-        }
-    })
+    const formatDate = (dateString) => {
+        const date = new Date(dateString)
+        const day = String(date.getDate()).padStart(2, '0')
+        const month = String(date.getMonth() + 1).padStart(2, '0')
+        const year = date.getFullYear()
+        const hours = String(date.getHours()).padStart(2, '0')
+        const minutes = String(date.getMinutes()).padStart(2, '0')
+
+        return `${hours}:${minutes} ${day}/${month}/${year} `
+    }
 
     const toggleTab = (e, value) => {
         document.querySelectorAll('.tab').forEach((tab) => {
@@ -60,59 +54,76 @@ function ReportPage() {
         setTab(value)
     }
 
+    useEffect(() => {
+        const getDeviceLogs = async () => {
+            try {
+                const res = await getDeviceLogsAPI(areaId)
+                console.log(res)
+                if (res) {
+                    const result = res.map((item) => {
+                        return {
+                            action: item.action,
+                            description: item.note,
+                            timestamp: formatDate(item.timestamp),
+                        }
+                    })
+
+                    setDeviceLogs(result)
+                }
+            } catch (error) {
+                console.log(error)
+            }
+        }
+        const getUserLog = async () => {
+            try {
+                const res = await getUserLogsAPI(areaId)
+                console.log(res)
+                if (res) {
+                    const result = res.map((item) => {
+                        return {
+                            action: item.action,
+                            description: item.description,
+                            timestamp: formatDate(item.timestamp),
+                        }
+                    })
+
+                    setUserLogs(result)
+                }
+            } catch (error) {
+                console.log(error)
+            }
+        }
+        getUserLog()
+        getDeviceLogs()
+    }, [areaId])
+
     return (
         <div className=''>
             <Header />
-            <div className='ml-12 mt-6 flex gap-6'>
-                <select className='cursor-pointer rounded-lg px-4 py-1 shadow outline-none'>
-                    <option value='1'>Nhiệt độ</option>
-                    <option value='2'>Độ ẩm đất</option>
-                    <option value='3'>Độ ẩm không khí</option>
-                    <option value='4'>Ánh sáng</option>
-                </select>
-                <input type='date' className='cursor-pointer rounded-lg px-4 py-1 shadow outline-none' />
-            </div>
 
             <div className='mt-12 flex gap-6'>
                 <div
                     className='tab cursor-pointer select-none rounded-xl bg-primary px-4 py-2 text-white shadow'
-                    onClick={(e) => toggleTab(e, 'chart')}
+                    onClick={(e) => toggleTab(e, 'userLog')}
                 >
-                    Biểu đồ{' '}
+                    User logs{' '}
                 </div>
                 <div
                     className='tab cursor-pointer select-none rounded-xl bg-white px-4 py-2 shadow'
-                    onClick={(e) => toggleTab(e, 'history')}
+                    onClick={(e) => toggleTab(e, 'deviceLog')}
                 >
-                    Lịch sử{' '}
+                    Device Logs{' '}
                 </div>
             </div>
-            <div className='h-[400px] overflow-x-auto pt-12'>
-                {tab == 'chart' && (
-                    <ResponsiveContainer width='100%' height='100%'>
-                        <BarChart
-                            width={900}
-                            height={300}
-                            data={data}
-                            margin={{
-                                top: 5,
-                                right: 0,
-                                left: 0,
-                                bottom: 5,
-                            }}
-                        >
-                            <CartesianGrid strokeDasharray='5 3' />
-                            <XAxis dataKey='name' scrollable />
-                            <YAxis scrollable />
-                            <Tooltip />
-                            <Legend />
-                            <Bar dataKey='uv' fill='#82ca9d' activeBar={<Rectangle fill='gold' stroke='purple' />} />
-                        </BarChart>
-                    </ResponsiveContainer>
+            <div className='overflow-x-auto pt-6'>
+                {tab === 'userLog' && (
+                    <div className='max-w-[1100px] rounded-lg bg-white px-6 py-4 shadow'>
+                        <Table dataSource={userLogs} columns={columns} scroll={{ y: 75 * 5 }} />
+                    </div>
                 )}
-                {tab == 'history' && (
-                    <div className='rounded-lg bg-white px-6 py-4 shadow'>
-                        <Table dataSource={dataSource} columns={columns} />;
+                {tab === 'deviceLog' && (
+                    <div className='max-w-[1100px] rounded-lg bg-white px-6 py-4 shadow'>
+                        <Table dataSource={deviceLogs} columns={columns} scroll={{ y: 75 * 5 }} />
                     </div>
                 )}
             </div>

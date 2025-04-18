@@ -1,18 +1,1 @@
-[
-    {
-      "id": "log_001",
-      "userId": "55b32078-551a-469d-9a34-94999e1f12a0",
-      "areaId": 1,
-      "action": "WATERING",
-      "description": "Watered crops in greenhouse 1",
-      "timestamp": "2025-04-01T08:30:00Z"
-    },
-    {
-      "id": "log_002",
-      "userId": "55b32078-551a-469d-9a34-94999e1f12a0",
-      "areaId": 2,
-      "action": "LIGHTING",
-      "description": "Turned on lights for night-time photosynthesis",
-      "timestamp": "2025-04-01T10:15:45Z"
-    }
-]
+[]
