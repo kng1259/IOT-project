@@ -60,8 +60,8 @@ const eventProcessor = async (events, context) => {
             const user = await userRepo.findUserById(farm.userId)
 
             const sensorName = event.body.alert
-            const measuredValue = ''
-            const limitedValue = ''
+            const measuredValue = event.body.measuredValue
+            const limitedValue = event.body.limitedValue
             const measuredTime = new Date(event.body.timestamp)
 
             const customSubject = 'IOT Smart Farm: Cảnh báo vượt ngưỡng!'

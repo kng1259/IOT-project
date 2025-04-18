@@ -64,11 +64,20 @@ def on_message(client, userdata, msg):
         except Exception as e:
             print(f"Failed to send message to IoT Hub: {e}")
     elif topic == "alert":
+        print(*data)
+        sensor_translator = {
+            "temperature": "Nhiệt độ",
+            "humidity": "Độ ẩm",
+            "light": "Ánh sáng",
+            "soilMoisture": "Độ ẩm đất"
+        }
         payload = {
             "areaId": area_id,
             "farmId": farm_id,
             "timestamp": datetime.now(timezone.utc).isoformat(),
-            "alert": data[0]
+            "alert": sensor_translator[data[0]],
+            "measuredValue": data[1],
+            "limitedValue": data[2]
         }
         message_json = json.dumps(payload)
         message = Message(message_json)
