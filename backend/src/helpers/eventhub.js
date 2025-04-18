@@ -54,14 +54,15 @@ const eventProcessor = async (events, context) => {
             io.emit('BE_ALERT_NOTIFICATION')
 
             const areaId = parseInt(event.body.areaId)
+            const farmId = event.body.farmId
             const area = await areaRepo.findAreaById(areaId)
-            const farm = await farmRepo.findFarmById(area.farmId)
+            const farm = await farmRepo.findFarmById(farmId)
             const user = await userRepo.findUserById(farm.userId)
 
-            const sensorName = ''
+            const sensorName = event.body.alert
             const measuredValue = ''
             const limitedValue = ''
-            const measuredTime = ''
+            const measuredTime = new Date(event.body.timestamp)
 
             const customSubject = 'IOT Smart Farm: Cảnh báo vượt ngưỡng!'
             const htmlContent = `
@@ -133,6 +134,8 @@ const eventProcessor = async (events, context) => {
                         <p>Xin chào,</p>
                         <p>Hệ thống vừa ghi nhận một giá trị vượt ngưỡng cho phép.</p>
                         <div class="alert-box">
+                            Nông trại: <strong>${farm.name}</strong><br/>
+                            Khu vực: <strong>${area.name}</strong><br/>
                             Cảm biến: <strong>${sensorName}</strong><br/>
                             Giá trị đo: <strong>${measuredValue}</strong><br/>
                             Ngưỡng cho phép: <strong>${limitedValue}</strong><br/>
@@ -150,8 +153,6 @@ const eventProcessor = async (events, context) => {
 
             `
             sendMail(user.email, customSubject, htmlContent)
-
-            console.log('Alert event:', event.data)
         }
     }
 }

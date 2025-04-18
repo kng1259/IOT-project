@@ -3,7 +3,9 @@ import nodemailer from 'nodemailer'
 
 export const sendMail = (email, subject, html) => {
     const transporter = nodemailer.createTransport({
-        service: 'gmail',
+        // service: 'gmail',
+        host: 'sandbox.smtp.mailtrap.io',
+        port: 587,
         auth: {
             user: process.env.EMAIL_USER,
             pass: process.env.EMAIL_PASSWORD
@@ -11,7 +13,8 @@ export const sendMail = (email, subject, html) => {
     })
 
     const mailOptions = {
-        from: process.env.EMAIL_USER,
+        // from: process.env.EMAIL_USER,
+        from: 'bot@example.org',
         to: email,
         subject: subject,
         html: html
