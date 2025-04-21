@@ -184,15 +184,6 @@ function Dashboard() {
 
             {/* buttons handle activities */}
             <div className='mt-8 flex gap-10'>
-                <button
-                    className='btn-primary'
-                    onClick={() => {
-                        // fetchLatestRecord(areaId)
-                        toast.success('Cập nhật thành công!')
-                    }}
-                >
-                    Cập nhật
-                </button>
                 {/* pump */}
                 <button
                     onClick={() => {
@@ -242,12 +233,6 @@ function Dashboard() {
                 >
                     Biểu đồ{' '}
                 </div>
-                <div
-                    className='tab cursor-pointer select-none rounded-xl bg-white px-4 py-2 shadow'
-                    onClick={(e) => toggleTab(e, 'infor')}
-                >
-                    Lịch sử{' '}
-                </div>
                 <div className='ml-auto flex gap-4'>
                     <IoFilter className='text-3xl' />
                     <select
@@ -285,11 +270,6 @@ function Dashboard() {
                             <Line type='monotone' dataKey='data' stroke='#82ca9d' strokeWidth={3} />
                         </LineChart>
                     </ResponsiveContainer>
-                )}
-                {tab == 'infor' && (
-                    <div className='rounded-lg bg-white px-6 py-4 shadow'>
-                        <div className=''>thoong tin them</div>
-                    </div>
                 )}
             </div>
         </div>
