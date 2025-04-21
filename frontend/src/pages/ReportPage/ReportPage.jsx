@@ -95,7 +95,7 @@ function ReportPage() {
         }
         getUserLog()
         getDeviceLogs()
-    }, [])
+    }, [areaId])
 
     return (
         <div className=''>
