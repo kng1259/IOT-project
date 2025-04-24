@@ -132,6 +132,14 @@ resource "azurerm_container_app" "backend" {
         name = "EVENT_HUB_NAME"
         value = var.event_hub_name
       }
+      env {
+        name = "EMAIL_USER"
+        value = var.email_user
+      }
+      env {
+        name = "EMAIL_PASSWORD"
+        value = var.email_password
+      }
     }
   }
 

@@ -50,6 +50,7 @@ module "postgres" {
   postgres_subnet_address_prefix  = var.postgres_subnet_address_prefix
   key_vault_id                    = module.key_vault.key_vault_id
   key_vault_name                  = module.key_vault.key_vault_name
+  ssl = "off"
 }
 
 module "webapp" {

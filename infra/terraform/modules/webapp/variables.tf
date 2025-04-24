@@ -76,3 +76,13 @@ variable "eventhub_constring_secret_id" {
   description = "The ID of the Event Hub connection string secret."
   type        = string
 }
+
+variable "email_user" {
+  description = "The email user for sending emails."
+  type        = string
+}
+
+variable "email_password" {
+  description = "The email password for sending emails."
+  type        = string
+}
