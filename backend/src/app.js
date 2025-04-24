@@ -10,13 +10,12 @@ import { errorHandlingMiddleware } from './middlewares/errorHandler.js'
 import swagger from './swagger.js'
 import 'dotenv/config'
 import cookieParser from 'cookie-parser'
-import { StatusCodes } from 'http-status-codes'
 import { env } from './helpers/environment.js'
 import { Server } from 'socket.io'
 import http from 'http'
 import { fetchChartDataSocket, fetchStatisticsSocket } from './sockets/index.js'
 import pg from 'pg'
-import { startEventHub } from './helpers/eventhub.js'
+import { initSocket, startEventHub } from './helpers/eventhub.js'
 
 const { Pool } = pg
 
@@ -80,6 +79,7 @@ const socketAreaMap = new Map()
 
 const server = http.createServer(app)
 const io = new Server(server, { cors: corsOptions })
+initSocket(io)
 io.on('connection', (socket) => {
     socket.on('FE_DASHBOARD_FETCH_STATISTICS', async (areaId) => {
         socketAreaMap.set(socket.id, { socket, areaId: parseInt(areaId) })

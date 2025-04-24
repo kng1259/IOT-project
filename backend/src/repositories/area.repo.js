@@ -6,6 +6,11 @@ const findAreasByFarmId = async (farmId) => {
     return await prisma.Area.findMany({ where: { farmId } })
 }
 
+const findAreaById = async (areaId) => {
+    return await prisma.Area.findUnique({ where: { id: areaId } })
+}
+
 export const areaRepo = {
-    findAreasByFarmId
+    findAreasByFarmId,
+    findAreaById
 }

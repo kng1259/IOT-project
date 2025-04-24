@@ -1,6 +1,6 @@
 import { IoFilter } from 'react-icons/io5'
 import { IoNotificationsOutline } from 'react-icons/io5'
-import { Dropdown } from 'antd'
+import { Alert, Dropdown } from 'antd'
 
 import bg from '../../assets/images/bgFarm.png'
 import { toast } from 'react-toastify'
@@ -10,6 +10,7 @@ import { Confirm } from '~/utils/sweet'
 import { fetchListAreasAPI, fetchListFarmsAPI } from '~/apis'
 import { useEffect, useState } from 'react'
 import { selectActiveAreaId, selectActiveFarmId, setDashboardAreaId, setDashboardFarmId } from '~/redux/dashboard/dashboardSlice'
+import { socketIoInstance } from '~/socketClient'
 
 function Header() {
     const dispatch = useDispatch()
@@ -17,9 +18,8 @@ function Header() {
     const activeAreaId = useSelector(selectActiveAreaId)
 
     const [farms, setFarms] = useState([])
-
     const [areas, setAreas] = useState([])
-
+    const [isNotified, setIsNotified] = useState(JSON.parse(localStorage.getItem('isNotified')))
     const currentUser = useSelector(selectCurrentUser)
 
     useEffect(() => {
@@ -30,6 +30,24 @@ function Header() {
             }
         })
     }, [currentUser.user_id, dispatch])
+
+    const onNotification = () => {
+        localStorage.setItem('isNotified', JSON.stringify(true))
+        setIsNotified(true)
+    }
+
+    const offNotification = () => {
+        localStorage.setItem('isNotified', JSON.stringify(false))
+        setIsNotified(false)
+    }
+
+    useEffect(() => {
+        socketIoInstance.on('BE_ALERT_NOTIFICATION', onNotification)
+
+        return () => {
+            socketIoInstance.off('BE_ALERT_NOTIFICATION', onNotification)
+        }
+    }, [])
 
     useEffect(() => {
         if (activeFarmId) {
@@ -82,36 +100,46 @@ function Header() {
     ]
 
     return (
-        <header className="flex items-center justify-between">
-            <div className="flex gap-4">
-                <IoFilter className="text-3xl" />
-                <select className="cursor-pointer rounded-lg px-4 py-1 shadow outline-none" onChange={handleChangeFarmId} value={activeFarmId}>
-                    <option value=""> -- Chọn nông trại -- </option>
-                    {farms.map(farm => <option key={farm.id} value={farm.id}>{farm.name}</option>)}
-                </select>
-                <select className="cursor-pointer rounded-lg px-4 py-1 shadow outline-none" onChange={handleChangeAreaId} value={activeAreaId}>
-                    {areas.map(area => <option key={area.id} value={area.id}>{area.name}</option>)}
-                </select>
-            </div>
+        <>
+            {isNotified && <Alert
+                type='error'
+                message=<div><b>Cảnh báo vượt ngưỡng!</b> Vui lòng kiểm tra email để biết thêm chi tiết.</div>
+                banner
+                closable
+                className='mb-2'
+                afterClose={offNotification}
+            />}
+            <header className="flex items-center justify-between">
+                <div className="flex gap-4">
+                    <IoFilter className="text-3xl" />
+                    <select className="cursor-pointer rounded-lg px-4 py-1 shadow outline-none" onChange={handleChangeFarmId} value={activeFarmId}>
+                        <option value=""> -- Chọn nông trại -- </option>
+                        {farms.map(farm => <option key={farm.id} value={farm.id}>{farm.name}</option>)}
+                    </select>
+                    <select className="cursor-pointer rounded-lg px-4 py-1 shadow outline-none" onChange={handleChangeAreaId} value={activeAreaId}>
+                        {areas.map(area => <option key={area.id} value={area.id}>{area.name}</option>)}
+                    </select>
+                </div>
 
-            {/* avatar */}
-            <div className="flex items-center gap-6">
-                <IoNotificationsOutline className="rounded-full p-2 text-[40px] hover:cursor-pointer hover:shadow-inner hover:shadow-black" />
+                {/* avatar */}
+                <div className="flex items-center gap-6">
+                    <IoNotificationsOutline className="rounded-full p-2 text-[40px] hover:cursor-pointer hover:shadow-inner hover:shadow-black"/>
 
-                <Dropdown menu={{ items }} trigger={['click']}>
-                    <div
-                        className="size-9 rounded-full border shadow-sm shadow-slate-500 cursor-pointer"
-                        style={{
-                            backgroundImage: `url(${bg})`,
-                            backgroundSize: 'cover',
-                            backgroundPosition: 'center',
-                            backgroundRepeat: 'no-repeat'
-                        }}
-                    >
-                    </div>
-                </Dropdown>
-            </div>
-        </header>
+                    <Dropdown menu={{ items }} trigger={['click']}>
+                        <div
+                            className="size-9 rounded-full border shadow-sm shadow-slate-500 cursor-pointer"
+                            style={{
+                                backgroundImage: `url(${bg})`,
+                                backgroundSize: 'cover',
+                                backgroundPosition: 'center',
+                                backgroundRepeat: 'no-repeat'
+                            }}
+                        >
+                        </div>
+                    </Dropdown>
+                </div>
+            </header>
+        </>
     )
 }
 

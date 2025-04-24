@@ -32,6 +32,5 @@ if __name__ == "__main__":
     # Derive the device symmetric key
     device_symmetric_key = compute_device_symmetric_key(
         group_symmetric_key, registration_id)
-    set_key(".env", "REGISTRATION_ID", registration_id)
     set_key(".env", "DEVICE_SYMMETRIC_KEY", device_symmetric_key)
     print(device_symmetric_key)

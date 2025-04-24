@@ -6,6 +6,7 @@ import json
 from datetime import datetime, timezone
 
 areas = [1, 2]
+topics = ['sensorData', 'alert']
 
 
 def provision_device(provisioning_host, id_scope, registration_id, device_symmetric_key):
@@ -32,7 +33,7 @@ def provision_device(provisioning_host, id_scope, registration_id, device_symmet
 def on_connect(client, userdata, flags, rc):
     """Callback triggered when the MQTT client connects to the local server."""
     if rc == 0:
-        [client.subscribe(f"{i}/sensorData") for i in areas]
+        [client.subscribe(f"{i}/{j}") for i in areas for j in topics]
     else:
         print(f"Failed to connect to local MQTT server, return code {rc}")
 
@@ -41,10 +42,10 @@ def on_message(client, userdata, msg):
     """Callback triggered when a message is received from the local MQTT server."""
     data = msg.payload.decode("utf-8").split()
     # Extract areaid from topic string (format: "{areaid}/sensorData")
-    area_id = msg.topic.split('/')[0]  # Get the first part of the topic
-    for i in range(4):
-        data[i] = float(data[i])
-    try:
+    area_id, topic = msg.topic.split('/', 1)  # Get the first part of the topic
+    if topic == "sensorData":
+        for i in range(4):
+            data[i] = float(data[i])
         # Send the message to Azure IoT Hub
         payload = {
             "areaId": area_id,
@@ -58,9 +59,36 @@ def on_message(client, userdata, msg):
         message_json = json.dumps(payload)
         message = Message(message_json)
         message.custom_properties["type"] = f"telemetry"
-        device_client.send_message(message)
-    except Exception as e:
-        print(f"Failed to send message to IoT Hub: {e}")
+        try:
+            device_client.send_message(message)
+        except Exception as e:
+            print(f"Failed to send message to IoT Hub: {e}")
+    elif topic == "alert":
+        print(*data)
+        sensor_translator = {
+            "temperature": "Nhiệt độ",
+            "humidity": "Độ ẩm",
+            "light": "Ánh sáng",
+            "soilMoisture": "Độ ẩm đất"
+        }
+        payload = {
+            "areaId": area_id,
+            "farmId": farm_id,
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "alert": sensor_translator[data[0]],
+            "measuredValue": data[1],
+            "limitedValue": data[2]
+        }
+        message_json = json.dumps(payload)
+        message = Message(message_json)
+        message.custom_properties["type"] = f"alert"
+        try:
+            device_client.send_message(message)
+            print(f"Alert sent to IoT Hub")
+        except Exception as e:
+            print(f"Failed to send message to IoT Hub: {e}")
+    else:
+        print(f"Unknown topic: {msg.topic}")
 
 
 def method_request_handler(method_request: MethodRequest):
